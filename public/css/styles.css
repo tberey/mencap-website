@@ -1,0 +1,817 @@
+/* (#ff01a5, Mencap Pink), (#FF01A5, Pink), (#D31160, Rose), (#970361, Maroon), (#7f2855, Dark Pink/Maroon), (#b10153, Reddish), (#e07494, Pale Light Pink) */
+
+/* ---- Custom Font Settings ---- */
+
+
+@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Italic.otf') format('opentype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Light.otf') format('opentype');
+    font-weight: lighter;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Light-Italic.otf') format('opentype');
+    font-weight: lighter;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Bold-Italic.otf') format('opentype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Heavy.otf') format('opentype');
+    font-weight: bolder;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'mencap-font';
+    src: url('../assets/fonts/Mencap-Heavy-Italic.otf') format('opentype');
+    font-weight: bolder;
+    font-style: italic;      #ff01a5
+}*/
+
+
+/* ---- Page CSS Settings ---- */
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 0;
+    color: white;
+    font-family: 'mencap-font', sans-serif;
+    background-color: #4F006F;/*#f878ba;*/
+    /* background: linear-gradient(#d843a1, #5a0c3d, #d843a1); /* background: linear-gradient(#ff05a8, #8a0358); background-image: linear-gradient(#FF01A5 6%, #970361); */
+    /*background-size: 100% 260%;*/
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+.js-banner {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: -112px;
+    width: 100%;
+    background-color: #afafafb0;
+    color: #000;
+    padding: 10px;
+    text-align: center;
+    pointer-events: none;
+    font-weight: bolder;
+    font-size: 20px;
+    z-index: 99;
+    overflow: auto;
+}
+
+.container-banner {
+    display: grid;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr;
+}
+
+.container-1 {
+    display: grid;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr;
+    padding-left: 57px;
+}
+
+.container-2 {
+    display: grid;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 57px;
+}
+
+.container-3 {
+    display: grid;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding-left: 57px;
+}
+
+.container-4 {
+    display: grid;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-left: 57px;
+}
+
+.container-5 {
+    display: grid;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    padding-left: 57px;
+}
+
+.col-1 {
+    grid-column-start: 1;
+}
+
+.col-2 {
+    grid-column-start: 2;
+}
+
+.col-3 {
+    grid-column-start: 3;
+}
+
+.col-4 {
+    grid-column-start: 4;
+}
+
+.col-5 {
+    grid-column-start: 5;
+}
+
+.item-left {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.item-right {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.item-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-left {
+    display: block;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.image-right {
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.image-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.image-viewer {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.image {
+    position: absolute;
+    width: 100%;
+    height: 19vw;
+    opacity: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: opacity 2.5s ease-in-out;
+}
+
+.image.active {
+    opacity: 1;
+}
+
+.image-1 {
+    background-image: url('../assets/images/banner-auto-scroller/member-staff-stall.jpeg');
+}
+
+.image-2 {
+    background-image: url('../assets/images/banner-auto-scroller/members-holding-board.jpeg');
+}
+
+.image-3 {
+    background-image: url('../assets/images/banner-auto-scroller/member-workshop.jpeg');
+}
+
+.image-4 {
+    background-image: url('../assets/images/banner-auto-scroller/mencap-coffee-stand.jpeg');
+}
+
+.image-5 {
+    background-image: url('../assets/images/banner-auto-scroller/members-pool.jpeg');
+}
+
+.image-6 {
+    background-image: url('../assets/images/banner-auto-scroller/members-stage-show.jpeg');
+}
+
+.image-7 {
+    background-image: url('../assets/images/banner-auto-scroller/member-gardening-shed.jpeg');
+}
+
+.menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 110px;
+    background-color: #970361;/*#ff01a694;*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    overflow: auto;
+    z-index: 2;
+}
+
+button {
+    width: 80px;
+    padding: 16px 0;
+    margin-bottom: 6px;
+    border-radius: 50%;
+    background-color: #D31160;/*#b10153;*/
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: large;
+    display: block;
+    cursor: pointer;
+    transition: background-color 0.6s;
+}
+
+button:hover {
+    background-color: #ff01a5;
+}
+
+button a {
+    color: white;
+    text-decoration: none;
+}
+
+.home-link-text {
+    padding-bottom: 10px;
+}
+
+.sticky-content {
+    position: relative;
+    z-index: 200;
+}
+
+.sticky-content.sticky {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #97036194;/*#ff01a66e;*/
+    padding: 0px;
+    width: 310px;
+    font-size: 17px;
+    border-radius: 0px 0px 0px 20px;
+}
+
+.footer {
+    position: fixed;
+    padding-left: 10px;
+    padding-top: 15px;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    background: #970361;/*#ff01a694;*/
+    z-index: 1;
+    font-size: 14px;
+}
+
+.mencap-index-logo {
+    width: 98%;
+    height: auto;
+    min-width: 340px;
+}
+
+.mencap-logo-center-small-screen-hide {
+    display: block;
+}
+
+.mencap-logo-center-small-screen-show {
+    display: none;
+}
+
+.contact-icons {
+    height: 40px;
+    width: 50px;
+    padding-top: 16px;
+}
+
+.socials-icons {
+    display: block;
+}
+
+.remove-list-indent {
+    list-style-type: none;
+    padding-left: 12px;
+    margin-left: 12px;
+}
+
+.image-padding {
+    height: 49px;
+    width: 49px;
+}
+
+.custom-submit-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.logout-button-footer {
+    display: inline-block;
+}
+
+.container-auto-hide {
+    display: grid;
+}
+
+.item-auto-hide {
+    display: block;
+}
+
+.item-auto-show {
+    display: none;
+}
+
+.clear-button {
+    display: none;
+    cursor: pointer;
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 4px;
+    border-radius: 50%;
+    border: 1px solid red;
+}
+
+.gallery-image {
+    width: 330px;
+    height: 330px;
+    object-fit: contain; /*  cover  */
+    margin-right: 10px;
+    cursor: pointer;
+    border: 1px solid white;
+}
+
+.gallery-wrapping {
+    display: inline-block;
+    overflow-x: auto;
+    white-space: normal;
+    border-radius: 0px;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dustbin-icon {
+    position: absolute;
+    bottom: 20px;
+    right: 26px;
+    cursor: pointer;
+}
+
+
+/* Full Image Viewer styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 95vh;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+    max-height: 95vh;
+    object-fit: contain;
+    border: 1px solid rgba(145, 145, 145, 0.884);
+    border-radius: 0px;
+}
+
+.close {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    color: #fff;
+    font-size: 75px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.feedback-small {
+    font-size: 22px;
+}
+
+.contact-form {
+    background-color: #970361;/*#ff01a675;*/
+    width: 60%;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form h2 {
+    text-align: center;
+    font-size: 28px;
+}
+
+.contact-form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 20px;
+}
+
+.contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.contact-form textarea {
+    height: 100px;
+}
+
+.contact-form input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 20px;
+    height: 50px;
+}
+
+.contact-form input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.spacing {
+    display: none;
+}
+
+
+/* ---- Small Screen Mobile CSS Settings ---- */
+
+@media (max-width: 1159px) {
+    .image-viewer {
+        display: none;
+    }
+}
+
+
+@media (max-width: 899px) {
+    .container-1 {
+        width: 99.8%;
+        padding-left: 0px;
+    }
+
+    .container-2 {
+        width: 99.8%;
+        padding-left: 0px;
+    }
+
+    .container-3 {
+        width: 99.8%;
+        padding-left: 0px;
+    }
+
+    .container-4 {
+        width: 99.8%;
+        padding-left: 0px;
+    }
+
+    .container-5 {
+        width: 99.8%;
+        padding-left: 0px;
+    }
+
+    .container-6 {
+        width: 99.8%;
+        padding-left: 0px;
+    }
+
+    .js-banner {
+        right: 0px;
+        padding: 5px;
+        text-align: left;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .burger-menu {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background-color: #b10153;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border-radius: 25px;
+        transform: scale(0.8);
+        z-index: 200;
+        cursor: pointer;
+    }
+
+    .burger-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+    }
+
+    .burger-icon::before {
+        content: '\2630';
+    }
+
+    .menu {
+        display: none;
+        position: absolute;
+        background-color: transparent;
+        width: 190px;
+        height: 660px;
+        top: 2px;
+        left: 60px;
+        border-radius: 15px;
+        padding-top: 0px;
+        overflow: auto;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 20px;
+        border-radius: 20px;
+    }
+
+    .menu button {
+        border: 2mm solid #ff01a5;
+        margin: 10px 0;
+        padding: 20px 0;
+    }
+
+    .menu button a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .home-link-text {
+        padding-bottom: 5px;
+        padding-left: 55px;
+        font-size: 0px;
+    }
+
+    .burger-menu.active .menu {
+        display: block;
+    }
+
+    .sticky-content {
+        font-size: 18px;
+        z-index: 200;
+        display: none;
+    }
+
+    .sticky-content.sticky {
+        font-size: 14px !important;
+        width: 225px !important;
+        display: none;
+    }
+
+    .footer {
+        position: fixed;
+        padding-left: 10px;
+        padding-top: 10px;
+        font-size: 12px;
+    }
+
+    .mencap-index-logo {
+        height: auto;
+        width: 58%;
+    }
+
+    .mencap-logo-center-small-screen-hide {
+        display: none;
+    }
+
+    .mencap-logo-center-small-screen-show {
+        display: block;
+    }
+
+    .socials-icons {
+        display: none;
+    }
+
+    .socials {
+        font-size: 0px;
+        padding-right: 40px;
+    }
+
+    .contact-icons {
+        height: 30px;
+        width: 28px;
+        padding-top: 10px;
+    }
+
+    .remove-list-indent {
+        list-style-type: none;
+        padding-left: 8px;
+        margin-left: 8px;
+    }
+
+    .image-padding {
+        padding-right: 25px;
+        height: 40px;
+        width: 40px;
+    }
+
+    .custom-submit-button {
+        font-size: 12px;
+    }
+
+    .gallery-wrapping {
+        display: inline-block;
+        white-space: normal;
+    }
+
+    .gallery-image {
+        margin-left: 10px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+    }
+
+    .feedback-small {
+        font-size: 16px;
+    }
+
+    .contact-form {
+        width: 80%;
+    }
+
+    .container-2-override {
+        display: block;
+    }
+
+    .container-4-override {
+        display: block;
+    }
+
+    .container-auto-hide {
+        display: none;
+    }
+
+    .item-auto-hide {
+        display: none;
+    }
+
+    .item-auto-show {
+        display: block;
+    }
+
+    .spacing {
+        display: block;
+        padding: 32px;
+    }
+}
+
+
+@media (max-width: 569px) {
+
+    .footer-donate {
+        display: none;
+    }
+
+    .w3w-text {
+        display: none;
+    }
+}
+
+
+/* ---- Calendar UI Extension CSS Settings ---- */
+
+.fc-theme-standard .fc-list-day-cushion {
+    background-color: #d843a1;
+    font-size: 20px;
+}
+
+.fc-event {
+    font-size: 16px;
+    word-wrap: break-word;
+}
+
+.fc-list-event:hover {
+    color: black;
+}
+
+.fc-theme-standard .fc-popover {
+    background-color: #d843a1;
+    background: #d843a1;
+}
+
+.fc .fc-toolbar-title {
+    padding-right: 25px;
+    font-size: 29px;
+}
+
+.fc .fc-view-harness {
+    height: fit-content !important;
+}
+
+.fc .fc-view-harness-active > .fc-view {
+    position: inherit;
+}
+
+.fc-dayGridWeek-view {
+    height: 420px;
+}
+
+.fc-dayGridMonth-view {
+    height: 750px;
+}
+
+.fc-timeGridDay-view {
+    height: 500px;
+}

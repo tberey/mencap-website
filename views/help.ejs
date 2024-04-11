@@ -1,0 +1,200 @@
+        <!--  EJS variables needed to render: `loggedIn`(boolean) + any in partials.ejs  -->
+
+        <%- include('partials/header') %>
+
+        <div class="container-1" id="find">
+            <div class="col-1 image-center">
+                <h1 class="text-center" style="font-size: 54px;">Staff Website Support</h1>
+                <p class="text-center" style="font-size: 28px;">A staff-only page with guides to help you perform website tasks. See the table of contents just below this, to jump to a guide for your exact query.</p>
+            </div>
+        </div>
+
+        <br><br><br><br><br>
+
+        <div class="container-1">
+            <div class="col-1">
+                <h1 class="item-center">Table of Contents</h1>
+                <table class="item-center" style="font-size: 19px;">
+                    <tr>
+                        <th><b><i>Support Topic List:<br>(Click One)</i></b></th>
+                    </tr>
+                    <tr>
+                        <td><a href="#login-help"><u>How to Login</u></a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#reset-account-help"><u>How to Reset My Account Details</u></a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#manage-account-help"><u>How to Manage My Account</u></a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#gallery-upload-help"><u>Uploading a New Image to the Gallery</u></a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#article-post-help"><u>Posting a New Article to the Home Page</u></a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <br><br><br><br><br><br><br><br><br>
+
+        <div class="container-1" style="background-color: rgb(135, 7, 185); border-radius: 50px; padding-bottom: 20px;">
+            <h1 id="login-help" class="item-center">How to Login</h1>
+            <p class="item-center" style="font-size: 22px;">
+                1)&nbsp;&nbsp;FIRST, from any page, click on the "Login" button, found in the bottom right corner of your screen. This can be found on the footer.
+                <br>See the red arrow and circle in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/1A-click-login-link.jpg" alt="Login Step 1" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px; padding-top: 40px;">
+                2)&nbsp;&nbsp;NEXT, enter your username and password, (if you don't know them, click the forgotten password link & see guide 'How to Reset My Login Details').
+                <br>After entering your login details, click the blue "Login" button.
+                <br>See the red arrows in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/1B-login-with-details.jpg" alt="Login Step 2" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px;">
+                3)&nbsp;&nbsp;FINALLY, if you entered the correct username and password, you will now be successfully logged in and redirected to the home page.
+                <br>You can confirm this yourself by checking bottom right corner of your screen, on the footer, where you will see your username, and the "Logout" button.
+                <br>Furthermore, if logged in you will also see the "Account" menu button of the left side of your screen, where you can mange your account.
+                <br>See the red arrows, red circle and red box in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/1C-logged-in-successfully.png" alt="Login Step 3" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+        </div>
+
+        <br><br><br><br><br><hr><br><br><br><br><br>
+
+        <div class="container-1" style="background-color: rgb(135, 7, 185); border-radius: 50px; padding-bottom: 20px;">
+            <h1 id="reset-account-help" class="item-center">How to Reset My Account Details</h1>
+            <p class="item-center" style="font-size: 22px;">
+                1)&nbsp;&nbsp;FIRST, from any page, click on the "Login" button, found in the bottom right corner of your screen. This can be found on the footer.
+                <br>See the red arrow and circle in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/1A-click-login-link.jpg" alt="Forgot Username or Password Step 1" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px; padding-top: 40px;">
+                2)&nbsp;&nbsp;NEXT, click on the blue link that says "Forgotten my username or password", just below the Login button.
+                <br>See the red arrow and box in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/2A-forgot-username-password.png" alt="Forgot Username or Password Step 2" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px;">
+                3)&nbsp;&nbsp;FINALLY, enter the email address associated with your account, (usually your @mencapliverpool.org.uk email address). After entering the email address for your account, click the blue "Reset Password" button.
+                <br>See the red arrows in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/2B-reset-account-by-email.png" alt="Forgot Username or Password Step 3" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 25px;">
+                NOTE: An email will be sent to that email address inbox (check spam or junk folders too) within a minute or two, which has your username and a newly reset password. Use these to login through the usual way, and you can then chane your password through account management.
+            </p>
+        </div>
+
+        <br><br><br><br><br><hr><br><br><br><br><br>
+
+        <div class="container-1" style="background-color: rgb(135, 7, 185); border-radius: 50px; padding-bottom: 20px;">
+            <h1 id="manage-account-help" class="item-center">How to Manage My Account</h1>
+            <p class="item-center" style="font-size: 22px;">
+                1)&nbsp;&nbsp;FIRST, from any page, click on the "Login" button, found in the bottom right corner of your screen, found on the footer. On the next page enter your login details.
+                <br>See the red arrow and circle in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/1A-click-login-link.jpg" alt="Manage Account Step 1" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px; padding-top: 40px;">
+                2)&nbsp;&nbsp;NEXT, now that you are logged in and have the "Account" menu option on the left, clicking it will take you to the Account Management page.
+                <br>Here you can change you username, password or email address, (one at a time, all three at once, or any combination of changes). See the red boxes in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/3A-account-management.png" alt="Manage Account Step 2" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 25px;">
+                3)&nbsp;&nbsp;FINALLY, once you have entered the new values for the account details that you want to change, click the blue "Submit" button. See in the above image ^
+            </p>
+            <p class="item-center" style="font-size: 25px;">
+                NOTE: An email will be sent to both the new and old email address inboxes (check spam or junk folders too) to confirm the changes that were made.
+            </p>
+        </div>
+
+        <br><br><br><br><br><hr><br><br><br><br><br>
+
+        <div class="container-1" style="background-color: rgb(135, 7, 185); border-radius: 50px; padding-bottom: 20px;">
+            <h1 id="gallery-upload-help" class="item-center">Uploading a New Image to the Gallery</h1>
+            <p class="item-center" style="font-size: 22px;">
+                1)&nbsp;&nbsp;FIRST, from any page, click on the "Login" button, found in the bottom right corner of your screen, found on the footer. On the next page enter your login details.
+                <br>See the red arrow and circle in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/1A-click-login-link.jpg" alt="Upload to the Gallery Step 1" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px; padding-top: 40px;">
+                2)&nbsp;&nbsp;NEXT, now that you are logged in, click the "Gallery" menu button, on the left side of your screen. This will take you to the Gallery page.
+                <br>See the red arrows and red boxes in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/4A-gallery.png" alt="Upload to the Gallery Step 2" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px;">
+                3)&nbsp;&nbsp;NOW, to upload a new image first choose an image from your device, then select the month and year you wish to display the image under.
+                <br>When you are ready to upload and display the chosen image, click the "Post to Gallery" button. Don't worry, if you make a mistake you can easily and quickly delete the image.
+                <br>See the red arrows, red box and red circle in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/4B-uploading-to-gallery.png" alt="Upload to the Gallery Step 3" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px;">
+                4)&nbsp;&nbsp;FINALLY, after clicking the submit "Post to Gallery" button, the page will refresh and you can see your new image under the year and month you specified.
+                <br>You will also see a dustbin or bin icon on your own uploaded images, which is to delete that specific image, (you can only delete your own images that you have historically uploaded).
+                <br>See the red arrows in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/4C-successfully-uploaded-to-gallery.png" alt="Upload to the Gallery Step 4" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+        </div>
+
+        <br><br><br><br><br><hr><br><br><br><br><br>
+
+        <div class="container-1" style="background-color: rgb(135, 7, 185); border-radius: 50px; padding-bottom: 20px;">
+            <h1 id="article-post-help" class="item-center">Posting a New Article to the Home Page</h1>
+            <p class="item-center" style="font-size: 22px;">
+                1)&nbsp;&nbsp;FIRST, from any page, click on the "Login" button, found in the bottom right corner of your screen, found on the footer. On the next page enter your login details.
+                <br>See the red arrow and circle in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/1A-click-login-link.jpg" alt="Posting a New Article Step 1" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px; padding-top: 40px;">
+                2)&nbsp;&nbsp;NEXT, now that you have just logged in, you should already be on the home page, but you can make sure of this by clicking the "Home" menu button, on the left side of your screen at the top of the menu.
+                <br>See the red arrow and box in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/5A-create-new-article.png" alt="Posting a New Article Step 2" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px;">
+                3)&nbsp;&nbsp;NOW, to write and create a new article, fill in each of the steps in the form, starting a title, then a date, and then a main body. Optionally you can upload and add up to 2 images and a file users can choose to download.
+                <br>When you are done, and ready to post and display your curated article, click the "Post to Article" button. Don't worry, you can delete a post whenever and try again, if needed.
+                <br>See the red arrows in the following image (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/5B-creating-the-article.png" alt="Posting a New Article Step 3" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+            <p class="item-center" style="font-size: 22px;">
+                4)&nbsp;&nbsp;FINALLY, after clicking the submit "Post to Gallery" button, the page will refresh and you can see your new image under the year and month you specified.
+                <br>You will also see a small "Delete" link at the bottom of any of your own posted articles, which is to delete that specific article, (you can only delete your own posts that you have historically made).
+                <br>See the following image below of an example article, to see which text box or image or file upload goes where (click to enlarge):
+            </p>
+            <div class="col-1">
+                <img class="image-center" src="assets/images/walkthroughs/5C-successfully-created-article.png" alt="Posting a New Article Step 4" style="height: auto; width: auto; max-width: 80%; cursor: pointer;" onclick="showImage('assets/images/walkthroughs/1-click-login-link.jpg')">
+            </div>
+        </div>
+
+        <br>
+
+        <%- include('partials/footer') %>

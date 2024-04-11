@@ -1,0 +1,63 @@
+{
+  "name": "mencap_website",
+  "version": "1.0.1",
+  "description": "Mencap-Website",
+  "homepage": "#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/user/mencap-website"
+  },
+  "main": "build/main.js",
+  "scripts": {
+    "dev": "nodemon --config nodemon.json",
+    "setup": "npm update && npm install",
+    "build": "rimraf ./build && tsc",
+    "start:fast": "node build/main.js",
+    "start": "npm run build && node build/main.js",
+    "upinstart": "npm run setup && npm run start",
+    "test:exit": "mocha --exit -r ts-node/register src/tests/*.test.ts",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/tests/*.ts'",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bcrypt": "latest",
+    "@types/chai": "latest",
+    "@types/cors": "latest",
+    "@types/express": "latest",
+    "@types/express-session": "latest",
+    "@types/mocha": "latest",
+    "@types/mysql": "latest",
+    "@types/node": "latest",
+    "@types/nodemailer": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "@types/formidable": "latest",
+    "eslint": "latest",
+    "nodemon": "latest",
+    "rimraf": "latest",
+    "ts-node": "latest",
+    "typescript": "latest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "latest",
+    "aws-sdk": "latest",
+    "bcrypt": "latest",
+    "chai": "latest",
+    "chai-http": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "ejs": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "formidable": "latest",
+    "fullcalendar": "latest",
+    "mocha": "latest",
+    "mysql": "latest",
+    "nodemailer": "latest",
+    "rollbar": "latest",
+    "simple-txt-logger": "latest"
+  }
+}

@@ -1,0 +1,24 @@
+        <!--  EJS variables needed to render: `loggedIn`(boolean) + any in partials.ejs  -->
+
+        <%- include('partials/header') %>
+
+        <div class="container-1">
+            <div class="col-1 image-center">
+                <h1 class="text-center" style="font-size: 54px;">Donate<br>&#9748;</h1>
+            </div>
+        </div>
+
+        <div class="container-1">
+            <div class="col-1">
+                <p class="text-center" style="font-size: 20px;">
+                    Any amount you may Donate would go a long way towards helping us with everything we do, and you would be a part of that.
+                    Kind Donations we get are put towards improving our services and support capabilities, and will enable us to reach even more people who have no support or social support.
+                    <br><br>
+                    You can use the below form to donate a one-off amount, or even setup a repeating monthly donation.<br>You can also read further about what each amount could do for someone:
+                </p>
+                <br>
+                <iframe class="image-center" src="https://donorbox.org/embed/mencap-website-donation" style="height: 1200px; width: 300px" seamless="seamless" id="dbox-form-embed" name="donorbox" frameborder="0" scrolling="no" allowpaymentrequest></iframe>
+            </div>
+        </div>
+
+        <%- include('partials/footer') %>

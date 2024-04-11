@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.js-banner {
+    display: block;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #b4b4b4e5;
+    color: #000;
+    padding: 10px;
+    text-align: center;
+    pointer-events: none;
+    font-weight: bolder;
+    font-size: 20px;
+    z-index: 99;
+    overflow: auto;
+}
+
+.login-container {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 40px;
+    width: 300px;
+    max-width: 90%;
+    text-align: center;
+    font-size: 16px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#forgot-password {
+    margin-top: 18px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+#login-home {
+    margin-top: 18px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+#back-to-login {
+    margin-top: 10px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+@media (max-width: 900px) {
+    .js-banner {
+        padding: 5px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+}

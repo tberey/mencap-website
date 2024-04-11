@@ -1,0 +1,261 @@
+        <!--  EJS variables needed to render: `loggedIn`(boolean) + any in partials.ejs  -->
+
+        <%- include('partials/header') %>
+
+        <div class="container-1">
+            <div class="col-1 image-center">
+                <h1 class="text-center" style="font-size: 54px;">What's On?<br>&#128197;</h1>
+            </div>
+        </div>
+
+        <div class="container-1">
+            <div class="col-1 text-center">
+                <h2>
+                    This is our Calendar that tells you what and when all our events or activites are on.
+                    If you want to check for a particular session, or try something out, this is the best place to start.
+                </h2>
+            </div>
+        </div>
+
+        <br><br>
+
+        <% if (loggedIn) { %>
+            <div class="container-1">
+                <div class="col-1">
+                    <br><br>
+                    <h2>Create a new Calendar Event</h2>
+                    <label for="formSelector">Choose an event type to create:</label>
+                    <select id="formSelector" onchange="toggleForm()">
+                        <option value="none" selected>Select event type...</option>
+                        <option value="recurringEvent">Repeating Event</option>
+                        <option value="singleEvent">One-Off Event</option>
+                    </select>
+                </div>
+            </div>
+
+            <br><br><br><br>
+
+            <div class="container-1" id="eventForm" style="display: none;">
+                <div class="col-1">
+                    <h3>Add a new Event to the Calendar:</h3>
+                    <br>
+                    <form id="event-form" action="/event" method="POST">
+                        <p>Event Name:</p>
+                        <input type="text" id="eventSubmit" name="title" placeholder="Event Title" style="width: 25%;" required>
+                        <br><br><br><br>
+
+                        <div id="recurringEvent">
+                            <label for="daysOfWeek">Which day should it repeat on each week?</label>
+                            <div id="daysOfWeek">
+                                <input type="checkbox" id="monday" name="recurring" value="1">
+                                <label for="monday">Monday</label><br>
+                                <input type="checkbox" id="tuesday" name="recurring" value="2">
+                                <label for="tuesday">Tuesday</label><br>
+                                <input type="checkbox" id="wednesday" name="recurring" value="3">
+                                <label for="wednesday">Wednesday</label><br>
+                                <input type="checkbox" id="thursday" name="recurring" value="4">
+                                <label for="thursday">Thursday</label><br>
+                                <input type="checkbox" id="friday" name="recurring" value="5">
+                                <label for="friday">Friday</label><br>
+                                <input type="checkbox" id="saturday" name="recurring" value="6">
+                                <label for="saturday">Saturday</label><br>
+                                <input type="checkbox" id="sunday" name="recurring" value="0">
+                                <label for="sunday">Sunday</label><br>
+                                <br><br><br><br>
+                            </div>
+                        </div>
+
+                        <label for="startDatePicker">Select a date when the event should <b>start</b>:</label><br><br>
+                        <input type="date" id="startDatePicker" name="startDate" required>
+                        <br><br><br><br><br>
+
+                        <label for="endDatePicker">Select a date when the event should <b>end</b>:</label><br><br>
+                        <input type="date" id="endDatePicker" name="endDate" required>
+                        <br><br><br><br><br>
+
+                        <label for="allday">Is it for the whole day?</label><br><br>
+                        <div id="allday">
+                            <input type="checkbox" id="alldaytrue" name="allDay" value="1" onchange="toggleTimeFields()">
+                            <label for="alldaytrue">Yes, it's an all day event.</label>
+                        </div>
+                        <br><br><br><br>
+
+                        <div id="timeFields">
+                            <label for="startTimePicker">Select a start time:</label><br><br>
+                            <input type="time" id="startTimePicker" name="startTime"><br><br>
+                            <sup><i>Enter <b>"09:30"</b> for 9:30 <b>AM</b>, or enter <b>"21:00"</b> for 9:30 <b>PM</b>.</i></sup>
+                            <br><br><br><br>
+
+                            <label for="endTimePicker">Select an end time:</label><br><br>
+                            <input type="time" id="endTimePicker" name="endTime"><br><br>
+                            <sup><i>Enter <b>"09:30"</b> for 9:30 <b>AM</b>, or enter <b>"21:00"</b> for 9:30 <b>PM</b>.</i></sup>
+                            <br><br><br><br>
+                        </div>
+
+                        <button type="submit" style="border-radius: 25px; background-color: #b10153; width: 35%;">Create Event</button>
+                    </form>
+                    <br><br><br><br><br>
+                </div>
+            </div>
+        <% } %>
+
+        <br>
+
+        <div class="container-1" style="padding-bottom: 80px;">
+            <div class="col-1">
+                <div id="calendar"></div>
+            </div>
+        </div>
+
+        <% if (loggedIn) { %>
+            <div class="container-1" style="padding-bottom: 80px;">
+                <div class="col-1">
+                    <h2>Delete one of your Calendar Events:</h2>
+                    <table style="border-collapse: collapse;">
+                        <tr>
+                            <th>Delete?</th>
+                            <th>Event Title</th>
+                        </tr>
+                            <% events.forEach(function(event) { %>
+                                <% if (event.userUid == uid) { %>
+                                    <tr>
+                                        <td style="border-bottom: 1px solid white; padding: 5px;"><input type="button" value="X" class="custom-submit-button" style="text-align: center; text-decoration: none; color: red; cursor: pointer;" onclick="confirmEventDelete('<%= event.ID %>','<%= event.userUid %>')"></td>
+                                        <td style="border-bottom: 1px solid white;"><%= event.title %></td>
+                                    </tr>
+                                <% } %>
+                            <% }); %>
+                    </table>
+                </div>
+            </div>
+        <% } %>
+
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', async function() {
+                var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+                    locale: 'en-gb',
+                    headerToolbar: {
+                        left: 'prev,next,today dayGridMonth,dayGridWeek,timeGridDay,listWeek',
+                        right: 'title'
+                    },
+                    initialView: 'listWeek',
+                    navLinks: false,
+                    dayMaxEvents: false,
+                    eventTimeFormat: {
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true
+                    },
+                    events: <%- calendarEvents %>
+                });
+                calendar.render();
+            });
+
+            /*
+                if typeof array: recurring: {
+                    daysOfMonth: [1, 15], // Repeat on the 1st and 15th day of the month
+                    <OR>
+                    daysOfWeek: [1, 3],// Repeat on Monday and Wednesday
+                },
+
+                if typeof number: recurring: {
+                    interval: 2, // Repeat every two weeks
+                },
+
+                const input = '42'; // Replace with your input string
+
+                const result = input.startsWith('[') && input.endsWith(']')
+                    ? JSON.parse(input)
+                    : isNaN(parseFloat(input))
+                        ? null
+                        : parseFloat(input);
+
+
+                events.forEach((event) => {
+                    const newEvent = new Event({
+                        title: event.title,
+                        start: event.startDateTime,
+                        end: event.endDateTime,
+                        description: event.description,
+                        author: event.author,
+                        recurring: {
+                            daysOfWeek: event.recurring,
+                        },
+                    });
+                });
+
+                let calendar = new Calendar(calendarEl, {
+                    plugins: [ interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin ],
+                    headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                    },
+                    initialDate: '2018-01-12',
+                    navLinks: true, // can click day/week names to navigate views
+                    editable: true,
+                    dayMaxEvents: true, // allow "more" link when too many events
+                    dayHeaderContent(arg: DayHeaderContentArg) {
+                    return createElement(CustomDayHeader, { text: arg.text })
+                    },
+                    events: [
+                    {
+                        title: 'All Day Event',
+                        start: '2018-01-01',
+                    },
+                    {
+                        title: 'Long Event',
+                        start: '2018-01-07',
+                        end: '2018-01-10'
+                    },
+                    {
+                        groupId: '999',
+                        title: 'Repeating Event',
+                        start: '2018-01-09T16:00:00'
+                    },
+                    {
+                        groupId: '999',
+                        title: 'Repeating Event',
+                        start: '2018-01-16T16:00:00'
+                    },
+                    {
+                        title: 'Conference',
+                        start: '2018-01-11',
+                        end: '2018-01-13'
+                    },
+                    {
+                        title: 'Meeting',
+                        start: '2018-01-12T10:30:00',
+                        end: '2018-01-12T12:30:00'
+                    },
+                    {
+                        title: 'Lunch',
+                        start: '2018-01-12T12:00:00'
+                    },
+                    {
+                        title: 'Meeting',
+                        start: '2018-01-12T14:30:00'
+                    },
+                    {
+                        title: 'Happy Hour',
+                        start: '2018-01-12T17:30:00'
+                    },
+                    {
+                        title: 'Dinner',
+                        start: '2018-01-12T20:00:00'
+                    },
+                    {
+                        title: 'Birthday Party',
+                        start: '2018-01-13T07:00:00'
+                    },
+                    {
+                        title: 'Click for Google',
+                        url: 'http://google.com/',
+                        start: '2018-01-28'
+                    }
+                    ]
+                });
+            */
+        </script>
+
+        <%- include('partials/footer') %>

@@ -230,6 +230,7 @@ a {
     background-repeat: no-repeat;
     background-position: center center;
     transition: opacity 2.5s ease-in-out;
+    border-radius: 7%;
 }
 
 .image.active {
@@ -340,14 +341,6 @@ button a {
     width: 98%;
     height: auto;
     min-width: 340px;
-}
-
-.mencap-logo-center-small-screen-hide {
-    display: block;
-}
-
-.mencap-logo-center-small-screen-show {
-    display: none;
 }
 
 .contact-icons {
@@ -671,14 +664,6 @@ button a {
     .mencap-index-logo {
         height: auto;
         width: 58%;
-    }
-
-    .mencap-logo-center-small-screen-hide {
-        display: none;
-    }
-
-    .mencap-logo-center-small-screen-show {
-        display: block;
     }
 
     .socials-icons {

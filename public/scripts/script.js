@@ -1,3 +1,18 @@
+//Global Bariables
+var isStickyMenuVisible = true;
+const hideButton = document.querySelector('.hide-sticky-menu-button');
+
+
+
+// Hide sticky menu.
+function hideStickyMenu() {
+    isStickyMenuVisible = !isStickyMenuVisible
+    stickyContent.classList.remove('sticky');
+    hideButton.style.display = 'none';
+}
+
+
+
 // Burger Menu Toggle.
 function toggleMenu() {
     var menu = document.getElementById('menu');
@@ -15,7 +30,13 @@ const delayPixels = 250;
 let stickyOffset;
 
 if (screenWidth < 900) {
-    stickyContent.classList.add('sticky');
+    if (isStickyMenuVisible) {
+        stickyContent.classList.add('sticky');
+        hideButton.style.display = 'block';
+    } else {
+        stickyContent.classList.remove('sticky');
+        hideButton.style.display = 'none';
+    }
 }
 
 function updateStickyOffset() {
@@ -33,10 +54,17 @@ function handleScroll() {
     const isElementOffScreen = !isElementInViewport(triggerElement);
 
     if (isElementOffScreen && scrolledPastTrigger) {
-        stickyContent.classList.add('sticky');
+        if (isStickyMenuVisible) {
+            stickyContent.classList.add('sticky');
+            hideButton.style.display = 'block';
+        } else {
+            stickyContent.classList.remove('sticky');
+            hideButton.style.display = 'none';
+        }
     } else {
         if (screenWidth > 900) {
             stickyContent.classList.remove('sticky');
+            hideButton.style.display = 'none';
         }
     }
 }

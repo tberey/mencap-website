@@ -4,7 +4,7 @@
 
         <div class="container-1">
             <div class="col-1 image-center">
-                <h1 class="text-center" style="font-size: 54px;">Gallery<br>&#128444;</h1>
+                <h1 class="text-center" style="font-size: 56px;">Gallery<br>&#128444;</h1>
             </div>
         </div>
 
@@ -17,8 +17,6 @@
                 </h2>
             </div>
         </div>
-
-        <br><br>
 
         <% if (loggedIn) { %>
             <div class="container-1">
@@ -52,8 +50,10 @@
             <br><br><br>
         <% } %>
 
+        <br><br>
+
         <div class="container-1">
-            <div class="col-1 text-center image-center" style="font-size: 22px;">
+            <div class="col-1 text-center image-center" style="font-size: 32px;">
                 <label for="yearView">Year&nbsp;</label>
                 <select id="yearView" name="yearView" required>
                 <% years.forEach((year) => { %>

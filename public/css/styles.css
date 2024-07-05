@@ -808,3 +808,11 @@ button a {
 .fc-timeGridDay-view {
     height: 500px;
 }
+
+
+
+.contact-time {
+    position: absolute;
+    top: 0px;
+    left: -9001px;
+}

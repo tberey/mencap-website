@@ -4,6 +4,7 @@ import { queryArticlesRead, queryEventsRead, queryGalleryRead, queryUsersRead } 
 import { Request, Response } from 'express';
 import formidable, { File } from 'formidable';
 import Formidable from 'formidable/Formidable';
+import axios from 'axios';
 
 
 type CalendarEvent = {
@@ -33,7 +34,6 @@ export class Server extends ServerSetup {
         super(live, port, hostname);
         this.getRequests();
         this.postRequests();
-        this.testRequests();
     }
 
 
@@ -286,7 +286,7 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /contact');
 
             res.status(200);
-            res.render('contact.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('contact.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : '', honeyValue: process.env['HONEY_PUBLIC_VALUE']  });
 
             return this.txtLogger.writeToLogFile(
             `Request Completed:
@@ -996,7 +996,7 @@ export class Server extends ServerSetup {
             let alertLog: boolean = false;
 
             try {
-                if (!req.session.contactPosts) req.session.contactPosts = 1;
+                if (!req.session.contactPosts) req.session.contactPosts = 0;
                 else if (req.session.contactPosts >= 2) {
                     this.txtLogger.writeToLogFile('Failed to send message. Session limit reached.');
                     log = "Maximum messages sent in to us. You can't send too many messages in a short space of time, to allow us the time to respond and not get overwhelmed.";
@@ -1004,43 +1004,87 @@ export class Server extends ServerSetup {
                     return status = 429;
                 }
 
-                const { name, email, message } = req.body;
+                const { name, email, message, contactTime, important, formLoadTime, 'g-recaptcha-response': recaptchaResponse } = req.body;
 
-                if (!name.toString() && !email.toString() && !message.toString()) {
-                    log = 'Failed to send message. Make sure you have completed all fields in the form.';
+                if (contactTime || !important ||important != process.env['HONEY_PUBLIC_VALUE']) {
+                    req.session.contactPosts++;
+                    log = 'Did not send message. Hidden field has been completed.';
+                    return status = 200; // Don't tell malicious user it was a failed attempt.
+                }
+
+                if (!name || !email || !message || !formLoadTime || !recaptchaResponse) {
+                    log = 'Failed to send message. Make sure you have completed all fields on the form.';
                     status = 400;
                     return alertLog = true;
                 }
 
-                if (this.transporter) this.transporter.sendMail({
-                    from: process.env['EMAIL_ADDRESS'],
-                    to: process.env['MENCAP_EMAIL_ADDRESS'],
-                    subject: '[Website Message] Someone has reached out through the Mencap Website...',
-                    text:
-                        'Hi,\n\n'
-                        +'****Internal Message to Staff****\n'
-                        +'This is an automatic email from the Mencap Liverpool & Sefton website; it is internal and perfectly safe. HOWEVER, the message itself below, is external and might not be safe!\n'
-                        +'So please check all contents of the below message carefully: Make sure there are no dangerous links or email addresses, that lead to a scam or virus.\n'
-                        +'You can tell when a link or email address looks suspicious, not quite right, or one you do not recognise. IF IN DOUBT, NEVER CLICK ANY LINKS OR DOWNLOAD ANY FILES!\n'
-                        +'****End of Staff Message****\n\n\n\n'
-                        +'Someone has reached out through the Mencap website. You can see the full details below:\n\n'
-                        +`Name (of person who left this message):  ${name.toString()}\n`
-                        +`Email (of person who left this message):  ${email.toString()}\n`
-                        +`Message:\n"${message.toString()}"\n`
-                        +`\n\n\n\nIf you suspect something is wrong with this email, delete it. You can also contact: ${process.env['EMAIL_ADDRESS']}\n`
-                }, (err, info) => {
-                    if (err) {
+                const isValidEmail = await this.validateEmail(email);
+
+                if (!isValidEmail) {
+                    log = 'Failed to send message. Make sure you have given a valid email address.';
+                    status = 400;
+                    return alertLog = true;
+                }
+
+                const isBadMessage = await this.containsBadWords([name, email, message], JSON.parse(process.env['BAD_WORDS']!));
+
+                if (isBadMessage) {
+                    req.session.contactPosts++;
+                    log = 'Message Not Sent. We found some bad words when scanning your message.';
+                    status = 400;
+                    return alertLog = true;
+                }
+
+                const submissionThreshold = parseInt(process.env['SUBMISSION_THRESHOLD_TIME']!); // X seconds is at least required before form is submit successfully, which is set here.
+                const formSubmitTime = new Date().getTime();
+                const timeDifference = formSubmitTime - parseInt(formLoadTime);
+
+                if (timeDifference < submissionThreshold) {
+                    req.session.contactPosts++;
+                    log = 'Did not send message. Form submitted in less time than the threshold.';
+                    return status = 200; // Don't tell malicious user it was a failed attempt.
+                }
+
+                const recaptchaVerificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env['RECAPTCHA_SECRET_KEY']}&response=${recaptchaResponse}`;
+                const recaptchaServerResponse = await axios.post(recaptchaVerificationUrl);
+
+                if (!recaptchaServerResponse.data.success) {
+                    req.session.contactPosts++;
+                    log = 'Failed to send message. reCAPTCHA verification failed.';
+                    return status = 400;
+                }
+
+                if (this.transporter) {
+                    try {
+                        const info = await this.transporter.sendMail({
+                            from: process.env['EMAIL_ADDRESS'],
+                            to: process.env['MENCAP_EMAIL_ADDRESS'],
+                            subject: '[Website Message] Someone has reached out through the Mencap Website...',
+                            text:
+                                'Hi,\n\n' +
+                                '****Internal Message to Staff****\n' +
+                                'This is an automatic email from the Mencap Liverpool & Sefton website; it is internal and perfectly safe. HOWEVER, the message itself below, is external and might not be safe!\n' +
+                                'So please check all contents of the below message carefully: Make sure there are no dangerous links or email addresses, that lead to a scam or virus.\n' +
+                                'You can tell when a link or email address looks suspicious, not quite right, or one you do not recognise. IF IN DOUBT, NEVER CLICK ANY LINKS OR DOWNLOAD ANY FILES!\n' +
+                                '****End of Staff Message****\n\n\n\n' +
+                                'Someone has reached out through the Mencap website. You can see the full details below:\n\n' +
+                                `Name (of person who left this message):  ${name}\n` +
+                                `Email (of person who left this message):  ${email}\n` +
+                                `Message:\n"${message}"\n` +
+                                `\n\n\n\nIf you suspect something is wrong with this email, delete it. You can also contact: ${process.env['EMAIL_ADDRESS']}\n`
+                        });
+
+                        req.session.contactPosts++;
+                        this.txtLogger.writeToLogFile(`Contact us email sent: ${info.response}`);
+                        log = 'Message successfully sent.';
+                        status = 200;
+                    } catch (err) {
                         this.txtLogger.writeToLogFile(`Error sending account update email: ${err}`);
                         log = `Failed to send message. You can reach out to the site Admin here: ${process.env['EMAIL_ADDRESS']}`;
                         alertLog = true;
-                        return status = 500;
-                    } else {
-                        req.session.contactPosts!++;
-                        this.txtLogger.writeToLogFile(`Contact us email sent: ${info.response}`);
-                        return status = 200;
+                        status = 500;
                     }
-                });
-
+                }
             } catch (err) {
                 log = `An error occurred during contact us request: ${err}`;
                 return status = 500;
@@ -1052,149 +1096,6 @@ export class Server extends ServerSetup {
                 else res.send(`<script>alert("Message successfully sent."); window.location.href = '/';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
-                    `Request Completed:
-                    POST: ${req.url},
-                    Host: ${req.hostname},
-                    IP: ${req.ip},
-                    Type: ${req.protocol?.toUpperCase()},
-                    Status: ${res.statusCode}.`
-                );
-            }
-        });
-    }
-
-
-    private testRequests(): void {
-        this.router.get('/testtwo', async (req:Request, res:Response) => {
-            this.txtLogger.writeToLogFile('Request Made: GET /testtwo');
-
-            let articles: queryArticlesRead[] | null | undefined;
-            let articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
-
-            try {
-                articles = await this.db.getArticles(16);
-                this.txtLogger.writeToLogFile('Successfully got Articles.');
-
-                if (articles) articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
-
-            } catch (err) {
-                this.txtLogger.writeToLogFile(`An error occurred getting articles: ${err}`);
-            }
-            finally {
-                res.status(200);
-                res.render('indexTwo.ejs', {
-                    loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    articles: articles, mediaUrl: articlesMediaUrl
-                });
-
-                return this.txtLogger.writeToLogFile(
-                    `Request Completed:
-                    POST: ${req.url},
-                    Host: ${req.hostname},
-                    IP: ${req.ip},
-                    Type: ${req.protocol?.toUpperCase()},
-                    Status: ${res.statusCode}.`
-                );
-            }
-        });
-
-        this.router.get('/testthree', async (req:Request, res:Response) => {
-            this.txtLogger.writeToLogFile('Request Made: GET /testthree');
-
-            let articles: queryArticlesRead[] | null | undefined;
-            let articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
-
-            try {
-                articles = await this.db.getArticles(16);
-                this.txtLogger.writeToLogFile('Successfully got Articles.');
-
-                if (articles) articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
-
-            } catch (err) {
-                this.txtLogger.writeToLogFile(`An error occurred getting articles: ${err}`);
-            }
-            finally {
-                res.status(200);
-                res.render('indexThree.ejs', {
-                    loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    articles: articles, mediaUrl: articlesMediaUrl
-                });
-
-                return this.txtLogger.writeToLogFile(
-                    `Request Completed:
-                    POST: ${req.url},
-                    Host: ${req.hostname},
-                    IP: ${req.ip},
-                    Type: ${req.protocol?.toUpperCase()},
-                    Status: ${res.statusCode}.`
-                );
-            }
-        });
-
-        this.router.get('/testfour', async (req:Request, res:Response) => {
-            this.txtLogger.writeToLogFile('Request Made: GET /testfour');
-
-            let articles: queryArticlesRead[] | null | undefined;
-            let articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
-
-            try {
-                articles = await this.db.getArticles(16);
-                this.txtLogger.writeToLogFile('Successfully got Articles.');
-
-                if (articles) articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
-
-            } catch (err) {
-                this.txtLogger.writeToLogFile(`An error occurred getting articles: ${err}`);
-            }
-            finally {
-                res.status(200);
-                res.render('indexFour.ejs', {
-                    loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    articles: articles, mediaUrl: articlesMediaUrl
-                });
-
-                return this.txtLogger.writeToLogFile(
-                    `Request Completed:
-                    POST: ${req.url},
-                    Host: ${req.hostname},
-                    IP: ${req.ip},
-                    Type: ${req.protocol?.toUpperCase()},
-                    Status: ${res.statusCode}.`
-                );
-            }
-        });
-
-        this.router.get('/testfive', async (req:Request, res:Response) => {
-            this.txtLogger.writeToLogFile('Request Made: GET /testfive');
-
-            let articles: queryArticlesRead[] | null | undefined;
-            let articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
-
-            try {
-                articles = await this.db.getArticles(16);
-                this.txtLogger.writeToLogFile('Successfully got Articles.');
-
-                if (articles) articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
-
-            } catch (err) {
-                this.txtLogger.writeToLogFile(`An error occurred getting articles: ${err}`);
-            }
-            finally {
-                res.status(200);
-                res.render('indexFive.ejs', {
-                    loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    articles: articles, mediaUrl: articlesMediaUrl
-                });
-
                 return this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
@@ -1236,5 +1137,51 @@ export class Server extends ServerSetup {
 
             return false;
         }
+    }
+
+
+    private async validateEmail(email: string): Promise<boolean> {
+        // Check if email is a string and its length is less than 75 characters
+        if (typeof email !== 'string' || email.length >= 75)  return false;
+
+        // Split the email at the "@" symbol
+        const parts = email.split('@');
+
+        // Check if there's exactly one "@" symbol and both parts exist
+        if (parts.length !== 2 || !parts[0] || !parts[1])  return false;
+
+        // Check if the part after the "@" symbol contains at least one "."
+        if (!parts[1].includes('.')) return false;
+
+        // Regex pattern for basic email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Test the email string against the regex pattern
+        return emailPattern.test(email);
+    }
+
+
+    private async containsBadWords(strings: string[], badWords: string[]): Promise<boolean> {
+        // Convert bad words to a Set for faster lookup
+        const badWordsSet = new Set(badWords.map(word => word.toLowerCase()));
+
+        // Function to check if a string contains any bad words
+        const hasBadWord = (str: string, badWordsSet: Set<string>): boolean => {
+            const lowerCaseStr = str.toLowerCase();
+
+            // Convert Set to array and iterate over it
+            for (let word of Array.from(badWordsSet)) {
+                if (lowerCaseStr.includes(word)) return true;
+            }
+
+            return false;
+        }
+
+        // Check each string in the array
+        for (let string of strings) {
+            if (hasBadWord(string, badWordsSet)) return true;
+        }
+
+        return false;
     }
 }

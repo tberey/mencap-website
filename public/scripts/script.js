@@ -398,3 +398,39 @@ function confirmGalleryDelete(id, uuid, media) {
         });
     }
 }
+
+
+
+// Function to set form load time when DOM is loaded
+function setFormLoadTime() {
+    var formLoadTime = document.getElementById('formLoadTime');
+
+    if (formLoadTime) {
+        formLoadTime.value = new Date().getTime();
+    }
+}
+
+// Function to calculate time difference on form submission
+function calculateTimeDifference() {
+    var formLoadTime = document.getElementById('formLoadTime');
+
+    if (formLoadTime) {
+        formLoadTime = formLoadTime.value;
+        const formSubmitTime = new Date().getTime();
+        const timeDifference = formSubmitTime - formLoadTime;
+        document.getElementById('formSubmitTime').value = timeDifference;
+    }
+}
+
+// Event listener for DOMContentLoaded to set form load time
+document.addEventListener('DOMContentLoaded', function() {
+    setFormLoadTime();
+});
+
+// Event listener for form submission to calculate time difference
+timingContactForm = document.getElementById('contactForm')
+if (timingContactForm) {
+    timingContactForm.addEventListener('submit', function(event) {
+        calculateTimeDifference();
+    });
+}

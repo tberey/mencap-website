@@ -4,7 +4,7 @@
 
         <div class="container-1">
             <div class="col-1 image-center">
-                <h1 class="text-center" style="font-size: 54px;">What's On?<br>&#128197;</h1>
+                <h1 class="text-center" style="font-size: 56px;">What's On?<br>&#128197;</h1>
             </div>
         </div>
 
@@ -16,8 +16,6 @@
                 </h2>
             </div>
         </div>
-
-        <br><br>
 
         <% if (loggedIn) { %>
             <div class="container-1">
@@ -101,14 +99,18 @@
 
         <br>
 
-        <div class="container-1" style="padding-bottom: 80px;">
+        <div class="container-1">
             <div class="col-1">
                 <div id="calendar"></div>
             </div>
         </div>
 
+        <% if (!loggedIn) { %>
+            <nav style="padding-bottom: 175px;"></nav>
+        <% } %>
+
         <% if (loggedIn) { %>
-            <div class="container-1" style="padding-bottom: 80px;">
+            <div class="container-1" style="padding-bottom: 125px; padding-top: 50px;">
                 <div class="col-1">
                     <h2>Delete one of your Calendar Events:</h2>
                     <table style="border-collapse: collapse;">

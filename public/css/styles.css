@@ -230,6 +230,7 @@ a {
     background-repeat: no-repeat;
     background-position: center center;
     transition: opacity 2.5s ease-in-out;
+    border-radius: 7%;
 }
 
 .image.active {
@@ -324,6 +325,14 @@ button a {
     border-radius: 0px 0px 0px 20px;
 }
 
+.hide-sticky-menu-button {
+    display: none;
+    position: absolute;
+    bottom: -6px;
+    left: -6px;
+    cursor: pointer;
+}
+
 .footer {
     position: fixed;
     padding-left: 10px;
@@ -340,14 +349,6 @@ button a {
     width: 98%;
     height: auto;
     min-width: 340px;
-}
-
-.mencap-logo-center-small-screen-hide {
-    display: block;
-}
-
-.mencap-logo-center-small-screen-show {
-    display: none;
 }
 
 .contact-icons {
@@ -475,7 +476,7 @@ button a {
     cursor: pointer;
 }
 
-.feedback-small {
+.donate-button-small {
     font-size: 22px;
 }
 
@@ -673,14 +674,6 @@ button a {
         width: 58%;
     }
 
-    .mencap-logo-center-small-screen-hide {
-        display: none;
-    }
-
-    .mencap-logo-center-small-screen-show {
-        display: block;
-    }
-
     .socials-icons {
         display: none;
     }
@@ -723,7 +716,7 @@ button a {
         margin-bottom: 10px;
     }
 
-    .feedback-small {
+    .donate-button-small {
         font-size: 16px;
     }
 
@@ -814,4 +807,12 @@ button a {
 
 .fc-timeGridDay-view {
     height: 500px;
+}
+
+
+
+.contact-time {
+    position: absolute;
+    top: 0px;
+    left: -9001px;
 }

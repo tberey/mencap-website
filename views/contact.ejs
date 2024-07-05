@@ -4,7 +4,7 @@
 
         <div class="container-1">
             <div class="col-1 image-center">
-                <h1 class="text-center" style="font-size: 54px;">Contact Us<br>&#128483;</h1>
+                <h1 class="text-center" style="font-size: 56px;">Contact Us<br>&#128483;</h1>
             </div>
         </div>
 
@@ -17,11 +17,9 @@
             </div>
         </div>
 
-        <br><br><br>
-
         <div class="container-1">
             <div class="col-1 item-center">
-                <form class="contact-form" action="/contact" method="post">
+                <form class="contact-form" id="contactForm" action="/contact" method="post">
                     <h2>Contact Form &#9998;</h2>
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
@@ -29,6 +27,14 @@
                     <input type="email" id="email" name="email" required>
                     <label for="message">Message:</label>
                     <textarea id="message" name="message" style="height: 220px;" required></textarea>
+                    <label for="contactTime" class="contact-time">Contact Time:</label>
+                    <input type="text" class="contact-time" name="contactTime" id="contactTime" value="">
+                    <label for="contactTime" class="contact-time">Important:</label>
+                    <input type="text" class="contact-time" name="important" id="important" value="<%= honeyValue %>">
+                    <input type="hidden" id="formLoadTime" name="formLoadTime">
+                    <input type="hidden" id="formSubmitTime" name="formSubmitTime">
+                    <br><br>
+                    <div class="g-recaptcha" data-sitekey="6Lf6KQkqAAAAAHzYgz4ft5CabozWW2ePFhg_sUt9"></div>
                     <br><br>
                     <input type="submit" value="Submit" style="background-color: #b10153;">
                 </form>

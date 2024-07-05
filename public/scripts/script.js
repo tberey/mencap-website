@@ -1,3 +1,18 @@
+//Global Bariables
+var isStickyMenuVisible = true;
+const hideButton = document.querySelector('.hide-sticky-menu-button');
+
+
+
+// Hide sticky menu.
+function hideStickyMenu() {
+    isStickyMenuVisible = !isStickyMenuVisible
+    stickyContent.classList.remove('sticky');
+    hideButton.style.display = 'none';
+}
+
+
+
 // Burger Menu Toggle.
 function toggleMenu() {
     var menu = document.getElementById('menu');
@@ -15,7 +30,13 @@ const delayPixels = 250;
 let stickyOffset;
 
 if (screenWidth < 900) {
-    stickyContent.classList.add('sticky');
+    if (isStickyMenuVisible) {
+        stickyContent.classList.add('sticky');
+        hideButton.style.display = 'block';
+    } else {
+        stickyContent.classList.remove('sticky');
+        hideButton.style.display = 'none';
+    }
 }
 
 function updateStickyOffset() {
@@ -33,10 +54,17 @@ function handleScroll() {
     const isElementOffScreen = !isElementInViewport(triggerElement);
 
     if (isElementOffScreen && scrolledPastTrigger) {
-        stickyContent.classList.add('sticky');
+        if (isStickyMenuVisible) {
+            stickyContent.classList.add('sticky');
+            hideButton.style.display = 'block';
+        } else {
+            stickyContent.classList.remove('sticky');
+            hideButton.style.display = 'none';
+        }
     } else {
         if (screenWidth > 900) {
             stickyContent.classList.remove('sticky');
+            hideButton.style.display = 'none';
         }
     }
 }
@@ -369,4 +397,40 @@ function confirmGalleryDelete(id, uuid, media) {
             console.error('Error:', error);
         });
     }
+}
+
+
+
+// Function to set form load time when DOM is loaded
+function setFormLoadTime() {
+    var formLoadTime = document.getElementById('formLoadTime');
+
+    if (formLoadTime) {
+        formLoadTime.value = new Date().getTime();
+    }
+}
+
+// Function to calculate time difference on form submission
+function calculateTimeDifference() {
+    var formLoadTime = document.getElementById('formLoadTime');
+
+    if (formLoadTime) {
+        formLoadTime = formLoadTime.value;
+        const formSubmitTime = new Date().getTime();
+        const timeDifference = formSubmitTime - formLoadTime;
+        document.getElementById('formSubmitTime').value = timeDifference;
+    }
+}
+
+// Event listener for DOMContentLoaded to set form load time
+document.addEventListener('DOMContentLoaded', function() {
+    setFormLoadTime();
+});
+
+// Event listener for form submission to calculate time difference
+timingContactForm = document.getElementById('contactForm')
+if (timingContactForm) {
+    timingContactForm.addEventListener('submit', function(event) {
+        calculateTimeDifference();
+    });
 }

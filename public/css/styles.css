@@ -1,7 +1,12 @@
 /* (#ff01a5, Mencap Pink), (#FF01A5, Pink), (#D31160, Rose), (#970361, Maroon), (#7f2855, Dark Pink/Maroon), (#b10153, Reddish), (#e07494, Pale Light Pink) */
+/*#ff01a694;*/
+/*#b10153;*/
+/*#ff01a66e;*/
+/*#ff01a675;*/
+
+
 
 /* ---- Custom Font Settings ---- */
-
 
 @font-face {
     font-family: 'mencap-font';
@@ -60,6 +65,7 @@
 }*/
 
 
+
 /* ---- Page CSS Settings ---- */
 
 html, body {
@@ -71,15 +77,37 @@ html, body {
     top: 0;
     color: white;
     font-family: 'mencap-font', sans-serif;
-    background-color: #4F006F;/*#f878ba;*/
-    /* background: linear-gradient(#d843a1, #5a0c3d, #d843a1); /* background: linear-gradient(#ff05a8, #8a0358); background-image: linear-gradient(#FF01A5 6%, #970361); */
-    /*background-size: 100% 260%;*/
+    background-color: #4F006F;
 }
+
+
+button {
+    width: 80px;
+    padding: 15px 0;
+    margin-bottom: 6px;
+    border-radius: 50%;
+    background-color: #d31160;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: large;
+    display: block;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+
+button:hover {
+    background-color: #ff01a5;
+}
+
 
 a {
     color: white;
     text-decoration: none;
 }
+
+
 
 .js-banner {
     display: block;
@@ -94,9 +122,30 @@ a {
     pointer-events: none;
     font-weight: bolder;
     font-size: 20px;
-    z-index: 99;
+    z-index: 51;
     overflow: auto;
 }
+
+
+
+.footer {
+    position: fixed;
+    padding-top: 9px;
+    padding-bottom: 3px;
+    padding-left: 4px;
+    bottom: 0;
+    width: 100%;
+    height: fit-content;
+    background: #970361;
+    z-index: 3;
+    font-size: 15px;
+}
+
+.footer-logout-button {
+    display: inline-block;
+}
+
+
 
 .container-banner {
     display: grid;
@@ -112,7 +161,7 @@ a {
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr;
-    padding-left: 57px;
+    padding-left: 36px;
 }
 
 .container-2 {
@@ -121,7 +170,7 @@ a {
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr;
-    padding-left: 57px;
+    padding-left: 36px;
 }
 
 .container-3 {
@@ -130,7 +179,7 @@ a {
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr 1fr;
-    padding-left: 57px;
+    padding-left: 36px;
 }
 
 .container-4 {
@@ -139,7 +188,7 @@ a {
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    padding-left: 57px;
+    padding-left: 36px;
 }
 
 .container-5 {
@@ -148,7 +197,7 @@ a {
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    padding-left: 57px;
+    padding-left: 36px;
 }
 
 .col-1 {
@@ -170,6 +219,8 @@ a {
 .col-5 {
     grid-column-start: 5;
 }
+
+
 
 .item-left {
     display: flex;
@@ -210,6 +261,20 @@ a {
 .text-center {
     text-align: center;
 }
+
+.container-auto-hide {
+    display: grid;
+}
+
+.item-auto-hide {
+    display: block;
+}
+
+.item-auto-show {
+    display: none;
+}
+
+
 
 .image-viewer {
     position: relative;
@@ -265,100 +330,109 @@ a {
     background-image: url('../assets/images/banner-auto-scroller/member-gardening-shed.jpeg');
 }
 
+
 .menu {
     position: fixed;
     left: 0;
     top: 0;
     height: 100%;
-    width: 110px;
-    background-color: #970361;/*#ff01a694;*/
+    width: 120px;
+    background-color: #970361;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 20px;
+    padding-top: 18px;
     overflow: auto;
-    z-index: 2;
+    z-index: 5;
 }
 
-button {
-    width: 80px;
-    padding: 16px 0;
-    margin-bottom: 6px;
+.menu-link-button {
+    width: 76%;
+    padding: 18px 0;
+    margin-bottom: 8px;
     border-radius: 50%;
-    background-color: #D31160;/*#b10153;*/
+    background-color: #d31160;
     border: none;
     color: white;
     text-align: center;
     text-decoration: none;
-    font-size: large;
+    font-size: 21px;
     display: block;
     cursor: pointer;
     transition: background-color 0.6s;
 }
 
-button:hover {
+.menu a:hover {
     background-color: #ff01a5;
-}
-
-button a {
-    color: white;
-    text-decoration: none;
+    border-radius: 50%;
+    transition: background-color 0.6s;
 }
 
 .home-link-text {
-    padding-bottom: 10px;
+    padding-bottom: 12px;
+    font-size: 19px;
 }
+
 
 .sticky-content {
     position: relative;
-    z-index: 200;
+    font-size: 23px;
+    z-index: 1;
 }
 
 .sticky-content.sticky {
     position: fixed;
     top: 0;
     right: 0;
-    background-color: #97036194;/*#ff01a66e;*/
+    background-color: #97036196;
     padding: 0px;
-    width: 310px;
-    font-size: 17px;
+    width: 298px;
+    font-size: 18px;
     border-radius: 0px 0px 0px 20px;
+    z-index: 9;
 }
 
 .hide-sticky-menu-button {
+    height: 27px;
+    width: 27px;
     display: none;
     position: absolute;
-    bottom: -6px;
-    left: -6px;
+    bottom: -7px;
+    left: -7px;
     cursor: pointer;
+    border-radius: 50%;
+    border: 5px solid rgba(0, 0, 0, 0);
+    transition: border 0.4s;
 }
 
-.footer {
-    position: fixed;
-    padding-left: 10px;
-    padding-top: 15px;
-    bottom: 0;
-    width: 100%;
-    height: 80px;
-    background: #970361;/*#ff01a694;*/
-    z-index: 1;
-    font-size: 14px;
+.hide-sticky-menu-button:hover {
+    border: 5px solid red;
 }
 
-.mencap-index-logo {
-    width: 98%;
-    height: auto;
-    min-width: 340px;
+.socials-image-padding {
+    height: 50px;
+    width: 50px;
 }
 
 .contact-icons {
-    height: 40px;
-    width: 50px;
-    padding-top: 16px;
+    height: 30px;
+    width: 35px;
+    margin-top: 22px;
 }
 
-.socials-icons {
-    display: block;
+.donate-button-small {
+    border: 2px solid white;
+    width: fit-content;
+    border-radius: 20px;
+    padding: 6px;
+    padding-top: 9px;
+    background-color: #970361;
+    font-size: 20px;
+    transition: background-color 0.3s;
+}
+
+.donate-button-small:hover {
+    background-color: #ff01a5;
 }
 
 .remove-list-indent {
@@ -367,10 +441,13 @@ button a {
     margin-left: 12px;
 }
 
-.image-padding {
-    height: 49px;
-    width: 49px;
+
+.mencap-index-logo {
+    width: 98%;
+    height: auto;
+    min-width: 338px;
 }
+
 
 .custom-submit-button {
     background-color: transparent;
@@ -379,22 +456,6 @@ button a {
     font-size: 14px;
     cursor: pointer;
     text-decoration: underline;
-}
-
-.logout-button-footer {
-    display: inline-block;
-}
-
-.container-auto-hide {
-    display: grid;
-}
-
-.item-auto-hide {
-    display: block;
-}
-
-.item-auto-show {
-    display: none;
 }
 
 .clear-button {
@@ -436,8 +497,6 @@ button a {
     cursor: pointer;
 }
 
-
-/* Full Image Viewer styling */
 .modal {
     display: none;
     position: fixed;
@@ -476,12 +535,8 @@ button a {
     cursor: pointer;
 }
 
-.donate-button-small {
-    font-size: 22px;
-}
-
 .contact-form {
-    background-color: #970361;/*#ff01a675;*/
+    background-color: #970361;
     width: 60%;
     padding: 20px;
     border-radius: 15px;
@@ -533,45 +588,49 @@ button a {
 }
 
 
+
 /* ---- Small Screen Mobile CSS Settings ---- */
 
-@media (max-width: 1159px) {
+@media (max-width: 1250px) {
     .image-viewer {
         display: none;
     }
 }
 
 
+
 @media (max-width: 899px) {
     .container-1 {
-        width: 99.8%;
+        width: 99.6%;
         padding-left: 0px;
     }
 
     .container-2 {
-        width: 99.8%;
+        width: 99.6%;
         padding-left: 0px;
     }
 
     .container-3 {
-        width: 99.8%;
+        width: 99.6%;
         padding-left: 0px;
     }
 
     .container-4 {
-        width: 99.8%;
+        width: 99.6%;
         padding-left: 0px;
     }
 
     .container-5 {
-        width: 99.8%;
+        width: 99.6%;
         padding-left: 0px;
     }
 
     .container-6 {
-        width: 99.8%;
+        width: 99.6%;
         padding-left: 0px;
     }
+
+
 
     .js-banner {
         right: 0px;
@@ -581,106 +640,101 @@ button a {
         font-size: 16px;
     }
 
+
+
+    .footer {
+        font-size: 13px;
+    }
+
+
+
     .burger-menu {
         position: fixed;
         top: 10px;
-        left: 10px;
-        background-color: #b10153;
+        left: 16px;
+        background-color: #970361;
         padding: 10px;
         display: flex;
         align-items: center;
-        border-radius: 25px;
-        transform: scale(0.8);
-        z-index: 200;
+        border-radius: 36%;
+        z-index: 7;
         cursor: pointer;
     }
 
     .burger-icon {
-        width: 60px;
-        height: 60px;
+        width: 65px;
+        height: 65px;
+        font-size: 40px;
         display: flex;
-        align-items: center;
         justify-content: center;
-        font-size: 50px;
+        align-items: center;
+        color: white;
+        z-index: 13;
     }
 
     .burger-icon::before {
-        content: '\2630';
+        content: '\2630'; /* Hamburger menu icon */
     }
 
+    .burger-icon.active::before {
+        content: '\2716'; /* Toggle to another icon when clicked */
+    }
+
+    /* Full-screen overlay menu */
     .menu {
-        display: none;
-        position: absolute;
-        background-color: transparent;
-        width: 190px;
-        height: 660px;
-        top: 2px;
-        left: 60px;
-        border-radius: 15px;
-        padding-top: 0px;
-        overflow: auto;
-    }
-
-    button {
+        position: fixed;
+        left: 0;
+        top: 0;
         width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        font-size: 20px;
-        border-radius: 20px;
+        background-color: #4f006fcb; /* Semi-transparent black background */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 25px;
+        overflow: auto;
+        opacity: 0; /* Hidden initially */
+        visibility: hidden; /* Hidden initially */
+        transition: visibility 0s, opacity 0.7s ease; /* Smooth fade-in */
+        z-index: 11;
     }
 
-    .menu button {
-        border: 2mm solid #ff01a5;
-        margin: 10px 0;
-        padding: 20px 0;
+    .menu.active {
+        opacity: 1;
+        visibility: visible;
+        cursor: default;
     }
 
-    .menu button a {
+    /* Links styled as buttons */
+    .menu a {
         color: white;
+        background-color: #d31160;
+        padding: 20px 40px;
+        margin: 10px 0;
         text-decoration: none;
+        font-size: 24px;
+        border-radius: 30px;
+        display: inline-block;
+        transition: background-color 0.4s;
     }
 
-    .home-link-text {
-        padding-bottom: 5px;
-        padding-left: 55px;
-        font-size: 0px;
+    .menu a:hover {
+        background-color: #ff01a5;
     }
 
-    .burger-menu.active .menu {
-        display: block;
-    }
 
     .sticky-content {
-        font-size: 18px;
-        z-index: 200;
         display: none;
     }
 
     .sticky-content.sticky {
-        font-size: 14px !important;
-        width: 225px !important;
         display: none;
     }
 
-    .footer {
-        position: fixed;
-        padding-left: 10px;
-        padding-top: 10px;
-        font-size: 12px;
-    }
-
-    .mencap-index-logo {
-        height: auto;
-        width: 58%;
-    }
-
-    .socials-icons {
-        display: none;
-    }
-
-    .socials {
-        font-size: 0px;
-        padding-right: 40px;
+    .socials-image-padding {
+        padding-right: 26px;
+        height: 45px;
+        width: 45px;
     }
 
     .contact-icons {
@@ -689,17 +743,26 @@ button a {
         padding-top: 10px;
     }
 
+    .contact-small-screen {
+        font-size: 24px;
+    }
+
+    .donate-button-small {
+        font-size: 20px;
+    }
+
     .remove-list-indent {
         list-style-type: none;
         padding-left: 8px;
         margin-left: 8px;
     }
 
-    .image-padding {
-        padding-right: 25px;
-        height: 40px;
-        width: 40px;
+
+    .mencap-index-logo {
+        height: auto;
+        width: 58%;
     }
+
 
     .custom-submit-button {
         font-size: 12px;
@@ -714,10 +777,6 @@ button a {
         margin-left: 10px;
         margin-right: 5px;
         margin-bottom: 10px;
-    }
-
-    .donate-button-small {
-        font-size: 16px;
     }
 
     .contact-form {
@@ -751,16 +810,13 @@ button a {
 }
 
 
-@media (max-width: 569px) {
 
-    .footer-donate {
-        display: none;
-    }
-
+@media (max-width: 565px) {
     .w3w-text {
         display: none;
     }
 }
+
 
 
 /* ---- Calendar UI Extension CSS Settings ---- */

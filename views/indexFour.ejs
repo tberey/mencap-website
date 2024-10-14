@@ -376,7 +376,7 @@
                 margin-left: 12px;
             }
 
-            .image-padding {
+            .socials-image-padding {
                 height: 49px;
                 width: 49px;
             }
@@ -390,7 +390,7 @@
                 text-decoration: underline;
             }
 
-            .logout-button-footer {
+            .footer-logout-button {
                 display: inline-block;
             }
 
@@ -710,7 +710,7 @@
                     margin-left: 8px;
                 }
 
-                .image-padding {
+                .socials-image-padding {
                     padding-right: 25px;
                     height: 40px;
                     width: 40px;
@@ -862,22 +862,22 @@
                         <ul class="remove-list-indent">
                             <li style="display: inline-block;">
                                 <a href="https://www.facebook.com/mencapliverpool/" target="_blank">
-                                    <img class="image-padding" src="assets/images/facebook-icon.png" alt="Facebook">
+                                    <img class="socials-image-padding" src="assets/images/facebook-icon.png" alt="Facebook">
                                 </a>
                             </li>
                             <li style="display: inline-block;">
                                 <a href="https://www.tiktok.com/@mencap_liverpool_sefton" target="_blank">
-                                    <img class="image-padding" src="assets/images/tiktok-icon.png" alt="TikTok">
+                                    <img class="socials-image-padding" src="assets/images/tiktok-icon.png" alt="TikTok">
                                 </a>
                             </li>
                             <li style="display: inline-block;">
                                 <a href="https://www.instagram.com/mencapliverpool/" target="_blank">
-                                    <img class="image-padding" src="assets/images/instagram-icon.png" alt="Instagram">
+                                    <img class="socials-image-padding" src="assets/images/instagram-icon.png" alt="Instagram">
                                 </a>
                             </li>
                             <li style="display: inline-block;">
                                 <a href="https://www.facebook.com/mencapliverpool/" target="_blank">
-                                    <img class="image-padding" src="assets/images/twitter-icon.png" alt="Facebook">
+                                    <img class="socials-image-padding" src="assets/images/twitter-icon.png" alt="Facebook">
                                 </a>
                             </li>
                             <li>
@@ -1028,7 +1028,7 @@
                     <div class="col-3" style="padding-right: 15px;">
                         <nav>
                             <% if (loggedIn) { %>
-                                Hi <%= username %>, <form action="/logout" method="POST" class="logout-button-footer"><input type="submit" value="Logout?" class="custom-submit-button"></button></form>
+                                Hi <%= username %>, <form action="/logout" method="POST" class="footer-logout-button"><input type="submit" value="Logout?" class="custom-submit-button"></button></form>
                                 <br>
                             <% } else { %>
                                 <a href="/login" style="text-decoration: underline;">Login</a><br>

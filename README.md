@@ -122,8 +122,8 @@ For help or guidance in downloading and running the application, see the followi
 ## Usage
 
 | Endpoint                          | Action/Desc.                                   | Full URI `<i>`(hosted locally, for some port; e.g.: 3000, which is default for this template)`</i>` |
-| :-------------------------------- | :--------------------------------------------- | :------------------------------------------------------------------------------------------------------ |
-| `<ul><li>`GET "/"`</li></ul>` | Homepage:`<br>`The client-side landing page. | `<ul><li>`"`http://localhost:3000/`"`</li></ul>`                                                  |
+| :-------------------------------- | :--------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
+| `<ul><li>`GET "/"`</li></ul>` | Homepage:`<br>`The client-side landing page. | `<ul><li>`"`http://localhost:3000/`"`</li></ul>` |
 
 <br>
 
@@ -222,9 +222,9 @@ The following steps are complete instruction to create this template, but withou
 Below is the refined and confirmed roadmap, that has been planned for completion. See [open issues][issues-url] and also the [project board][project-url], for any other proposed features or known issues, which may not be listed below.
 
 | Feature/Task/Bugfix       | Details                           | Version `<i>`(if released)`</i>` | Notes                     |
-| :------------------------ | :-------------------------------- | :----------------------------------- | :------------------------ |
-| `<i>`Bug#1 `</i>`     | `<i>`Bug details...`</i>`     | `<i>`0.0.1 `</i>`                | `<i>`example#1 `</i>` |
-| `<i>`Feature#4 `</i>` | `<i>`Feature details...`</i>` |                                      | `<i>`example#2 `</i>` |
+| :------------------------ | :-------------------------------- | :------------------------------- | :------------------------ |
+| `<i>`Bug#1`</i>` | `<i>`Bug details...`</i>` | `<i>`0.0.1`</i>` | `<i>`example#1`</i>` |
+| `<i>`Feature#4`</i>` | `<i>`Feature details...`</i>` | `<i>`0.1.2`</i>` | `<i>`example#2`</i>` |
 
 <br><hr><br>
 
@@ -238,7 +238,8 @@ Below is the refined and confirmed roadmap, that has been planned for completion
 | 1.0.1 | 2024-04-10 | `<ul><li>`Minor updates to site wording, sticky menu background colour, and a link.`</li><li>`Add staff help page.`</li><li>`Update Dependencies.`</li><li>`Update README.md`</li><ul>` |
 | 1.0.2 | 2024-04-11 | `<ul><li>`Mobile formatting and bug fixes.`</li><li>`Add email obfuscation for public repo exposure`</li><li>`Adds new slim social media widgets bar to header`</li><li>`Update README.md`</li><ul>` |
 | 1.0.3 | 2024-05-01 | `<ul><li>`Adjust page formatting and layout bug fixes.`</li><li>`Adds hide button to the sticky menu.`</li><li>`General minor improvements or tidy up, based on feedback.`</li><li>`Update README.md`</li><ul>` |
-| 1.0.4 | 2024-04-04 | `<ul><li>`Adds spam protections to contact us form.`</li><li>`Adds bad word protections to contact us form.`</li><li>`Adds reCaptcha to contact us form.`</li><li>`General dependency and code updates.`</li><li>`Update README.md `</li></ul>` |
+| 1.0.4 | 2024-04-04 | `<ul><li>`Adds spam protections to contact us form.`</li><li>`Adds bad word protections to contact us form.`</li><li>`Adds reCaptcha to contact us form.`</li><li>`General dependency and code updates.`</li><li>`Update README.md`</li></ul>` |
+| 1.0.5 | 2024-10-14 | `<ul><li>`Updates mobile menu to a new look and design.`</li><li>`Generallayout and front end tidy and code updates.`</li><li>`Minor API updates`</li><li>`Dependency and Security updates.`</li><li>`Update README.md`</li></ul>` |
 
 <br><hr><br>
 

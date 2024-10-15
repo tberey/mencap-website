@@ -44,7 +44,7 @@ export class Server extends ServerSetup {
 
 
     private getRequests(): void {
-        this.router.get('/', async (req:Request, res:Response) => {
+        this.router.get('/', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /');
 
             let articles: queryArticlesRead[] | null | undefined;
@@ -68,7 +68,7 @@ export class Server extends ServerSetup {
                     articles: articles, mediaUrl: articlesMediaUrl
                 });
 
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -79,7 +79,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.get('/login', (req:Request, res:Response) => {
+        this.router.get('/login', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /login');
 
             if (req.session.loggedin) return res.status(302).redirect('/');
@@ -87,17 +87,17 @@ export class Server extends ServerSetup {
             res.status(200);
             res.render('login.ejs');
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/account', async (req:Request, res:Response) => {
+        this.router.get('/account', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /account');
 
             if (!req.session.loggedin || !req.session.sid || !(await this.db.checkData(req.session.sid.toString(), 'sid'))) return res.status(401).redirect('/login');
@@ -110,49 +110,49 @@ export class Server extends ServerSetup {
                 membership: await this.db.getData('membership','sid', req.session.sid)
             });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/about', (req:Request, res:Response) => {
+        this.router.get('/about', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /about');
 
             res.status(200);
             res.render('about.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/find', (req:Request, res:Response) => {
+        this.router.get('/find', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /find');
 
             res.status(200);
             res.render('find.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/events', async (req:Request, res:Response) => {
+        this.router.get('/events', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /events');
 
             let events: queryEventsRead[] | null = null;
@@ -196,7 +196,7 @@ export class Server extends ServerSetup {
                     calendarEvents: JSON.stringify(parsedEvents), events: events
                 });
 
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -207,7 +207,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.get('/gallery', async (req:Request, res:Response) => {
+        this.router.get('/gallery', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /gallery');
 
             let gallery: queryGalleryRead[] | null | undefined;
@@ -239,7 +239,7 @@ export class Server extends ServerSetup {
                     mediaUrl: mediaUrl, gallery: gallery, months: months, years: years
                 });
 
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -250,71 +250,71 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.get('/involve', (req:Request, res:Response) => {
+        this.router.get('/involve', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /involve');
 
             res.status(200);
             res.render('involve.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/cafe', (req:Request, res:Response) => {
+        this.router.get('/cafe', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /cafe');
 
             res.status(200);
             res.render('cafe.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/contact', (req:Request, res:Response) => {
+        this.router.get('/contact', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /contact');
 
             res.status(200);
             res.render('contact.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : '', honeyValue: process.env['HONEY_PUBLIC_VALUE']  });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/donate', (req:Request, res:Response) => {
+        this.router.get('/donate', async (req:Request, res:Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /donate');
 
             res.status(200);
             res.render('donate.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
 
-        this.router.get('/help', async (req:Request, res:Response) => {
+        this.router.get('/help', async (req:Request, res:Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /help');
 
             if (!req.session.loggedin || !req.session.sid || !(await this.db.checkData(req.session.sid.toString(), 'sid'))) return res.status(401).redirect('/login');
@@ -325,23 +325,7 @@ export class Server extends ServerSetup {
                 username: req.session.username
             });
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
-            );
-        });
-
-        this.router.get('/outreach', (req: Request, res: Response) => {
-            this.txtLogger.writeToLogFile('Request Made: GET /outreach');
-        
-            // Redirect to the Google forms Members Referral form.
-            res.redirect("https://docs.google.com/forms/d/e/1FAIpQLSeoPm-4CKMJ1BmsjcGd_cZvz7pWlb7E_w1MBirYyvhmQGMj6w/viewform?usp=sf_link");
-
-            return this.txtLogger.writeToLogFile(
+            this.txtLogger.writeToLogFile(
                 `Request Completed:
                 GET: ${req.url},
                 Host: ${req.hostname},
@@ -351,26 +335,42 @@ export class Server extends ServerSetup {
             );
         });
 
-        this.router.get('/test', async (req:Request, res:Response) => {
+        this.router.get('/outreach', async (req: Request, res: Response): Promise<void> => {
+            this.txtLogger.writeToLogFile('Request Made: GET /outreach');
+        
+            // Redirect to the Google forms Members Referral form.
+            res.redirect("https://docs.google.com/forms/d/e/1FAIpQLSeoPm-4CKMJ1BmsjcGd_cZvz7pWlb7E_w1MBirYyvhmQGMj6w/viewform?usp=sf_link");
+
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
+            );
+        });
+
+        this.router.get('/test', async (req:Request, res:Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /test');
 
             res.status(200);
             res.redirect('/');
 
-            return this.txtLogger.writeToLogFile(
-            `Request Completed:
-            GET: ${req.url},
-            Host: ${req.hostname},
-            IP: ${req.ip},
-            Type: ${req.protocol?.toUpperCase()},
-            Status: ${res.statusCode}.`
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
             );
         });
     }
 
 
     private postRequests(): void {
-        this.router.post('/login', async (req: Request, res: Response) => {
+        this.router.post('/login', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /login');
 
             let log: string = '';
@@ -388,7 +388,8 @@ export class Server extends ServerSetup {
                 if (!username.toString() || !password.toString()) {
                     log = 'Login failed. Enter your username and password.';
                     status = 400;
-                    return alertLog = true;
+                    alertLog = true;
+                    return;
                 }
 
                 const dbResponse: null | queryUsersRead = await this.db.login(username.toString(), password.toString());
@@ -398,17 +399,18 @@ export class Server extends ServerSetup {
                     req.session.username = dbResponse.username;
                     req.session.uid = dbResponse.uid;
                     req.session.sid = dbResponse.sid;
-                    return status = 200;
+                    status = 200;
+                    return;
                 }
 
                 log = 'Login failed. Incorrect username or password.';
                 status = 401;
-                return alertLog = true;
+                alertLog = true;
 
             } catch (err) {
                 log = `An error occurred during login: ${err}`;
                 status = 500;
-                return alertLog = true;
+                alertLog = true;
 
             } finally {
                 res.status(status);
@@ -417,7 +419,8 @@ export class Server extends ServerSetup {
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -428,7 +431,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/logout', async (req:Request, res:Response) => {
+        this.router.post('/logout', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /logout');
 
             req.session.loggedin = false;
@@ -439,7 +442,7 @@ export class Server extends ServerSetup {
             res.status(200);
             res.redirect('/');
 
-            return this.txtLogger.writeToLogFile(
+            this.txtLogger.writeToLogFile(
                 `Request Completed:
                 GET: ${req.url},
                 Host: ${req.hostname},
@@ -449,7 +452,7 @@ export class Server extends ServerSetup {
             );
         });
 
-        this.router.post('/reset', async (req: Request, res: Response) => {
+        this.router.post('/reset', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /reset');
 
             let log: string = '';
@@ -467,7 +470,8 @@ export class Server extends ServerSetup {
                     this.txtLogger.writeToLogFile('Failed to reset account. Session limit reached.');
                     log = "Maximum account reset attempts. Please check you inbox, including junk or spam mail, for an account reset email. If not, check your email address is correct.";
                     alertLog = true;
-                    return status = 429;
+                    status = 429;
+                    return;
                 }
 
                 const { email } = req.body;
@@ -475,7 +479,8 @@ export class Server extends ServerSetup {
                 if (!email.toString()) {
                     log = 'Account recovery failed. Enter your email.';
                     status = 400;
-                    return alertLog = true;
+                    alertLog = true;
+                    return;
                 }
 
                 req.session.resetPosts++;
@@ -509,20 +514,22 @@ export class Server extends ServerSetup {
                                 }
                             });
 
-                            return status = 200;
+                            status = 200;
+                            return;
                         }
                     }
 
                     log = 'Account recovery failed. Database failed to update or get data.';
-                    return status = 500;
+                    status = 500;
+                    return;
                 }
 
                 log = 'Account recovery failed. Incorrect email address.';
-                return status = 200; // Send positive response so not to indicate it could be an incorrect credential.
-                
+                status = 200; // Send positive response so not to indicate it could be an incorrect credential.
+
             } catch (err) {
                 log = `An error occurred during account recovery: ${err}`;
-                return status = 200; // Send positive response so not to indicate it could be an incorrect credential.
+                status = 200; // Send positive response so not to indicate it could be an incorrect credential.
 
             } finally {
                 res.status(status);
@@ -531,7 +538,7 @@ export class Server extends ServerSetup {
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -542,7 +549,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/account', async (req: Request, res: Response) => {
+        this.router.post('/account', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /account');
 
             if (!(await this.isValidUserSession(req))) return res.status(401).redirect('/login');
@@ -557,8 +564,8 @@ export class Server extends ServerSetup {
                 if (!newUsername.toString() && !newPassword.toString() && !newEmail.toString()) {
                     log = 'Account update failed. Enter either a new username, password or email.';
                     status = 400;
-                    return alertLog = true;
-
+                    alertLog = true;
+                    return;
                 }
 
                 if (req.session.sid) {
@@ -588,19 +595,21 @@ export class Server extends ServerSetup {
                             }
                         });
 
-                        return status = 200;
+                        status = 200;
+                        return;
                     }
 
                     log = 'Account update failed. Failed to update the user account.';
-                    return status = 400;
+                    status = 400;
+                    return;
                 }
 
                 log = 'Account update failed. Missing cache session data.';
-                return status = 401;
+                status = 401;
 
             } catch (err) {
                 log = `An error occurred during account recovery: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
@@ -609,7 +618,7 @@ export class Server extends ServerSetup {
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -620,7 +629,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/article', async (req: Request, res: Response) => {
+        this.router.post('/article', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /article');
 
             if (!(await this.isValidUserSession(req))) return res.status(401).redirect('/login');
@@ -674,14 +683,13 @@ export class Server extends ServerSetup {
 
                         log = 'Posting Article Failed. Something went wrong, contact the site admin for support.';
                         status = 500;
-
-                        return reject();
+                        reject();
                     });
                 });
 
             } catch (err) {
                 log = `An error occurred during article posting: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
@@ -690,7 +698,7 @@ export class Server extends ServerSetup {
                 else res.send(`<script>alert("${log}"); window.location.href = '/';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -701,7 +709,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/article-delete', async (req: Request, res: Response) => {
+        this.router.post('/article-delete', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /article-delete');
 
             if (!(await this.isValidUserSession(req))) return res.status(401).redirect('/login');
@@ -715,7 +723,8 @@ export class Server extends ServerSetup {
 
                 if (!uid || !articleId.toString() || !userUid.toString() || (uid != userUid.toString()) || !(await this.db.checkData(userUid.toString(), 'uid'))) {
                     log = 'Deleting Article Failed. Please make sure you are logged in, and deleting your own article.';
-                    return status = 400;
+                    status = 400;
+                    return;
                 }
 
                 const dbResponse: boolean = await this.db.deleteArticle(articleId.toString(), uid);
@@ -726,15 +735,16 @@ export class Server extends ServerSetup {
                     });
 
                     log = 'Successfully Deleted Article. Your article will be removed from the home page.';
-                    return status = 200;
+                    status = 200;
+                    return;
                 }
 
                 log = 'Deleting Article Failed. Something went wrong, contact the site admin for support.';
-                return status = 500;
+                status = 500;
 
             } catch (err) {
                 log = `An error occurred during article deleting: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
@@ -743,7 +753,7 @@ export class Server extends ServerSetup {
                 else res.json({ log: log, redirect: '/' });
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -754,7 +764,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/event', async (req: Request, res: Response) => {
+        this.router.post('/event', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /event');
 
             if (!(await this.isValidUserSession(req))) return res.status(401).redirect('/login');
@@ -788,27 +798,31 @@ export class Server extends ServerSetup {
 
                 if (!title.toString() || !startDate.toString() || !startTime.toString() || !startDateTime || !endDate.toString() || !endTime.toString() || !endDateTime || !author || !uid) {
                     log = 'Create Event Failed. Please make sure that you are logged in, and have also provided at least a title, date and duration for your event.';
-                    return status = 400;
+                    status = 400;
+                    return;
                 }
 
                 const dbResponse: boolean = await this.db.createEvent(title.toString(), startDateTime, endDateTime, recurring, allDay, author, uid);
 
                 log = 'Successfully Created a New Event. Your event will be added to the Calendar.';
-                if (dbResponse) return status = 200;
+                if (dbResponse) {
+                    status = 200;
+                    return;
+                }
 
                 log = 'Creating Event Failed. Something went wrong, contact the site admin for support.';
-                return status = 500;
+                status = 500;
 
             } catch (err) {
                 log = `An error occurred during event creating: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
                 res.send(`<script>alert("${log}"); window.location.href = '/events';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -819,7 +833,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/event-delete', async (req: Request, res: Response) => {
+        this.router.post('/event-delete', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /event-delete');
 
             if (!(await this.isValidUserSession(req))) return res.status(401).redirect('/login');
@@ -833,22 +847,24 @@ export class Server extends ServerSetup {
 
                 if (!uid || !eventId.toString() || !userUid.toString() || (uid != userUid.toString()) || !(await this.db.checkData(userUid.toString(), 'uid'))) {
                     log = 'Deleting Event Failed. Please make sure you are logged in, and deleting your own event.';
-                    return status = 400;
+                    status = 400;
+                    return;
                 }
 
                 const dbResponse: boolean = await this.db.deleteEvent(eventId.toString(), uid);
 
                 if (dbResponse) {
                     log = 'Successfully Deleted Event. Your event will be removed from the calendar.';
-                    return status = 200;
+                    status = 200;
+                    return;
                 }
 
                 log = 'Deleting Event Failed. Something went wrong, contact the site admin for support.';
-                return status = 500;
+                status = 500;
 
             } catch (err) {
                 log = `An error occurred during event deleting: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
@@ -857,7 +873,7 @@ export class Server extends ServerSetup {
                 else res.json({ log: log, redirect: '/events' });
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -868,7 +884,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/gallery', async (req: Request, res: Response) => {
+        this.router.post('/gallery', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /gallery');
 
             if (!(await this.isValidUserSession(req))) return res.status(401).redirect('/login');
@@ -878,7 +894,7 @@ export class Server extends ServerSetup {
 
             try {
                 const form: Formidable = formidable({  allowEmptyFiles: true, minFileSize: 0  });
-                await new Promise<void>((resolve, reject) => {
+                await new Promise<void>((resolve, reject): void => {
                     form.parse(req, async (err, fields, files) => {
                         if (err) {
                             reject(err);
@@ -911,20 +927,20 @@ export class Server extends ServerSetup {
                         log = 'Uploading Media Failed. Something went wrong, contact the site admin for support.';
                         status = 500;
 
-                        return reject();
+                        reject();
                     });
                 });
 
             } catch (err) {
                 log = `An error occurred during media uploading: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
                 res.send(`<script>alert("${log}"); window.location.href = '/gallery';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -935,7 +951,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/gallery-delete', async (req: Request, res: Response) => {
+        this.router.post('/gallery-delete', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /gallery-delete');
 
             if (!(await this.isValidUserSession(req))) return res.status(401).redirect('/login');
@@ -949,7 +965,8 @@ export class Server extends ServerSetup {
 
                 if (!uid || !galleryId.toString() || !files || !userUid.toString() || (uid != userUid.toString()) || !(await this.db.checkData(userUid.toString(), 'uid'))) {
                     log = 'Deleting Gallery Media Failed. Please make sure you are logged in, and deleting your own media.';
-                    return status = 400;
+                    status = 400;
+                    return;
                 }
 
                 const dbResponse: boolean = await this.db.deleteGalleryMedia(galleryId.toString(), uid);
@@ -960,15 +977,16 @@ export class Server extends ServerSetup {
                     });
 
                     log = 'Successfully Deleted Media. Your image will be removed from the Gallery.';
-                    return status = 200;
+                    status = 200;
+                    return;
                 }
 
                 log = 'Deleting Media Failed. Something went wrong, contact the site admin for support.';
-                return status = 500;
+                status = 500;
 
             } catch (err) {
                 log = `An error occurred during media deleting: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
@@ -977,7 +995,7 @@ export class Server extends ServerSetup {
                 else res.json({ log: log, redirect: '/gallery' });
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},
@@ -988,7 +1006,7 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.post('/contact', async (req: Request, res: Response) => {
+        this.router.post('/contact', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /contact');
 
             let status: number = 418;
@@ -1001,7 +1019,8 @@ export class Server extends ServerSetup {
                     this.txtLogger.writeToLogFile('Failed to send message. Session limit reached.');
                     log = "Maximum messages sent in to us. You can't send too many messages in a short space of time, to allow us the time to respond and not get overwhelmed.";
                     alertLog = true;
-                    return status = 429;
+                    status = 429;
+                    return;
                 }
 
                 const { name, email, message, contactTime, important, formLoadTime, 'g-recaptcha-response': recaptchaResponse } = req.body;
@@ -1009,13 +1028,15 @@ export class Server extends ServerSetup {
                 if (contactTime || !important ||important != process.env['HONEY_PUBLIC_VALUE']) {
                     req.session.contactPosts++;
                     log = 'Did not send message. Hidden field has been completed.';
-                    return status = 200; // Don't tell malicious user it was a failed attempt.
+                    status = 200; // Don't tell malicious user it was a failed attempt.
+                    return;
                 }
 
                 if (!name || !email || !message || !formLoadTime || !recaptchaResponse) {
                     log = 'Failed to send message. Make sure you have completed all fields on the form.';
                     status = 400;
-                    return alertLog = true;
+                    alertLog = true;
+                    return;
                 }
 
                 const isValidEmail = await this.validateEmail(email);
@@ -1023,7 +1044,8 @@ export class Server extends ServerSetup {
                 if (!isValidEmail) {
                     log = 'Failed to send message. Make sure you have given a valid email address.';
                     status = 400;
-                    return alertLog = true;
+                    alertLog = true;
+                    return;
                 }
 
                 const isBadMessage = await this.containsBadWords([name, email, message], JSON.parse(process.env['BAD_WORDS']!));
@@ -1032,7 +1054,8 @@ export class Server extends ServerSetup {
                     req.session.contactPosts++;
                     log = 'Message Not Sent. We found some bad words when scanning your message.';
                     status = 400;
-                    return alertLog = true;
+                    alertLog = true;
+                    return;
                 }
 
                 const submissionThreshold = parseInt(process.env['SUBMISSION_THRESHOLD_TIME']!); // X seconds is at least required before form is submit successfully, which is set here.
@@ -1042,7 +1065,8 @@ export class Server extends ServerSetup {
                 if (timeDifference < submissionThreshold) {
                     req.session.contactPosts++;
                     log = 'Did not send message. Form submitted in less time than the threshold.';
-                    return status = 200; // Don't tell malicious user it was a failed attempt.
+                    status = 200; // Don't tell malicious user it was a failed attempt.
+                    return;
                 }
 
                 const recaptchaVerificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env['RECAPTCHA_SECRET_KEY']}&response=${recaptchaResponse}`;
@@ -1051,7 +1075,8 @@ export class Server extends ServerSetup {
                 if (!recaptchaServerResponse.data.success) {
                     req.session.contactPosts++;
                     log = 'Failed to send message. reCAPTCHA verification failed.';
-                    return status = 400;
+                    status = 400;
+                    return;
                 }
 
                 if (this.transporter) {
@@ -1078,6 +1103,7 @@ export class Server extends ServerSetup {
                         this.txtLogger.writeToLogFile(`Contact us email sent: ${info.response}`);
                         log = 'Message successfully sent.';
                         status = 200;
+
                     } catch (err) {
                         this.txtLogger.writeToLogFile(`Error sending account update email: ${err}`);
                         log = `Failed to send message. You can reach out to the site Admin here: ${process.env['EMAIL_ADDRESS']}`;
@@ -1087,7 +1113,7 @@ export class Server extends ServerSetup {
                 }
             } catch (err) {
                 log = `An error occurred during contact us request: ${err}`;
-                return status = 500;
+                status = 500;
 
             } finally {
                 res.status(status);
@@ -1096,7 +1122,7 @@ export class Server extends ServerSetup {
                 else res.send(`<script>alert("Message successfully sent."); window.location.href = '/';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
-                return this.txtLogger.writeToLogFile(
+                this.txtLogger.writeToLogFile(
                     `Request Completed:
                     POST: ${req.url},
                     Host: ${req.hostname},

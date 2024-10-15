@@ -13,27 +13,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <link rel="stylesheet" type="text/css" href="css/styles.css">
     </head>
 
 
+
     <body>
         <div class="js-banner" id="js-disabled-banner">
-            <p style="padding-left: 15px;">&#9888; JavaScript is disabled in your browser. Some features may not work.</p>
+            <p>&#9888; JavaScript is disabled in your browser. Some features may not work.</p>
         </div>
+
 
         <div class="container-banner">
             <div class="col-1">
-                <img src="assets/images/picture-banner.png" alt="Mencap Picure Collage Banner" style="width: 100%;">
+                <img class="banner" src="assets/images/picture-banner.png" alt="Mencap Picure Collage Banner">
             </div>
         </div>
 
-        <div class="container-3" style="padding-top: 1%; padding-bottom: 1%;">
-            <div class="col-1 image-center">
-                <a href="/"><img class="image-center mencap-index-logo mencap-logo-center-small-screen-hide" src="assets/images/MencapLogo-white-no-background.png" alt="Mencap Logo"></a>
+
+        <nav class="pad-below-s"></nav>
+
+
+        <div class="container-3">
+            <div class="col-1 image-center pad-right-s">
+                <a href="/"><img class="image-center mencap-index-logo item-auto-hide" src="assets/images/MencapLogo-white-no-background.png" alt="Mencap Logo"></a>
             </div>
 
-            <div class="col-2" style="margin-left: 3%;">
+            <div class="col-2">
                 <div class="image-viewer item-center">
                     <div class="image image-1 active"></div>
                     <div class="image image-2"></div>
@@ -46,34 +53,37 @@
             </div>
 
             <div class="col-3 image-left">
-                <div id="trigger-element" style="font-size: 21px;">
+                <div id="trigger-element">
                     <div id="sticky-content" class="sticky-content">
                         <ul class="remove-list-indent">
-                            <li style="display: inline-block;">
+                            <li class="socials-list">
                                 <a href="https://www.facebook.com/mencapliverpool/" target="_blank">
-                                    <img class="image-padding" src="assets/images/facebook-icon.png" alt="Facebook">
+                                    <img class="socials-image-padding" src="assets/images/facebook-icon.png" alt="Facebook">
                                 </a>
                             </li>
-                            <li style="display: inline-block;">
+                            &nbsp;&nbsp;
+                            <li class="socials-list">
                                 <a href="https://www.tiktok.com/@mencap_liverpool_sefton" target="_blank">
-                                    <img class="image-padding" src="assets/images/tiktok-icon.png" alt="TikTok">
+                                    <img class="socials-image-padding" src="assets/images/tiktok-icon.png" alt="TikTok">
                                 </a>
                             </li>
-                            <li style="display: inline-block;">
+                            &nbsp;&nbsp;
+                            <li class="socials-list">
                                 <a href="https://www.instagram.com/mencapliverpool/" target="_blank">
-                                    <img class="image-padding" src="assets/images/instagram-icon.png" alt="Instagram">
+                                    <img class="socials-image-padding" src="assets/images/instagram-icon.png" alt="Instagram">
                                 </a>
                             </li>
-                            <li style="display: inline-block;">
-                                <a href="https://www.facebook.com/mencapliverpool/" target="_blank">
-                                    <img class="image-padding" src="assets/images/twitter-icon.png" alt="Facebook">
+                            &nbsp;&nbsp;
+                            <li class="socials-list">
+                                <a href="https://twitter.com/mencapliverpool" target="_blank">
+                                    <img class="socials-image-padding" src="assets/images/twitter-icon.png" alt="Twitter">
                                 </a>
                             </li>
                             <li>
                                 <a href="tel:01517078582" target="_blank">
                                     <img class="contact-icons" src="assets/images/telephone-icon.png" alt="Phone">
                                     <br>
-                                    <span>&nbsp;0151&nbsp;&nbsp;707 8582</span>
+                                    <span>0151 707 8582</span>
                                 </a>
                             </li>
                             <li>
@@ -83,47 +93,87 @@
                                     <span>contact@mencapliverpool.org.uk</span>
                                 </a>
                             </li>
-                            <br><br>
-                            <li class="feedback-small" style="border: 2px solid white; width: fit-content; border-radius: 20px; padding: 6px; background-color: #970361;">
+                            <br>
+                            <li class="donate-button-small">
                                 <a href="/donate">&nbsp;&#128227;&nbsp;&nbsp;DONATE NOW!&nbsp;&nbsp;&#128227;&nbsp;</a>
                             </li>
                         </ul>
+                        <br>
+                        <nav class="hide-sticky-menu-button-custom">
+                            <img class="hide-sticky-menu-button" src="assets/images/remove.png" alt="Hide Menu" onclick="hideStickyMenu()">
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="container-3 mencap-logo-center-small-screen-show" style="padding-top: 1%; padding-bottom: 1%;">
-            <a href="/"><img class="image-center mencap-index-logo" src="assets/images/MencapLogo-white-no-background.png" alt="Mencap Logo"></a><br>
+
+        <div class="container-3 item-auto-show">
+            <a href="/"><img class="image-center mencap-index-logo" src="assets/images/MencapLogo-white-no-background.png" alt="Mencap Logo"></a>
         </div>
 
-        <div class="burger-menu" id="burgerMenu">
-            <div class="burger-icon" onclick="toggleMenu()"></div>
+
+        <div class="container-1 item-auto-show">
+            <div class="col-1 item-center pad-top-l pad-left-m">
+                <a href="https://www.facebook.com/mencapliverpool/" target="_blank">
+                    <img class="socials-image-padding" src="assets/images/facebook-icon.png" alt="Facebook">
+                </a>
+                &nbsp;&nbsp;
+                <a href="https://www.tiktok.com/@mencap_liverpool_sefton" target="_blank">
+                    <img class="socials-image-padding" src="assets/images/tiktok-icon.png" alt="TikTok">
+                </a>
+                &nbsp;&nbsp;
+                <a href="https://www.instagram.com/mencapliverpool/" target="_blank">
+                    <img class="socials-image-padding" src="assets/images/instagram-icon.png" alt="Instagram">
+                </a>
+                &nbsp;&nbsp;
+                <a href="https://twitter.com/mencapliverpool" target="_blank">
+                    <img class="socials-image-padding" src="assets/images/twitter-icon.png" alt="Twitter">
+                </a>
+            </div>
+        </div>
+
+
+        <div class="container-1 item-auto-show">
+            <div class="col-1 item-center">
+                <p class="text-center">
+                    <a class="contact-small-screen" href="tel:01517078582" target="_blank">0151 707 8582</a>
+                    <br><br>
+                    <a class="contact-small-screen" href="mailto:contact@mencapliverpool.org.uk" target="_blank">contact@mencapliverpool.org.uk</a>
+                    <br><br><br>
+                    <a class="donate-button-small" href="/donate">&nbsp;&#128227;&nbsp;&nbsp;DONATE NOW!&nbsp;&nbsp;&#128227;&nbsp;</a>
+                </p>
+            </div>
+        </div>
+
+
+        <div class="burger-menu-button" id="burgerMenuButton">
+            <div class="burger-icon" id="test123" onclick="toggleMenu()"></div>
             <div class="menu" id="menu">
                 <nav class="home-link-text">
                     <a href="/">
-                        <img src="assets/images/mencap_small_buble_logo_white.png" alt="Home" style="height: 68px; width: 78px; border-radius: 25px;">
-                        <br><nav class="item-center home-text">Home</nav>
+                        <img src="assets/images/mencap_small_buble_logo_white.png" alt="Home" height="68" width="78">
+                        <br>
+                        <nav class="item-center">Home</nav>
                     </a>
                 </nav>
-                <a href="/about" style="border-radius: 49%;"><button>About Mencap</button></a>
-                <a href="/find" style="border-radius: 49%;"><button>Where to find us?</button></a>
-                <a href="/involve" style="border-radius: 49%;"><button>Get Involved!</button></a>
-                <a href="/events" style="border-radius: 49%;"><button>The Calendar</button></a>
-                <a href="/gallery" style="border-radius: 49%;"><button>The Gallery</button></a>
-                <a href="/contact" style="border-radius: 49%;"><button>Contact Us</button></a>
-                <a href="/cafe" style="border-radius: 49%;"><img src="assets/images/coffee-logo.png" alt="Coffee at Mencap" style=" width: 118px; border-radius: 49%;"></a>
+                <a href="/about" class="menu-link-button">About Mencap</a>
+                <a href="/find" class="menu-link-button">Where to find us?</a>
+                <a href="/involve" class="menu-link-button">Get Involved!</a>
+                <a href="/events" class="menu-link-button">The Calendar</a>
+                <a href="/gallery" class="menu-link-button">The Gallery</a>
+                <a href="/contact" class="menu-link-button">Contact Us</a>
+                <a href="/cafe" class="item-center margin-below-s"><img src="assets/images/coffee-logo.png" alt="Coffee at Mencap" width="120"></a>
                 <% if (loggedIn) { %>
-                    <nav style="padding-top: 20px;">
-                        <a href="/account" style="background-color: #b10153; padding: 8px; border-radius: 20px; font-size: 19px;">Account</a>
-                        <br><br>
-                        <a href="/help" style="background-color: #b10153; padding: 8px; margin-bottom: 20px; border-radius: 20px; font-size: 19px;">Help</a>
-                    </nav>
+                    <a class="menu-link-button" href="/account">Account</a>
+                    <a class="menu-link-button margin-below-l-i" href="/help">Help</a>
                 <% } %>
             </div>
         </div>
 
-        <br>
+
+        <nav class="pad-below-l"></nav>
+
 
 
         <script>document.getElementById('js-disabled-banner').style.display = 'none';</script>

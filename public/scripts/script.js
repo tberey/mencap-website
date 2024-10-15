@@ -1,9 +1,38 @@
+//Global Bariables
+var isStickyMenuVisible = true;
+const hideButton = document.querySelector('.hide-sticky-menu-button');
+
+
+
 // Burger Menu Toggle.
 function toggleMenu() {
     var menu = document.getElementById('menu');
-    menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
-    var burgerMenu = document.getElementById('burgerMenu');
-    burgerMenu.classList.toggle('active');
+    menu.scrollTop = 0;
+
+    // Check if the menu is hidden
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'flex'; // Change to flex to show as full screen
+    } else {
+        menu.style.display = 'none'; // Hide the menu
+    }
+
+    var burgerMenuButton = document.getElementById('burgerMenuButton');
+    burgerMenuButton.classList.toggle('active');
+
+    var burgerIcon = document.querySelector('.burger-icon');
+    burgerIcon.classList.toggle('active');
+
+    document.body.classList.toggle('no-scroll');
+    menu.classList.toggle('active');
+}
+
+
+
+// Hide sticky menu.
+function hideStickyMenu() {
+    isStickyMenuVisible = !isStickyMenuVisible
+    stickyContent.classList.remove('sticky');
+    hideButton.style.display = 'none';
 }
 
 
@@ -15,7 +44,13 @@ const delayPixels = 250;
 let stickyOffset;
 
 if (screenWidth < 900) {
-    stickyContent.classList.add('sticky');
+    if (isStickyMenuVisible) {
+        stickyContent.classList.add('sticky');
+        hideButton.style.display = 'block';
+    } else {
+        stickyContent.classList.remove('sticky');
+        hideButton.style.display = 'none';
+    }
 }
 
 function updateStickyOffset() {
@@ -33,10 +68,17 @@ function handleScroll() {
     const isElementOffScreen = !isElementInViewport(triggerElement);
 
     if (isElementOffScreen && scrolledPastTrigger) {
-        stickyContent.classList.add('sticky');
+        if (isStickyMenuVisible) {
+            stickyContent.classList.add('sticky');
+            hideButton.style.display = 'block';
+        } else {
+            stickyContent.classList.remove('sticky');
+            hideButton.style.display = 'none';
+        }
     } else {
         if (screenWidth > 900) {
             stickyContent.classList.remove('sticky');
+            hideButton.style.display = 'none';
         }
     }
 }
@@ -369,4 +411,40 @@ function confirmGalleryDelete(id, uuid, media) {
             console.error('Error:', error);
         });
     }
+}
+
+
+
+// Function to set form load time when DOM is loaded
+function setFormLoadTime() {
+    var formLoadTime = document.getElementById('formLoadTime');
+
+    if (formLoadTime) {
+        formLoadTime.value = new Date().getTime();
+    }
+}
+
+// Function to calculate time difference on form submission
+function calculateTimeDifference() {
+    var formLoadTime = document.getElementById('formLoadTime');
+
+    if (formLoadTime) {
+        formLoadTime = formLoadTime.value;
+        const formSubmitTime = new Date().getTime();
+        const timeDifference = formSubmitTime - formLoadTime;
+        document.getElementById('formSubmitTime').value = timeDifference;
+    }
+}
+
+// Event listener for DOMContentLoaded to set form load time
+document.addEventListener('DOMContentLoaded', function() {
+    setFormLoadTime();
+});
+
+// Event listener for form submission to calculate time difference
+timingContactForm = document.getElementById('contactForm')
+if (timingContactForm) {
+    timingContactForm.addEventListener('submit', function(event) {
+        calculateTimeDifference();
+    });
 }

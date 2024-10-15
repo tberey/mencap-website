@@ -4,21 +4,35 @@ const hideButton = document.querySelector('.hide-sticky-menu-button');
 
 
 
+// Burger Menu Toggle.
+function toggleMenu() {
+    var menu = document.getElementById('menu');
+    menu.scrollTop = 0;
+
+    // Check if the menu is hidden
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'flex'; // Change to flex to show as full screen
+    } else {
+        menu.style.display = 'none'; // Hide the menu
+    }
+
+    var burgerMenuButton = document.getElementById('burgerMenuButton');
+    burgerMenuButton.classList.toggle('active');
+
+    var burgerIcon = document.querySelector('.burger-icon');
+    burgerIcon.classList.toggle('active');
+
+    document.body.classList.toggle('no-scroll');
+    menu.classList.toggle('active');
+}
+
+
+
 // Hide sticky menu.
 function hideStickyMenu() {
     isStickyMenuVisible = !isStickyMenuVisible
     stickyContent.classList.remove('sticky');
     hideButton.style.display = 'none';
-}
-
-
-
-// Burger Menu Toggle.
-function toggleMenu() {
-    var menu = document.getElementById('menu');
-    menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
-    var burgerMenu = document.getElementById('burgerMenu');
-    burgerMenu.classList.toggle('active');
 }
 
 

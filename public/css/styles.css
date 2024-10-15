@@ -6,6 +6,8 @@
 
 
 
+
+
 /* ---- Custom Font Settings ---- */
 
 @font-face {
@@ -66,6 +68,8 @@
 
 
 
+
+
 /* ---- Page CSS Settings ---- */
 
 html, body {
@@ -79,7 +83,6 @@ html, body {
     font-family: 'mencap-font', sans-serif;
     background-color: #4F006F;
 }
-
 
 button {
     width: 80px;
@@ -107,6 +110,16 @@ a {
     text-decoration: none;
 }
 
+.underline {
+    text-decoration: underline;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+
+
 
 
 .js-banner {
@@ -126,7 +139,9 @@ a {
     overflow: auto;
 }
 
-
+.banner {
+    width: 100%;
+}
 
 .footer {
     position: fixed;
@@ -144,6 +159,8 @@ a {
 .footer-logout-button {
     display: inline-block;
 }
+
+
 
 
 
@@ -222,6 +239,8 @@ a {
 
 
 
+
+
 .item-left {
     display: flex;
     align-items: flex-start;
@@ -273,6 +292,116 @@ a {
 .item-auto-show {
     display: none;
 }
+
+
+
+
+
+.pad-top-footer {
+    padding-top: 120px;
+}
+
+.pad-top-s {
+    padding-top: 10px;
+}
+
+.pad-top-m {
+    padding-top: 20px;
+}
+
+.pad-top-l {
+    padding-top: 30px;
+}
+
+.pad-right-s {
+    padding-right: 10px;
+}
+
+.pad-right-m {
+    padding-right: 20px;
+}
+
+.pad-right-l {
+    padding-right: 30px;
+}
+
+.pad-left-s {
+    padding-left: 10px;
+}
+
+.pad-left-m {
+    padding-left: 20px;
+}
+
+.pad-left-l {
+    padding-left: 30px;
+}
+
+.pad-below-s {
+    padding-bottom: 10px;
+}
+
+.pad-below-m {
+    padding-bottom: 20px;
+}
+
+.pad-below-l {
+    padding-bottom: 30px;
+}
+
+.margin-top-s {
+    margin-top: 10px;
+}
+
+.margin-top-m {
+    margin-top: 20px;
+}
+
+.margin-top-l {
+    margin-top: 30px;
+}
+
+.margin-right-s {
+    margin-right: 10px;
+}
+
+.margin-right-m {
+    margin-right: 20px;
+}
+
+.margin-right-l {
+    margin-right: 30px;
+}
+
+.margin-left-s {
+    margin-left: 10px;
+}
+
+.margin-left-m {
+    margin-left: 20px;
+}
+
+.margin-left-l {
+    margin-left: 30px;
+}
+
+.margin-below-s {
+    margin-bottom: 10px;
+}
+
+.margin-below-m {
+    margin-bottom: 20px;
+}
+
+.margin-below-l {
+    margin-bottom: 30px;
+}
+
+.margin-below-l-i {
+    margin-bottom: 30px !important;
+}
+
+
 
 
 
@@ -331,6 +460,7 @@ a {
 }
 
 
+
 .menu {
     position: fixed;
     left: 0;
@@ -374,6 +504,7 @@ a {
 }
 
 
+
 .sticky-content {
     position: relative;
     font-size: 23px;
@@ -409,6 +540,10 @@ a {
     border: 5px solid red;
 }
 
+.socials-list {
+    display: inline-block;
+}
+
 .socials-image-padding {
     height: 50px;
     width: 50px;
@@ -442,11 +577,15 @@ a {
 }
 
 
+
 .mencap-index-logo {
-    width: 98%;
+    width: 100%;
     height: auto;
-    min-width: 338px;
+    min-width: 340px;
 }
+
+
+
 
 
 .custom-submit-button {
@@ -589,6 +728,8 @@ a {
 
 
 
+
+
 /* ---- Small Screen Mobile CSS Settings ---- */
 
 @media (max-width: 1250px) {
@@ -596,6 +737,8 @@ a {
         display: none;
     }
 }
+
+
 
 
 
@@ -640,15 +783,13 @@ a {
         font-size: 16px;
     }
 
-
-
     .footer {
         font-size: 13px;
     }
 
 
 
-    .burger-menu {
+    .burger-menu-button {
         position: fixed;
         top: 10px;
         left: 16px;
@@ -659,6 +800,10 @@ a {
         border-radius: 36%;
         z-index: 7;
         cursor: pointer;
+    }
+
+    .burger-menu-button:hover {
+        background-color: #ff01a5;
     }
 
     .burger-icon {
@@ -674,28 +819,33 @@ a {
 
     .burger-icon::before {
         content: '\2630'; /* Hamburger menu icon */
+        background-color: rgba(255, 0, 0, 0);
     }
 
     .burger-icon.active::before {
-        content: '\2716'; /* Toggle to another icon when clicked */
+        content: '\2716'; /* Toggle to cross icon when clicked */
+        border-radius: 20px;
+        padding-top: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: rgb(255, 0, 0);
     }
 
-    /* Full-screen overlay menu */
     .menu {
         position: fixed;
         left: 0;
         top: 0;
         width: 100%;
-        background-color: #4f006fcb; /* Semi-transparent black background */
+        background-color: #4f006fd0;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         padding-top: 25px;
         overflow: auto;
-        opacity: 0; /* Hidden initially */
-        visibility: hidden; /* Hidden initially */
-        transition: visibility 0s, opacity 0.7s ease; /* Smooth fade-in */
+        opacity: 0;
+        visibility: hidden;
+        transition: visibility 0.5s, opacity 0.5s ease;
         z-index: 11;
     }
 
@@ -705,11 +855,10 @@ a {
         cursor: default;
     }
 
-    /* Links styled as buttons */
     .menu a {
         color: white;
         background-color: #d31160;
-        padding: 20px 40px;
+        padding: 18px 34px;
         margin: 10px 0;
         text-decoration: none;
         font-size: 24px;
@@ -719,8 +868,10 @@ a {
     }
 
     .menu a:hover {
+        border-radius: 30px;
         background-color: #ff01a5;
     }
+
 
 
     .sticky-content {
@@ -758,10 +909,12 @@ a {
     }
 
 
+
     .mencap-index-logo {
         height: auto;
         width: 58%;
     }
+
 
 
     .custom-submit-button {
@@ -811,11 +964,15 @@ a {
 
 
 
+
+
 @media (max-width: 565px) {
     .w3w-text {
         display: none;
     }
 }
+
+
 
 
 

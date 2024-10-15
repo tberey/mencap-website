@@ -2,7 +2,7 @@
 
 <!--  EJS variables needed to render: `loggedIn`(boolean), `username`(string)  -->
 
-        <nav style="padding-top: 125px;"></nav>
+        <nav class="pad-top-footer"></nav>
 
 
         <div id="footer" class="footer">
@@ -19,7 +19,7 @@
                         Hi <%= username %>, <form action="/logout" method="POST" class="footer-logout-button"><input type="submit" value="Logout?" class="custom-submit-button"></button></form>
                         <br>
                     <% } else { %>
-                        <a href="/login" style="text-decoration: underline;">Login</a><br>
+                        <a href="/login" class="underline">Login</a><br>
                     <% } %>
                     <br>Registered Charity 1004262.
                     <br>Donate £4 by txting <b><i>MENL33 £4</i></b> to <b>70070.</b>

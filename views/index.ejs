@@ -48,28 +48,44 @@
             <div class="col-1">
                 <% articles.forEach(function(article) { %>
                     <nav style="background-color: #ff01a64d; border-radius: 100px;">
-                        <nav style="word-break: normal; padding: 40px 70px;">
+                        <nav style="word-break: normal; padding: 30px 60px;">
                             <div>
                                 <p style="font-size: 32px;"><%= article.title %></p>
-                                <p style="font-size: 22px;"><%= article.date %></p>
-                                <% if (article.imgThumb && mediaUrl) { %>
-                                    <img class="image-center" src="<%= mediaUrl %><%= article.imgThumb %>"  alt="Article Thumbnail" style="max-width: 50%; max-height: 330px; border-radius: 30%; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgThumb %>')">
+                                <p style="font-size: 20px;"><%= article.date %></p>
+
+                                <% if (article.type == 'db') { %>
+                                    <img class="image-right" src="assets/images/website-icon.png"  alt="Website Post Thumbnail" height="60" width="60">
+                                    <% if (article.imgThumb && mediaUrl) { %>
+                                        <img class="image-center" src="<%= mediaUrl %><%= article.imgThumb %>"  alt="Website Post Image Thumbnail" style="max-width: 50%; max-height: 330px; border-radius: 30%; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgThumb %>')">
+                                    <% } %>
+                                <% } else if (article.type == 'fb') { %>
+                                    <img class="image-right" src="assets/images/facebook-icon.png"  alt="Facebook Post Thumbnail" height="70" width="70">
+                                <% } else if (article.type == 'ig') { %>
+                                    <img class="image-right" src="assets/images/instagram-icon.png"  alt="Instagram Post Thumbnail" height="70" width="70">
                                 <% } %>
-                                <p style="font-size: 17px; padding: 20px;"><%- article.body %></p>
+
+                                <p style="font-size: 22px; padding: 15px;"><%- article.body %></p>
+
                                 <% if (article.fileName && mediaUrl) { %>
-                                    <p style="font-size: 18px; border: 3px solid white; padding: 6px; border-radius: 55px; width: fit-content;">
+                                    <p style="font-size: 18px; border: 3px solid white; padding: 5px; border-radius: 55px; width: fit-content;">
                                         <a href="<%= mediaUrl %><%= article.file %>" download="<%= article.fileName %>" target="_blank">
                                             <i>Click here to download:</i><br><b><u><%= article.fileName %></u> &#8659;</b>
                                         </a>
                                     </p>
                                 <% } %>
-                                <% if (article.imgMain && mediaUrl) { %>
+
+                                <% if (article.type == 'db' && article.imgMain && mediaUrl) { %>
+                                    <img class="image-center" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" style="max-width: 80%; max-height: 600px; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
                                     <br>
-                                    <img class="image-center" src="<%= mediaUrl %><%= article.imgMain %>" alt="Article Image" style="max-width: 80%; max-height: 600px; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
+                                <% } else if ((article.type == 'fb' || article.type == 'ig') && article.imgMain) { %>
+                                    <img class="image-center" src="<%= article.imgMain %>" alt="Post Image" style="max-width: 80%; max-height: 600px; cursor: pointer;" onclick="showImage('<%= article.imgMain %>')">
                                     <br>
                                 <% } %>
-                                <p class="item-right" style="font-size: 13px;">Published by&nbsp;<b><%= article.author %></b>&nbsp;on <%= article.createdAt %></p>
-                                <% if (loggedIn && uid && article.userUid && article.userUid == uid) { %>
+
+                                <br>
+
+                                <nav class="item-right"><p style="font-size: 12px;">Published by&nbsp;<b><%= article.author %></b>&nbsp;on <%= article.createdAt %></p></nav>
+                                <% if (article.type == 'db' && loggedIn && uid && article.userUid && article.userUid == uid) { %>
                                     <input type="button" value="Delete" class="custom-submit-button" style="text-decoration: underline; cursor: pointer; font-size: 12px;" onclick="confirmArticleDelete('<%= article.ID %>','<%= article.userUid %>','<%= article.imgThumb %>','<%= article.imgMain %>','<%= article.file %>')">
                                 <% } %>
                             </div>

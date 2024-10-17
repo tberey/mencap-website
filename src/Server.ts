@@ -47,25 +47,72 @@ export class Server extends ServerSetup {
         this.router.get('/', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /');
 
-            let articles: queryArticlesRead[] | null | undefined;
+            let articlesPostsList: queryArticlesRead[] = [];
             let articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
 
             try {
-                articles = await this.db.getArticles(16);
+                let facebookUrl: string = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/posts?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=message,full_picture,created_time&limit=3`;
+                let instagramUrl: string = `https://graph.instagram.com/${process.env['INSTAGRAM_BUSINESS_USER_ID']}/media?fields=caption,media_url,timestamp&access_token=${process.env['INSTAGRAM_APP_API_TOKEN']}&limit=3`;
+
+                let articles: queryArticlesRead[] = await this.db.getArticles(3);
+                if (articles) articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
                 this.txtLogger.writeToLogFile('Successfully got Articles.');
 
-                if (articles) articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
+                const responseFb = await fetch(facebookUrl);
+                const dataFb = await responseFb.json();
+                let fbPosts: queryArticlesRead[] =  await dataFb.data.map((postFb: { message: string; full_picture: string; created_time: string; }) => ({
+                    ID: 0,
+                    title: 'Facebook Post',
+                    date: Helper.formatDate(postFb.created_time),
+                    body: postFb.message,
+                    file: null,
+                    fileName: null,
+                    imgThumb: null,
+                    imgMain: postFb.full_picture,
+                    author: 'fb',
+                    userUid: '127345',
+                    type: 'fb',
+                    createdAt: postFb.created_time
+                }));
+                this.txtLogger.writeToLogFile('Successfully got Facebook Posts.');
+
+                const responseIg = await fetch(instagramUrl);
+                const dataIg = await responseIg.json();
+                let igPosts: queryArticlesRead[] = await dataIg.data.map((postIg: { caption: string; media_url: string; timestamp: string; }) => ({
+                    ID: 0,
+                    title: 'Instagram Post',
+                    date: Helper.formatDate(postIg.timestamp),
+                    body: postIg.caption,
+                    file: null,
+                    fileName: null,
+                    imgThumb: null,
+                    imgMain: postIg.media_url,
+                    author: 'ig',
+                    userUid: '124345',
+                    type: 'ig',
+                    createdAt: postIg.timestamp
+                }));
+                this.txtLogger.writeToLogFile('Successfully got Instagram Posts.');
+
+                articlesPostsList = articlesPostsList.concat(articles, fbPosts, igPosts);
+
+                // Sort by date and take the first 8 items from this super list. TODO: Add pagination, (using 'paging.next' URL, as part of Meta APIs).
+                if (articlesPostsList.length) {
+                    articlesPostsList.sort((a, b) => Helper.parseDate(b.createdAt)! - Helper.parseDate(a.createdAt)!);
+                    articlesPostsList = articlesPostsList.slice(0, 8);
+                }
 
             } catch (err) {
-                this.txtLogger.writeToLogFile(`An error occurred getting articles: ${err}`);
+                this.txtLogger.writeToLogFile(`An error occurred getting articles or posts: ${err}`);
             }
             finally {
                 res.status(200);
                 res.render('index.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    articles: articles, mediaUrl: articlesMediaUrl
+                    username: req.session.username || '',
+                    uid: req.session.uid || '',
+                    mediaUrl: articlesMediaUrl || '',
+                    articles: articlesPostsList || []
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -104,10 +151,10 @@ export class Server extends ServerSetup {
 
             res.status(200);
             res.render('account.ejs', {
-                loggedIn: req.session.loggedin,
-                username: req.session.username,
-                email: await this.db.getData('email','sid', req.session.sid),
-                membership: await this.db.getData('membership','sid', req.session.sid)
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || '',
+                email: await this.db.getData('email','sid', req.session.sid) || '',
+                membership: await this.db.getData('membership','sid', req.session.sid) || ''
             });
 
             this.txtLogger.writeToLogFile(
@@ -124,7 +171,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /about');
 
             res.status(200);
-            res.render('about.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('about.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -140,7 +190,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /find');
 
             res.status(200);
-            res.render('find.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('find.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -191,9 +244,10 @@ export class Server extends ServerSetup {
                 res.status(200);
                 res.render('events.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    calendarEvents: JSON.stringify(parsedEvents), events: events
+                    username: req.session.username || '',
+                    uid: req.session.uid || '',
+                    calendarEvents: JSON.stringify(parsedEvents) || '',
+                    events: events || []
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -210,9 +264,9 @@ export class Server extends ServerSetup {
         this.router.get('/gallery', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /gallery');
 
-            let gallery: queryGalleryRead[] | null | undefined;
-            let years: queryGalleryRead[] | null | undefined;
-            let months: queryGalleryRead[] | null | undefined;
+            let gallery: queryGalleryRead[] | undefined;
+            let years: queryGalleryRead[] | undefined;
+            let months: queryGalleryRead[] | undefined;
             let mediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.galleryFolder}/`;
             const { yearView } = req.query;
 
@@ -234,9 +288,12 @@ export class Server extends ServerSetup {
                 res.status(200);
                 res.render('gallery.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    mediaUrl: mediaUrl, gallery: gallery, months: months, years: years
+                    username: req.session.username || '',
+                    uid: req.session.uid || '',
+                    mediaUrl: mediaUrl || '',
+                    gallery: gallery || [],
+                    months: months || [],
+                    years: years || []
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -254,7 +311,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /involve');
 
             res.status(200);
-            res.render('involve.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('involve.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -270,7 +330,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /cafe');
 
             res.status(200);
-            res.render('cafe.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('cafe.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -286,7 +349,11 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /contact');
 
             res.status(200);
-            res.render('contact.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : '', honeyValue: process.env['HONEY_PUBLIC_VALUE']  });
+            res.render('contact.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || '',
+                honeyValue: process.env['HONEY_PUBLIC_VALUE'] || 'bac312'
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -302,7 +369,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /donate');
 
             res.status(200);
-            res.render('donate.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('donate.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -321,8 +391,8 @@ export class Server extends ServerSetup {
 
             res.status(200);
             res.render('help.ejs', {
-                loggedIn: req.session.loggedin,
-                username: req.session.username
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
             });
 
             this.txtLogger.writeToLogFile(

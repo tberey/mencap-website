@@ -498,9 +498,9 @@ a {
     transition: background-color 0.6s;
 }
 
-.home-link-text {
-    padding-bottom: 12px;
-    font-size: 19px;
+.image-menu-link {
+    margin-top: -12px;
+    margin-bottom: -18px;
 }
 
 
@@ -720,6 +720,21 @@ a {
 
 .contact-form input[type="submit"]:hover {
     background-color: #45a049;
+}
+
+.rounded-box {
+    border-radius: 26px;
+    border: 2px solid white;
+    padding: 12px;
+    width: fit-content;
+    margin: 0 0 26px 0;
+    word-break: break-word;
+}
+
+.highlight:hover {
+    background-color: #ff01a5;
+    border-radius: 50%;
+    transition: background-color 0.6s;
 }
 
 .spacing {
@@ -962,15 +977,6 @@ a {
     }
 }
 
-
-
-
-
-@media (max-width: 565px) {
-    .w3w-text {
-        display: none;
-    }
-}
 
 
 

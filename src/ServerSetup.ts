@@ -25,7 +25,7 @@ declare module 'express-session' {
 
 
 
-export class ServerSetup {//const
+export class ServerSetup {
     private port: string;
     private hostname: string;
     private server: http.Server;

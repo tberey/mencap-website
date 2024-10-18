@@ -737,6 +737,25 @@ a {
     transition: background-color 0.6s;
 }
 
+.custom-hr {
+    height: 6px;
+    background-color: #ff01a5;
+    border-radius: 16px;
+    margin: 36px auto;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+    width: 72%;
+    transform: translateX(28px);
+}
+
+.custom-ellipsis {
+    font-size: 100px;
+    color: #ff01a5;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    transform: translateX(15px);
+}
+
 .spacing {
     display: none;
 }
@@ -949,6 +968,14 @@ a {
 
     .contact-form {
         width: 80%;
+    }
+
+    .custom-hr {
+        transform: translateX(0px);
+    }
+
+    .custom-ellipsis {
+        transform: translateX(0px);
     }
 
     .container-2-override {

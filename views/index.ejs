@@ -10,37 +10,35 @@
 
         <div class="container-1">
             <% if (loggedIn) { %>
+                <nav class="custom-hr"></nav>
                 <div class="col-1">
                     <form id="article-form" action="/article" method="POST" enctype="multipart/form-data">
-                        <br><br>
                         <label for="testSubmit"><h2>Post a new Article, with a pic, video or downloadable attachment:</h2></label>
-                        <br>
                         <p>Give it a title</p>
                         <input type="text" id="testSubmit" name="title" placeholder="Post Title" style="width: 50%;" required>
-                        <br><br>
+                        <br>
                         <p>When did it happen?</p>
                         <input type="text" id="testSubmit" name="date" placeholder="Wednesday 19th August 2023 or Last Week or 19/08/23" style="width: 40%;" required>
-                        <br><br><br>
+                        <br>
                         <p>Write something about it</p>
                         <textarea id="testSubmit" name="body" placeholder="Tell a story..." style="width: 80%; height: 300px;" required></textarea>
-                        <br><br><br><br><br>
+                        <br><br><br>
                         <label for="imgThumb">Thumbnail Image (<i>Optional;</i>&nbsp;&nbsp;Select an image or video for the <b>top</b> of your Post, that will be smaller but above the text.)</label><br>
-                        <span class="clear-button" data-input-id="imgThumb"><br>X</span>&nbsp;
+                        <nav class="clear-button" data-input-id="imgThumb"><br>X</nav>&nbsp;
                         <input type="file" id="imgThumb" name="imgThumb" accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg">
-                        <br><br><br>
+                        <br><br>
                         <label for="imgMain">Main Image (<i>Optional;</i>&nbsp;&nbsp;Select an image or video for the <b>main</b> part of your Post, that will be larger but below the text.)</label><br>
-                        <span class="clear-button" data-input-id="imgMain"><br>X</span>&nbsp;
+                        <nav class="clear-button" data-input-id="imgMain"><br>X</nav>&nbsp;
                         <input type="file" id="imgMain" name="imgMain" accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg">
-                        <br><br><br>
+                        <br><br>
                         <label for="fileDl">File Attachement (<i>Optional;</i>&nbsp;&nbsp;Select a file you want users to be able to <b>download</b>.)</label><br>
-                        <span class="clear-button" data-input-id="fileDl"><br>X</span>&nbsp;
+                        <nav class="clear-button" data-input-id="fileDl"><br>X</nav>&nbsp;
                         <input type="file" id="fileDl" name="fileDl" accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .odt, .ods, .odp, .txt, .rtf, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg, .mov">
-                        <br><br><br><br><br>
+                        <br><br><br>
                         <button type="submit" style="border-radius: 25px; background-color: #b10153; width: 40%;">Post Article</button>
-                        <br><br><br><br>
                     </form>
                 </div>
-                <br>
+                <nav class="custom-hr"></nav>
             <% } %>
         </div>
 
@@ -91,7 +89,8 @@
                             </div>
                         </nav>
                     </nav>
-                    <br><br><hr style="border-color: white;"><br><br>
+
+                    <nav class="custom-hr"></nav>
                 <% }); %>
             </div>
         </div>

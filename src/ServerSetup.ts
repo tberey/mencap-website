@@ -4,6 +4,7 @@ import { Database } from './services/Database';
 import { AwsS3 } from './services/AwsS3';
 import express, { Express, Router } from 'express';
 import session from "express-session";
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import http from 'http';
 import cors from 'cors';
@@ -16,10 +17,12 @@ declare module 'express-session' {
         username: string;
         uid: string;
         sid: string;
-        contactPosts: number;
-        resetPosts: number;
+        helpRequests: number;
+        loginRequests: number;
+        resetRequests: number;
     }
 }
+
 
 
 export class ServerSetup {
@@ -41,7 +44,7 @@ export class ServerSetup {
         if (live) dotenv.config();
         else dotenv.config();
 
-        if (process.env['ENVIRONMENT']) console.info(`...::STARTING ${process.env['ENVIRONMENT']!} APPLICATION::...`);
+        if (process && process.env && process.env['ENVIRONMENT']) console.info(`...::STARTING ${process.env['ENVIRONMENT']} APPLICATION::...`);
         else process.exit(0);
 
         this.txtLogger = new SimpleTxtLogger(SimpleTxtLogger.newDateTime(), 'Server', 'Mencap-Website');
@@ -63,18 +66,17 @@ export class ServerSetup {
         this.serverStart();
     }
 
+
     private serverConfig(): void {
         this.transporter = nodemailer.createTransport({
             service: process.env['EMAIL_SERVER']!,
             auth: {
                 user: process.env['EMAIL_USERNAME']!,
-                pass: process.env['EMAIL_PASSWORD']!//Use an app password if using Gmail
+                pass: process.env['EMAIL_PASSWORD']!
             }
         });
 
-        const corsOptions: cors.CorsOptions = {
-            origin: [ `${process.env['CORS_ORIGIN']!}` ]
-        };
+        const corsOptions: cors.CorsOptions = {  origin: [`${process.env['CORS_ORIGIN']!}`]  };
         this.app.use(cors(corsOptions));
 
         const sessionOptions: session.SessionOptions = {
@@ -82,8 +84,10 @@ export class ServerSetup {
             store: new FileStore(),//store some session data in a db/cache?
             */
             cookie: {
-                maxAge: 24 * 60 * 60 * 1000,//24 hours,
-                httpOnly: false
+                maxAge: parseInt(process.env['COOKIE_MAX_AGE']!), // In milleseconds
+                httpOnly: true,
+                secure: process.env['ENVIRONMENT'] != 'TEST',
+                sameSite: process.env['COOKIE_SAME_SITE_SET']! as "lax" | "strict" | "none" | boolean
             },
             secret: process.env['SESSION_SECRET']!,
             saveUninitialized: false,
@@ -91,18 +95,29 @@ export class ServerSetup {
         };
         this.app.use(session(sessionOptions));
 
+        const limiter = rateLimit({
+            windowMs: parseInt(process.env['RATE_LIMIT_TIME']!), // In milleseconds
+            max: parseInt(process.env['RATE_LIMIT_REQUESTS']!),
+            standardHeaders: true,
+            legacyHeaders: false,
+            message: "<h1>Too Many Requests</h1><h3>You have exceeded the maximum number of requests allowed in set time period</h3><p>Please try again later.</p>",
+            statusCode: 429,
+        });
+
         this.app.use(express.json());
-        this.app.use(express.urlencoded({extended: true}));
+        this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.static('public'));
         this.app.set('view engine', 'ejs');
-
+        this.app.use("/", limiter);
         this.app.use("/", this.router);
     }
 
+
     private serverStart(): void {
-        this.txtLogger.writeToLogFile(`Hostname Available (but not in use): ${this.hostname}`);
+        this.txtLogger.writeToLogFile(`Hostname available (but not in use): ${this.hostname}`);
         this.server.listen(parseInt(this.port), () => this.txtLogger.writeToLogFile(`Server Listening on Port: ${parseInt(this.port)}`));
     }
+
 
     // Accessor needed for testing only. So property 'this.app' can remain private.
     public appAccessor(app = this.app): Express { return app; }

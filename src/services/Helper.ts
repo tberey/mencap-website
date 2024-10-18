@@ -1,3 +1,6 @@
+import { randomBytes } from 'crypto';
+
+
 export class Helper {
 
     static newDateTime(): string {
@@ -6,11 +9,18 @@ export class Helper {
     }
 
     static generateRandomPassword(length: number): string {
+        length = Math.ceil(Math.abs(length));
+
+        if (length < 3) {
+            length = 3;
+        }
+
         const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let password: string = '';
+        const bytes = randomBytes(length);
 
         for (let i = 0; i < length; i++) {
-            const randomIndex = Math.floor(Math.random() * charset.length);
+            const randomIndex = bytes[i]! % charset.length;
             password += charset[randomIndex];
         }
 

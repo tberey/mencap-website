@@ -453,6 +453,15 @@ export class Server extends ServerSetup {
             req.session.sid = '';
 
             try {
+                if (!req.session.loginRequests) req.session.loginRequests = 0;
+                else if (req.session.loginRequests >= 3) {
+                    this.txtLogger.writeToLogFile('Failed to reset account. Session limit reached.');
+                    log = "Maximum account login attempts reached. Please check your email address and password are both correct. You can try again in 24 hours.";
+                    alertLog = true;
+                    status = 429;
+                    return;
+                }
+
                 const { username, password } = req.body;
 
                 if (!username.toString() || !password.toString()) {
@@ -461,6 +470,8 @@ export class Server extends ServerSetup {
                     alertLog = true;
                     return;
                 }
+
+                req.session.loginRequests++;
 
                 const dbResponse: null | queryUsersRead = await this.db.login(username.toString(), password.toString());
 
@@ -485,7 +496,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/login';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/login';</script>`);
+                }
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
@@ -535,10 +549,10 @@ export class Server extends ServerSetup {
             req.session.sid = '';
 
             try {
-                if (!req.session.resetPosts) req.session.resetPosts = 1;
-                else if (req.session.resetPosts >= 3) {
+                if (!req.session.resetRequests) req.session.resetRequests = 0;
+                else if (req.session.resetRequests >= 2) {
                     this.txtLogger.writeToLogFile('Failed to reset account. Session limit reached.');
-                    log = "Maximum account reset attempts. Please check you inbox, including junk or spam mail, for an account reset email. If not, check your email address is correct.";
+                    log = "Maximum account reset attempts reached. Please check you inbox, including junk or spam mail, for an account reset email. If not, check your email address is correct. You can try again in 24 hours.";
                     alertLog = true;
                     status = 429;
                     return;
@@ -553,7 +567,7 @@ export class Server extends ServerSetup {
                     return;
                 }
 
-                req.session.resetPosts++;
+                req.session.resetRequests++;
 
                 const emailFound: boolean = await this.db.checkData(email.toString(), 'email');
 
@@ -604,7 +618,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/login';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/login';</script>`);
+                }
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
@@ -684,7 +701,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/login';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/login';</script>`);
+                }
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
@@ -765,7 +785,10 @@ export class Server extends ServerSetup {
                 res.status(status);
 
                 if (status == 401) res.redirect('/login');
-                else res.send(`<script>alert("${log}"); window.location.href = '/';</script>`);
+                else {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/';</script>`);
+                }
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(
@@ -889,7 +912,8 @@ export class Server extends ServerSetup {
 
             } finally {
                 res.status(status);
-                res.send(`<script>alert("${log}"); window.location.href = '/events';</script>`);
+                const safeLog = encodeURIComponent(log);
+                res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/events';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(
@@ -1007,7 +1031,8 @@ export class Server extends ServerSetup {
 
             } finally {
                 res.status(status);
-                res.send(`<script>alert("${log}"); window.location.href = '/gallery';</script>`);
+                const safeLog = encodeURIComponent(log);
+                res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/gallery';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(
@@ -1084,10 +1109,10 @@ export class Server extends ServerSetup {
             let alertLog: boolean = false;
 
             try {
-                if (!req.session.contactPosts) req.session.contactPosts = 0;
-                else if (req.session.contactPosts >= 2) {
+                if (!req.session.helpRequests) req.session.helpRequests = 0;
+                else if (req.session.helpRequests >= 2) {
                     this.txtLogger.writeToLogFile('Failed to send message. Session limit reached.');
-                    log = "Maximum messages sent in to us. You can't send too many messages in a short space of time, to allow us the time to respond and not get overwhelmed.";
+                    log = "Maximum messages sent in to us. You can't send too many messages in a short space of time, to allow us the time to respond and not get overwhelmed. Please try again in 24 hours.";
                     alertLog = true;
                     status = 429;
                     return;
@@ -1096,7 +1121,7 @@ export class Server extends ServerSetup {
                 const { name, email, message, contactTime, important, formLoadTime, 'g-recaptcha-response': recaptchaResponse } = req.body;
 
                 if (contactTime || !important ||important != process.env['HONEY_PUBLIC_VALUE']) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Did not send message. Hidden field has been completed.';
                     status = 200; // Don't tell malicious user it was a failed attempt.
                     return;
@@ -1121,7 +1146,7 @@ export class Server extends ServerSetup {
                 const isBadMessage = await this.containsBadWords([name, email, message], JSON.parse(process.env['BAD_WORDS']!));
 
                 if (isBadMessage) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Message Not Sent. We found some bad words when scanning your message.';
                     status = 400;
                     alertLog = true;
@@ -1133,7 +1158,7 @@ export class Server extends ServerSetup {
                 const timeDifference = formSubmitTime - parseInt(formLoadTime);
 
                 if (timeDifference < submissionThreshold) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Did not send message. Form submitted in less time than the threshold.';
                     status = 200; // Don't tell malicious user it was a failed attempt.
                     return;
@@ -1143,7 +1168,7 @@ export class Server extends ServerSetup {
                 const recaptchaServerResponse = await axios.post(recaptchaVerificationUrl);
 
                 if (!recaptchaServerResponse.data.success) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Failed to send message. reCAPTCHA verification failed.';
                     status = 400;
                     return;
@@ -1169,7 +1194,7 @@ export class Server extends ServerSetup {
                                 `\n\n\n\nIf you suspect something is wrong with this email, delete it. You can also contact: ${process.env['EMAIL_ADDRESS']}\n`
                         });
 
-                        req.session.contactPosts++;
+                        req.session.helpRequests++;
                         this.txtLogger.writeToLogFile(`Contact us email sent: ${info.response}`);
                         log = 'Message successfully sent.';
                         status = 200;
@@ -1188,8 +1213,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/';</script>`);
-                else res.send(`<script>alert("Message successfully sent."); window.location.href = '/';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/';</script>`);
+                } else res.send(`<script>alert("Message successfully sent."); window.location.href = '/';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(

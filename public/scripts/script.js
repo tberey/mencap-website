@@ -347,7 +347,7 @@ function initializePage() {
 
 // Function to update the gallery
 function updateGallery(selectedYear) {
-    window.location.href = `/gallery?yearView=${selectedYear}`;
+    window.location.href = `/gallery?yearView=${encodeURIComponent(selectedYear)}`;
 }
 
 // Call the initialization function when the DOM is loaded

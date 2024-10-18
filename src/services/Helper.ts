@@ -1,33 +1,9 @@
-import { randomBytes } from 'crypto';
-
 
 export class Helper {
 
     static newDateTime(): string {
         const date = new Date().toUTCString();
         return date.substring(0, date.indexOf(':')-3).replace(',','').replace(/[ \s]/g, '_');
-    }
-
-    static generateRandomPassword(length: number): string {
-        length = Math.ceil(Math.abs(length));
-
-        if (length < 3) {
-            length = 3;
-        }
-
-        const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let password: string = '';
-
-        while (password.length < length) {
-            const byte = randomBytes(1)[0];
-            if (byte >= 252) { // 252 is the largest multiple of 62 (charset length) that is less than 256
-                continue;
-            }
-            const randomIndex = byte % charset.length;
-            password += charset[randomIndex];
-        }
-
-        return password;
     }
 
     static bucketFormat(bucketName: string): string {

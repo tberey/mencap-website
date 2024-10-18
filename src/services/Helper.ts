@@ -17,10 +17,13 @@ export class Helper {
 
         const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let password: string = '';
-        const bytes = randomBytes(length);
 
-        for (let i = 0; i < length; i++) {
-            const randomIndex = bytes[i]! % charset.length;
+        while (password.length < length) {
+            const byte = randomBytes(1)[0];
+            if (byte >= 252) { // 252 is the largest multiple of 62 (charset length) that is less than 256
+                continue;
+            }
+            const randomIndex = byte % charset.length;
             password += charset[randomIndex];
         }
 

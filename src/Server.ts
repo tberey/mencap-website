@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import formidable, { File } from 'formidable';
 import Formidable from 'formidable/Formidable';
 import axios from 'axios';
+import { randomBytes } from 'crypto';
 
 
 type CalendarEvent = {
@@ -440,7 +441,7 @@ export class Server extends ServerSetup {
 
 
     private postRequests(): void {
-        this.router.post('/login', async (req: Request, res: Response): Promise<void> => {
+        this.router.post('/login', this.loginLimiter, async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /login');
 
             let log: string = '';
@@ -575,7 +576,7 @@ export class Server extends ServerSetup {
                     const username: string | null = await this.db.getData('username','email', email.toString());
 
                     if(username) {
-                        const newRandomPassword: string = Helper.generateRandomPassword(12);
+                        const newRandomPassword: string = await this.generateRandomPassword(12);
                         const updateSuccess: boolean = await this.db.updateData(newRandomPassword, 'password', 'email', email.toString());
 
                         if (updateSuccess) {
@@ -1232,6 +1233,7 @@ export class Server extends ServerSetup {
     }
 
 
+
     private async isValidUserSession(req: Request): Promise<boolean> {
         if (
             req.session.loggedin
@@ -1281,6 +1283,29 @@ export class Server extends ServerSetup {
 
         // Test the email string against the regex pattern
         return emailPattern.test(email);
+    }
+
+
+    private async generateRandomPassword(length: number): Promise<string> {
+        length = Math.ceil(Math.abs(length));
+
+        if (length < 3) {
+            length = 3;
+        }
+
+        const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let password: string = '';
+
+        while (password.length < length) {
+            const byte = randomBytes(1)[0];
+            if (byte! >= 252) { // 252 is the largest multiple of 62 (charset length) that is less than 256
+                continue;
+            }
+            const randomIndex = byte! % charset.length;
+            password += charset[randomIndex];
+        }
+
+        return password;
     }
 
 

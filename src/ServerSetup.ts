@@ -4,7 +4,7 @@ import { Database } from './services/Database';
 import { AwsS3 } from './services/AwsS3';
 import express, { Express, Router } from 'express';
 import session from "express-session";
-import rateLimit from 'express-rate-limit';
+import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import dotenv from 'dotenv';
 import http from 'http';
 import cors from 'cors';
@@ -38,6 +38,7 @@ export class ServerSetup {
     protected db: Database;
     protected s3: AwsS3;
     protected transporter: Transporter | undefined;
+    protected loginLimiter: RateLimitRequestHandler;
 
 
     protected constructor(live: boolean = false, port: string = '4000', hostname: string = '127.0.0.1') {
@@ -59,6 +60,12 @@ export class ServerSetup {
         this.router = express.Router();
         this.app = express();
         this.serverConfig();
+        this.loginLimiter = rateLimit({
+            windowMs: 60000,
+            max: 5,
+            message: "<h1>Too Many Requests</h1><h3>You have exceeded the maximum number of login requests allowed.</h3><p>Please try again in a minute.</p>",
+            statusCode: 429
+        });
 
         this.server = new http.Server(this.app);
         this.txtLogger.writeToLogFile('Server Configured.');
@@ -95,20 +102,20 @@ export class ServerSetup {
         };
         this.app.use(session(sessionOptions));
 
-        const limiter = rateLimit({
+        const routerLimiter: RateLimitRequestHandler = rateLimit({
             windowMs: parseInt(process.env['RATE_LIMIT_TIME']!), // In milleseconds
             max: parseInt(process.env['RATE_LIMIT_REQUESTS']!),
             standardHeaders: true,
             legacyHeaders: false,
             message: "<h1>Too Many Requests</h1><h3>You have exceeded the maximum number of requests allowed in set time period</h3><p>Please try again later.</p>",
-            statusCode: 429,
+            statusCode: 429
         });
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.static('public'));
         this.app.set('view engine', 'ejs');
-        this.app.use("/", limiter);
+        this.app.use("/", routerLimiter);
         this.app.use("/", this.router);
     }
 

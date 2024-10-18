@@ -441,7 +441,7 @@ export class Server extends ServerSetup {
 
 
     private postRequests(): void {
-        this.router.post('/login', async (req: Request, res: Response): Promise<void> => {
+        this.router.post('/login', this.loginLimiter, async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /login');
 
             let log: string = '';

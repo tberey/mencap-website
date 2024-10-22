@@ -767,7 +767,7 @@ a {
     margin: 0 auto;
     display: block;
     text-align: center;
-    transform: translateX(15px);
+    margin-left: 45px;
 }
 
 .spacing {
@@ -993,7 +993,7 @@ a {
     }
 
     .custom-ellipsis {
-        transform: translateX(0px);
+        margin: 0 auto;
     }
 
     .container-2-override {

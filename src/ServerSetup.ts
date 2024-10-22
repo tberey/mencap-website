@@ -115,6 +115,7 @@ export class ServerSetup {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.static('public'));
         this.app.set('view engine', 'ejs');
+        this.app.set('trust proxy', 1);
         this.app.use("/", routerLimiter);
         this.app.use("/", this.router);
     }

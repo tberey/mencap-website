@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import formidable, { File } from 'formidable';
 import Formidable from 'formidable/Formidable';
 import axios from 'axios';
+import { randomBytes } from 'crypto';
 
 
 type CalendarEvent = {
@@ -47,25 +48,88 @@ export class Server extends ServerSetup {
         this.router.get('/', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /');
 
-            let articles: queryArticlesRead[] | null | undefined;
-            let articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
+            let articlesPostsList: queryArticlesRead[] = [];
+            const articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
 
             try {
-                articles = await this.db.getArticles(16);
-                this.txtLogger.writeToLogFile('Successfully got Articles.');
+                //const facebookUrl: string = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/posts?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=message,full_picture,created_time,attachments{media}&limit=4`;
+                const facebookUrl2: string = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/feed?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=message,full_picture,created_time,attachments{media}&limit=4`;
+                const instagramUrl: string = `https://graph.instagram.com/${process.env['INSTAGRAM_BUSINESS_USER_ID']}/media?fields=caption,media_url,timestamp,media_type,children{media_url,media_type}&access_token=${process.env['INSTAGRAM_APP_API_TOKEN']}&limit=8`;
 
-                if (articles) articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
+                this.txtLogger.writeToLogFile('Attempting to fetch Articles, Facebook Posts and Instagram Posts.');
 
+                const articles: queryArticlesRead[] = await this.db.getArticles(4);
+                if (articles.length) {
+                    articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
+                    this.txtLogger.writeToLogFile('Successfully got Articles.');
+                }
+
+                let fbPosts: queryArticlesRead[] = [];
+                const responseFb: globalThis.Response = await fetch(facebookUrl2); // facebookUrl2  facebookUrl
+                if (responseFb && responseFb.status == 200) var dataFb = await responseFb.json();
+                if (dataFb) {
+                    fbPosts = dataFb.data.map((postFb: { message: string; full_picture: string; created_time: string; attachments?: { media: { image: { src: string; } }[] }; }) => {
+                        let images: string[] = postFb.attachments?.media?.map(media => media.image.src) || [postFb.full_picture];
+                        return {
+                            ID: 0,
+                            title: 'Facebook Post',
+                            date: Helper.formatDate(postFb.created_time),
+                            body: postFb.message,
+                            file: null,
+                            fileName: null,
+                            imgThumb: null,
+                            imgMain: images.slice(0, 5),
+                            author: 'fb',
+                            userUid: '127345',
+                            type: 'fb',
+                            createdAt: postFb.created_time
+                        };
+                    });
+                    this.txtLogger.writeToLogFile('Successfully got Facebook Posts.');
+                }
+
+                let igPosts: queryArticlesRead[] = [];
+                const responseIg: globalThis.Response = await fetch(instagramUrl);
+                if (responseIg && responseIg.status == 200) var dataIg = await responseIg.json();
+                if (dataIg) {
+                    igPosts = dataIg.data.map((igPost: { caption: string; media_url: string; timestamp: string; media_type: string; children?: { data: { media_url: string, media_type: string }[]; } }) => {
+                        let images: { media_url: string, media_type: string }[] = [];
+
+                        if (igPost && igPost.children && igPost.children.data && igPost.children.data.length) igPost.children.data.forEach(child => images.push(child));
+                        else if (igPost) images.push(igPost);
+
+                        return {
+                            ID: 0,
+                            title: 'Instagram Post',
+                            date: Helper.formatDate(igPost.timestamp),
+                            body: igPost.caption,
+                            file: null,
+                            fileName: null,
+                            imgThumb: null,
+                            imgMain: images.slice(0, 5),
+                            author: 'ig',
+                            userUid: '124345',
+                            type: 'ig',
+                            createdAt: igPost.timestamp
+                        };
+                    });
+                    this.txtLogger.writeToLogFile('Successfully got Instagram Posts.');
+                }
+
+                articlesPostsList = articlesPostsList.concat(articles, fbPosts, igPosts);
+
+                if (articlesPostsList.length) articlesPostsList.sort((a, b) => Helper.parseDate(b.createdAt)! - Helper.parseDate(a.createdAt)!);
+                else this.txtLogger.writeToLogFile(`No Articles/Posts to fetch, or, an error occurred getting articles or posts.`);
             } catch (err) {
-                this.txtLogger.writeToLogFile(`An error occurred getting articles: ${err}`);
-            }
-            finally {
+                this.txtLogger.writeToLogFile(`An error occurred getting articles or posts: ${err}`);
+            } finally {
                 res.status(200);
                 res.render('index.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    articles: articles, mediaUrl: articlesMediaUrl
+                    username: req.session.username || '',
+                    uid: req.session.uid || '',
+                    mediaUrl: articlesMediaUrl || '',
+                    articles: articlesPostsList.slice(0, 10) || []
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -104,10 +168,10 @@ export class Server extends ServerSetup {
 
             res.status(200);
             res.render('account.ejs', {
-                loggedIn: req.session.loggedin,
-                username: req.session.username,
-                email: await this.db.getData('email','sid', req.session.sid),
-                membership: await this.db.getData('membership','sid', req.session.sid)
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || '',
+                email: await this.db.getData('email','sid', req.session.sid) || '',
+                membership: await this.db.getData('membership','sid', req.session.sid) || ''
             });
 
             this.txtLogger.writeToLogFile(
@@ -124,7 +188,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /about');
 
             res.status(200);
-            res.render('about.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('about.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -140,7 +207,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /find');
 
             res.status(200);
-            res.render('find.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('find.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -159,10 +229,12 @@ export class Server extends ServerSetup {
             let parsedEvents: CalendarEvent[] = [];
 
             try {
+                this.txtLogger.writeToLogFile('Fetching Events.');
                 events = await this.db.getEvents(250);
-                this.txtLogger.writeToLogFile('Successfully got Events.');
-                
-                if (events) events.forEach((event: queryEventsRead) => {
+
+                if (events.length) events.forEach((event: queryEventsRead) => {
+                    this.txtLogger.writeToLogFile('Successfully got Events.');
+
                     if (event.recurring) parsedEvents.push({
                         title: event.title,
                         id: event.ID.toString(),
@@ -191,9 +263,10 @@ export class Server extends ServerSetup {
                 res.status(200);
                 res.render('events.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    calendarEvents: JSON.stringify(parsedEvents), events: events
+                    username: req.session.username || '',
+                    uid: req.session.uid || '',
+                    calendarEvents: JSON.stringify(parsedEvents) || '',
+                    events: events || []
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -210,9 +283,9 @@ export class Server extends ServerSetup {
         this.router.get('/gallery', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /gallery');
 
-            let gallery: queryGalleryRead[] | null | undefined;
-            let years: queryGalleryRead[] | null | undefined;
-            let months: queryGalleryRead[] | null | undefined;
+            let gallery: queryGalleryRead[] | undefined;
+            let years: queryGalleryRead[] | undefined;
+            let months: queryGalleryRead[] | undefined;
             let mediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.galleryFolder}/`;
             const { yearView } = req.query;
 
@@ -234,9 +307,12 @@ export class Server extends ServerSetup {
                 res.status(200);
                 res.render('gallery.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
-                    username: req.session.username ? req.session.username : '',
-                    uid: req.session.uid ? req.session.uid : '',
-                    mediaUrl: mediaUrl, gallery: gallery, months: months, years: years
+                    username: req.session.username || '',
+                    uid: req.session.uid || '',
+                    mediaUrl: mediaUrl || '',
+                    gallery: gallery || [],
+                    months: months || [],
+                    years: years || []
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -254,7 +330,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /involve');
 
             res.status(200);
-            res.render('involve.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('involve.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -270,7 +349,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /cafe');
 
             res.status(200);
-            res.render('cafe.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('cafe.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -286,7 +368,11 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /contact');
 
             res.status(200);
-            res.render('contact.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : '', honeyValue: process.env['HONEY_PUBLIC_VALUE']  });
+            res.render('contact.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || '',
+                honeyValue: process.env['HONEY_PUBLIC_VALUE'] || 'bac312'
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -302,7 +388,10 @@ export class Server extends ServerSetup {
             this.txtLogger.writeToLogFile('Request Made: GET /donate');
 
             res.status(200);
-            res.render('donate.ejs', {  loggedIn: req.session.loggedin ? true : false, username: req.session.username ? req.session.username : ''  });
+            res.render('donate.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
@@ -321,8 +410,8 @@ export class Server extends ServerSetup {
 
             res.status(200);
             res.render('help.ejs', {
-                loggedIn: req.session.loggedin,
-                username: req.session.username
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
             });
 
             this.txtLogger.writeToLogFile(
@@ -370,7 +459,7 @@ export class Server extends ServerSetup {
 
 
     private postRequests(): void {
-        this.router.post('/login', async (req: Request, res: Response): Promise<void> => {
+        this.router.post('/login', this.loginLimiter, async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: POST /login');
 
             let log: string = '';
@@ -383,6 +472,15 @@ export class Server extends ServerSetup {
             req.session.sid = '';
 
             try {
+                if (!req.session.loginRequests) req.session.loginRequests = 0;
+                else if (req.session.loginRequests >= 3) {
+                    this.txtLogger.writeToLogFile('Failed to reset account. Session limit reached.');
+                    log = "Maximum account login attempts reached. Please check your email address and password are both correct. You can try again in 24 hours.";
+                    alertLog = true;
+                    status = 429;
+                    return;
+                }
+
                 const { username, password } = req.body;
 
                 if (!username.toString() || !password.toString()) {
@@ -391,6 +489,8 @@ export class Server extends ServerSetup {
                     alertLog = true;
                     return;
                 }
+
+                req.session.loginRequests++;
 
                 const dbResponse: null | queryUsersRead = await this.db.login(username.toString(), password.toString());
 
@@ -415,7 +515,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/login';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/login';</script>`);
+                }
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
@@ -465,10 +568,10 @@ export class Server extends ServerSetup {
             req.session.sid = '';
 
             try {
-                if (!req.session.resetPosts) req.session.resetPosts = 1;
-                else if (req.session.resetPosts >= 3) {
+                if (!req.session.resetRequests) req.session.resetRequests = 0;
+                else if (req.session.resetRequests >= 2) {
                     this.txtLogger.writeToLogFile('Failed to reset account. Session limit reached.');
-                    log = "Maximum account reset attempts. Please check you inbox, including junk or spam mail, for an account reset email. If not, check your email address is correct.";
+                    log = "Maximum account reset attempts reached. Please check you inbox, including junk or spam mail, for an account reset email. If not, check your email address is correct. You can try again in 24 hours.";
                     alertLog = true;
                     status = 429;
                     return;
@@ -483,7 +586,7 @@ export class Server extends ServerSetup {
                     return;
                 }
 
-                req.session.resetPosts++;
+                req.session.resetRequests++;
 
                 const emailFound: boolean = await this.db.checkData(email.toString(), 'email');
 
@@ -491,7 +594,7 @@ export class Server extends ServerSetup {
                     const username: string | null = await this.db.getData('username','email', email.toString());
 
                     if(username) {
-                        const newRandomPassword: string = Helper.generateRandomPassword(12);
+                        const newRandomPassword: string = await this.generateRandomPassword(12);
                         const updateSuccess: boolean = await this.db.updateData(newRandomPassword, 'password', 'email', email.toString());
 
                         if (updateSuccess) {
@@ -534,7 +637,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/login';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/login';</script>`);
+                }
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
@@ -614,7 +720,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/login';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/login';</script>`);
+                }
                 else res.redirect('/');
 
                 if (log) this.txtLogger.writeToLogFile(log);
@@ -695,7 +804,10 @@ export class Server extends ServerSetup {
                 res.status(status);
 
                 if (status == 401) res.redirect('/login');
-                else res.send(`<script>alert("${log}"); window.location.href = '/';</script>`);
+                else {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/';</script>`);
+                }
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(
@@ -819,7 +931,8 @@ export class Server extends ServerSetup {
 
             } finally {
                 res.status(status);
-                res.send(`<script>alert("${log}"); window.location.href = '/events';</script>`);
+                const safeLog = encodeURIComponent(log);
+                res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/events';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(
@@ -937,7 +1050,8 @@ export class Server extends ServerSetup {
 
             } finally {
                 res.status(status);
-                res.send(`<script>alert("${log}"); window.location.href = '/gallery';</script>`);
+                const safeLog = encodeURIComponent(log);
+                res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/gallery';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(
@@ -1014,10 +1128,10 @@ export class Server extends ServerSetup {
             let alertLog: boolean = false;
 
             try {
-                if (!req.session.contactPosts) req.session.contactPosts = 0;
-                else if (req.session.contactPosts >= 2) {
+                if (!req.session.helpRequests) req.session.helpRequests = 0;
+                else if (req.session.helpRequests >= 2) {
                     this.txtLogger.writeToLogFile('Failed to send message. Session limit reached.');
-                    log = "Maximum messages sent in to us. You can't send too many messages in a short space of time, to allow us the time to respond and not get overwhelmed.";
+                    log = "Maximum messages sent in to us. You can't send too many messages in a short space of time, to allow us the time to respond and not get overwhelmed. Please try again in 24 hours.";
                     alertLog = true;
                     status = 429;
                     return;
@@ -1026,7 +1140,7 @@ export class Server extends ServerSetup {
                 const { name, email, message, contactTime, important, formLoadTime, 'g-recaptcha-response': recaptchaResponse } = req.body;
 
                 if (contactTime || !important ||important != process.env['HONEY_PUBLIC_VALUE']) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Did not send message. Hidden field has been completed.';
                     status = 200; // Don't tell malicious user it was a failed attempt.
                     return;
@@ -1051,7 +1165,7 @@ export class Server extends ServerSetup {
                 const isBadMessage = await this.containsBadWords([name, email, message], JSON.parse(process.env['BAD_WORDS']!));
 
                 if (isBadMessage) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Message Not Sent. We found some bad words when scanning your message.';
                     status = 400;
                     alertLog = true;
@@ -1063,7 +1177,7 @@ export class Server extends ServerSetup {
                 const timeDifference = formSubmitTime - parseInt(formLoadTime);
 
                 if (timeDifference < submissionThreshold) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Did not send message. Form submitted in less time than the threshold.';
                     status = 200; // Don't tell malicious user it was a failed attempt.
                     return;
@@ -1073,7 +1187,7 @@ export class Server extends ServerSetup {
                 const recaptchaServerResponse = await axios.post(recaptchaVerificationUrl);
 
                 if (!recaptchaServerResponse.data.success) {
-                    req.session.contactPosts++;
+                    req.session.helpRequests++;
                     log = 'Failed to send message. reCAPTCHA verification failed.';
                     status = 400;
                     return;
@@ -1099,7 +1213,7 @@ export class Server extends ServerSetup {
                                 `\n\n\n\nIf you suspect something is wrong with this email, delete it. You can also contact: ${process.env['EMAIL_ADDRESS']}\n`
                         });
 
-                        req.session.contactPosts++;
+                        req.session.helpRequests++;
                         this.txtLogger.writeToLogFile(`Contact us email sent: ${info.response}`);
                         log = 'Message successfully sent.';
                         status = 200;
@@ -1118,8 +1232,10 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(status);
 
-                if (alertLog && log) res.send(`<script>alert("${log}"); window.location.href = '/';</script>`);
-                else res.send(`<script>alert("Message successfully sent."); window.location.href = '/';</script>`);
+                if (alertLog && log) {
+                    const safeLog = encodeURIComponent(log);
+                    res.send(`<script>alert("${decodeURIComponent(safeLog)}"); window.location.href = '/';</script>`);
+                } else res.send(`<script>alert("Message successfully sent."); window.location.href = '/';</script>`);
 
                 if (log) this.txtLogger.writeToLogFile(log);
                 this.txtLogger.writeToLogFile(
@@ -1133,6 +1249,7 @@ export class Server extends ServerSetup {
             }
         });
     }
+
 
 
     private async isValidUserSession(req: Request): Promise<boolean> {
@@ -1184,6 +1301,29 @@ export class Server extends ServerSetup {
 
         // Test the email string against the regex pattern
         return emailPattern.test(email);
+    }
+
+
+    private async generateRandomPassword(length: number): Promise<string> {
+        length = Math.ceil(Math.abs(length));
+
+        if (length < 3) {
+            length = 3;
+        }
+
+        const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let password: string = '';
+
+        while (password.length < length) {
+            const byte = randomBytes(1)[0];
+            if (byte! >= 252) { // 252 is the largest multiple of 62 (charset length) that is less than 256
+                continue;
+            }
+            const randomIndex = byte! % charset.length;
+            password += charset[randomIndex];
+        }
+
+        return password;
     }
 
 

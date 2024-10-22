@@ -2,6 +2,7 @@
 
 <!--  EJS variables needed to render: `loggedIn`(boolean)  -->
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -83,14 +84,14 @@
                                 <a href="tel:01517078582" target="_blank">
                                     <img class="contact-icons" src="assets/images/telephone-icon.png" alt="Phone">
                                     <br>
-                                    <span>0151 707 8582</span>
+                                    <nav>0151 707 8582</nav>
                                 </a>
                             </li>
                             <li>
                                 <a href="mailto:contact@mencapliverpool.org.uk" target="_blank">
                                     <img class="contact-icons" src="assets/images/email-icon.png" alt="Email">
                                     <br>
-                                    <span>contact@mencapliverpool.org.uk</span>
+                                    <nav>contact@mencapliverpool.org.uk</nav>
                                 </a>
                             </li>
                             <br>
@@ -150,22 +151,22 @@
         <div class="burger-menu-button" id="burgerMenuButton">
             <div class="burger-icon" id="test123" onclick="toggleMenu()"></div>
             <div class="menu" id="menu">
-                <nav class="home-link-text">
-                    <a href="/">
-                        <img src="assets/images/mencap_small_buble_logo_white.png" alt="Home" height="68" width="78">
-                        <br>
-                        <nav class="item-center">Home</nav>
-                    </a>
-                </nav>
+                <a class="margin-below-s" href="/">
+                    <img src="assets/images/mencap_small_buble_logo_white.png" alt="Home" height="68" width="78">
+                    <nav class="item-center">Home</nav>
+                </a>
                 <a href="/about" class="menu-link-button">About Mencap</a>
                 <a href="/find" class="menu-link-button">Where to find us?</a>
                 <a href="/involve" class="menu-link-button">Get Involved!</a>
                 <a href="/events" class="menu-link-button">The Calendar</a>
                 <a href="/gallery" class="menu-link-button">The Gallery</a>
                 <a href="/contact" class="menu-link-button">Contact Us</a>
-                <a href="/cafe" class="item-center margin-below-s"><img src="assets/images/coffee-logo.png" alt="Coffee at Mencap" width="120"></a>
+                <a href="/cafe">
+                    <img class="image-menu-link" src="assets/images/coffee-logo.png" alt="Coffee at Mencap" width="130">
+                    <nav class="item-center">Cafe</nav>
+                </a>
                 <% if (loggedIn) { %>
-                    <a class="menu-link-button" href="/account">Account</a>
+                    <a class="menu-link-button margin-top-s" href="/account">Account</a>
                     <a class="menu-link-button margin-below-l-i" href="/help">Help</a>
                 <% } %>
             </div>

@@ -10,6 +10,7 @@ import {
     HeadObjectCommand
 } from "@aws-sdk/client-s3";
 import fs from 'fs';
+import path from 'path';
 
 
 type DeleteObjectsCommandInput = {
@@ -137,8 +138,21 @@ export class AwsS3 {
         if (bucketName) bucketName = Helper.bucketFormat(bucketName);
         this.txtLogger.writeToLogFile(`Upload item '${filePath}' to bucket '${bucketName}'.`);
 
-        const file = filePath.substring(filePath.lastIndexOf('/') + 1);
-        const key = folderName ? (fileName ? `${folderName}/${fileName}`: `${folderName}/${file}`) : (fileName ? `${fileName}`: `${file}`);
+        const normalizedPath = path.resolve(filePath);
+
+        const validPathPattern = /^[a-zA-Z0-9 _\-\/\\\.]+$/;
+        if (!validPathPattern.test(normalizedPath)) {
+            this.txtLogger.writeToLogFile(`Invalid file path: '${normalizedPath}'.`);
+            return 400;
+        }
+
+        const file = normalizedPath.substring(normalizedPath.lastIndexOf('/') + 1);
+        const key = folderName ? (fileName ? `${folderName}/${fileName}` : `${folderName}/${file}`) : (fileName ? `${fileName}` : `${file}`);
+
+        if (folderName && !validPathPattern.test(folderName)) {
+            this.txtLogger.writeToLogFile(`Invalid folder name: '${folderName}'.`);
+            return 400;
+        }
 
         if (folderName) {
             try {
@@ -163,7 +177,7 @@ export class AwsS3 {
             return 500;
         }
 
-        const fsFile = fs.createReadStream(filePath);
+        const fsFile = fs.createReadStream(normalizedPath);
         const params = new PutObjectCommand({
             Bucket: bucketName,
             Key: key,
@@ -171,16 +185,12 @@ export class AwsS3 {
         });
 
         try {
-
             await this.AWS_S3.send(params);
             this.txtLogger.writeToLogFile(`Successfully uploaded '${fileName ? fileName : file}' to bucket '${bucketName}'`);
-
             return 200;
-
         } catch (err) {
             this.txtLogger.writeToLogFile(`Error uploading file to bucket: ${err}`);
             return 500;
-
         } finally {
             fsFile.close();
         }

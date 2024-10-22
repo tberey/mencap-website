@@ -14,16 +14,18 @@ type queryUsersRead = {
 };
 
 type queryArticlesRead = {
-    ID: string,
+    ID: number,
     title: string,
     date: string,
     body: string,
-    file: string,
-    fileName: string,
-    imgThumb: string,
-    imgMain: string,
+    file: string | null,
+    fileName: string | null,
+    imgThumb: string | null,
+    imgMain: string | null,
     author: string,
-    userUid: string
+    userUid: string,
+    type: string,
+    createdAt: string | Date
 };
 
 type queryEventsRead = {
@@ -53,7 +55,7 @@ type queryWrite = {
     changedRows: number
 };
 
-type Columns = 'ID' | 'username' | 'password' | 'email' | 'uid' | 'sid' | 'membership' | 'title' | 'body' | 'file' | 'fileName' | 'imgThumb' | 'imgMain' | 'author' | 'userUid' | 'startDateTime' | 'endDateTime' | 'description' | 'recurring' | 'allDay';
+type Columns = 'ID' | 'username' | 'password' | 'email' | 'uid' | 'sid' | 'membership' | 'title' | 'body' | 'file' | 'fileName' | 'imgThumb' | 'imgMain' | 'author' | 'userUid' | 'type' | 'startDateTime' | 'endDateTime' | 'description' | 'recurring' | 'allDay' | 'createdAt';
 type Membership = 'staff';
 
 
@@ -175,9 +177,19 @@ export class Database {
                 imgMain VARCHAR(100) NULL,
                 author VARCHAR(100) NOT NULL,
                 userUid CHAR(36) NOT NULL,
+                type CHAR(2) NOT NULL,
                 createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )`;
+
+            const queryTypeTrigger: string = 'DELIMITER ;;\n'
+                + 'CREATE TRIGGER type_trigger\n'
+                + 'BEFORE INSERT ON ??\n'
+                + 'FOR EACH ROW\n'
+                + 'BEGIN\n'
+                + '  SET new.type = "db";\n'
+                + 'END;;\n'
+                + 'DELIMITER ;';
 
             const query3: string = `CREATE TABLE IF NOT EXISTS ?? (
                 ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -208,6 +220,7 @@ export class Database {
             await this.query(connection, queryUidTrigger, [this.dbTables[0]!]);
             await this.query(connection, querySidTrigger, [this.dbTables[0]!]);
             await this.query(connection, query2, [this.dbTables[1]!]);
+            await this.query(connection, queryTypeTrigger, [this.dbTables[1]!]);
             await this.query(connection, query3, [this.dbTables[2]!]);
             await this.query(connection, query4, [this.dbTables[3]!]);
 
@@ -358,23 +371,23 @@ export class Database {
         }
     }
 
-    public async getArticles(limit: number): Promise<queryArticlesRead[] | null> {
+    public async getArticles(limit: number): Promise<queryArticlesRead[]> {
         const connection = await this.open();
         
         try {
             const query: string = 'SELECT ?? FROM ?? ORDER BY ?? DESC LIMIT ?';
-            const inserts: Array<string | string[] | number> = [['ID', 'title', 'date', 'body', 'author', 'createdAt', 'imgThumb', 'imgMain', 'file', 'fileName', 'userUid'], this.dbTables[1]!, 'createdAt', limit];
+            const inserts: Array<string | string[] | number> = [['ID', 'title', 'date', 'body', 'author', 'createdAt', 'imgThumb', 'imgMain', 'file', 'fileName', 'userUid', 'type'], this.dbTables[1]!, 'createdAt', limit];
 
             const result: queryArticlesRead[] = await this.query(connection, query, inserts) as queryArticlesRead[];
 
             this.dbTxtLogger.writeToLogFile(`Query Results: ${result}`);
 
             if (result) return result;
-            return null;
+            return [];
 
         } catch (err) {
             this.dbTxtLogger.writeToLogFile(`Error Querying: ${err}`);
-            return null;
+            return [];
 
         } finally {
             await this.close(connection);
@@ -446,7 +459,7 @@ export class Database {
         }
     }
 
-    public async getGalleryMediaByYear(limit: number, year: string): Promise<queryGalleryRead[] | null> {
+    public async getGalleryMediaByYear(limit: number, year: string): Promise<queryGalleryRead[]> {
         const connection = await this.open();
         
         try {
@@ -458,18 +471,18 @@ export class Database {
             this.dbTxtLogger.writeToLogFile(`Query Results: ${result}`);
 
             if (result) return result;
-            return null;
+            return [];
 
         } catch (err) {
             this.dbTxtLogger.writeToLogFile(`Error Querying: ${err}`);
-            return null;
+            return [];
 
         } finally {
             await this.close(connection);
         }
     }
 
-    public async getGalleryMonthsByYear(year: string): Promise<queryGalleryRead[] | null> {
+    public async getGalleryMonthsByYear(year: string): Promise<queryGalleryRead[]> {
         const connection = await this.open();
         
         try {
@@ -481,18 +494,18 @@ export class Database {
             this.dbTxtLogger.writeToLogFile(`Query Results: ${result}`);
 
             if (result) return result;
-            return null;
+            return [];
 
         } catch (err) {
             this.dbTxtLogger.writeToLogFile(`Error Querying: ${err}`);
-            return null;
+            return [];
 
         } finally {
             await this.close(connection);
         }
     }
 
-    public async getGalleryYears(): Promise<queryGalleryRead[] | null> {
+    public async getGalleryYears(): Promise<queryGalleryRead[]> {
         const connection = await this.open();
         
         try {
@@ -504,11 +517,11 @@ export class Database {
             this.dbTxtLogger.writeToLogFile(`Query Results: ${result}`);
 
             if (result) return result;
-            return null;
+            return [];
 
         } catch (err) {
             this.dbTxtLogger.writeToLogFile(`Error Querying: ${err}`);
-            return null;
+            return [];
 
         } finally {
             await this.close(connection);
@@ -559,7 +572,7 @@ export class Database {
         }
     }
 
-    public async getEvents(limit: number): Promise<queryEventsRead[] | null> {
+    public async getEvents(limit: number): Promise<queryEventsRead[]> {
         const connection = await this.open();
         
         try {
@@ -571,11 +584,11 @@ export class Database {
             this.dbTxtLogger.writeToLogFile(`Query Results: ${result}`);
 
             if (result) return result;
-            return null;
+            return [];
 
         } catch (err) {
             this.dbTxtLogger.writeToLogFile(`Error Querying: ${err}`);
-            return null;
+            return [];
 
         } finally {
             await this.close(connection);

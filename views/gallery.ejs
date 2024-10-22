@@ -19,6 +19,8 @@
         </div>
 
         <% if (loggedIn) { %>
+            <nav class="custom-hr"></nav>
+
             <div class="container-1">
                 <div class="col-1">
                     <form id="gallery-form" action="/gallery" method="POST" enctype="multipart/form-data">
@@ -26,7 +28,7 @@
                         <h2>Upload a new image or video:</h2>
                         <br>
                         <label for="galleryImg">Image, Video or Gif to Upload:</label><br>
-                        <span class="clear-button" data-input-id="galleryImg"><br>X</span>
+                        <nav class="clear-button" data-input-id="galleryImg"><br>X</nav>
                         <input type="file" id="galleryImg" name="galleryImg" accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg" required>
                         <br><br><br>
                         <label for="month">Month:</label>
@@ -50,7 +52,7 @@
             <br><br><br>
         <% } %>
 
-        <br><br>
+        <nav class="custom-hr"></nav>
 
         <div class="container-1">
             <div class="col-1 text-center image-center" style="font-size: 32px;">

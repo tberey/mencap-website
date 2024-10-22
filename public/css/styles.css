@@ -722,6 +722,20 @@ a {
     background-color: #45a049;
 }
 
+.media-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.media-item {
+    flex: 1 1 100%;
+    max-width: 46%;
+    cursor: pointer;
+}
+
 .rounded-box {
     border-radius: 26px;
     border: 2px solid white;
@@ -970,6 +984,10 @@ a {
         width: 80%;
     }
 
+    .media-item {
+        max-width: 48%;
+    }
+
     .custom-hr {
         transform: translateX(0px);
     }
@@ -1001,6 +1019,14 @@ a {
     .spacing {
         display: block;
         padding: 32px;
+    }
+}
+
+
+
+@media (max-width: 499px) {
+    .media-item {
+        max-width: 85%;
     }
 }
 

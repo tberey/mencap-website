@@ -264,4 +264,4 @@ Contributions are welcomed and, of course, **greatly appreciated**.
 
 ### Contact
 
-`<b>`Tom Berey `</b>`;`<br>`tomberey@mencapliverpool.org.uk
+`<b>`Tom Berey `</b>`;`<br>`tom.berey@mencapliverpool.org.uk

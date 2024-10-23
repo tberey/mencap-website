@@ -21,10 +21,10 @@
                 <div class="col-2 image-right">
                     <% if (loggedIn) { %>
                         Hi <%= username %>, <form action="/logout" method="POST" class="footer-logout-button"><input type="submit" value="Logout?" class="custom-submit-button"></button></form>
-                        <br>
                     <% } else { %>
-                        <a href="/login" class="underline">Login</a><br>
+                        <a href="/login" class="underline">Login</a>
                     <% } %>
+                    <br><a href="/privacy" class="underline">Our Privacy Policy.</a>
                     <br>Registered Charity 1004262.
                     <br>Donate £4 by txting <b><i>MENL33 £4</i></b> to <b>70070.</b>
                 </div>

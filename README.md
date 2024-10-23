@@ -243,6 +243,7 @@ Below is the refined and confirmed roadmap, that has been planned for completion
 | 1.1.0 | 2024-10-17 | `<ul><li>`Further updates and refinement to mobile screen formatting, layout and design.`</li><li>`Minor full size screen tidying and formatting.`</li><li>`Home/front page changes so that ig and fb posts are also rendered in a wall timeline format.`</li><li>`Server changes to accomodate home/front page post changes.`</li><li>`Minor API updates and tidy.`</li><li>`Update README.md`</li></ul>` |
 | 1.1.1 | 2024-10-18 | `<ul><li>`Design, view and quality improvements.`</li><li>`Address numerous security concerns and exploits.`</li><li>`Adds further rate limiting and enhances existing session limits.`</li><li>`Enhances session and cookies config.`</li><li>`Minor general server updates and tidy.`</li><li>`Update README.md`</li></ul>` |
 | 1.1.2 | 2024-10-22 | `<ul><li>`Design, view and quality improvements.`</li><li>`Refine posts fetching on the server side, and update front end handling of this.`</li><li>`Update README.md`</li></ul>` |
+| 1.1.3 | 2024-10-23 | `<ul><li>`Minor view update.`</li><li>`Add our current privacy policy, that has always been followed by us (mencap liverpool and sefton), even if not visible.`</li><li>`Update README.md`</li></ul>` |
 
 <br><hr><br>
 

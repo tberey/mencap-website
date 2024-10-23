@@ -424,6 +424,25 @@ export class Server extends ServerSetup {
             );
         });
 
+        this.router.get('/privacy', async (req:Request, res:Response): Promise<void> => {
+            this.txtLogger.writeToLogFile('Request Made: GET /privacy');
+
+            res.status(200);
+            res.render('privacy.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
+
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
+            );
+        });
+
         this.router.get('/outreach', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /outreach');
         

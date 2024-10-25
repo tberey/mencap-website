@@ -129,8 +129,33 @@ For help or guidance in downloading and running the application, see the followi
 
 ### Screenshots
 
-Logging Sample `<br>`
-![Screenshot#1](https://github.com/tberey/mencap-website/blob/master/screenshots/local-logs-sample.png?raw=true)
+Landing Page 1<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/landing-page-1.png?raw=true)
+
+<br><br>
+
+Landing Page 2<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/landing-page-2.png?raw=true)
+
+<br><br>
+
+Screenshot<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/screenshot.png?raw=true)
+
+<br><br>
+
+Mobile Landing Page 1<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/mobile-landing-page-1.png?raw=true)
+
+<br><br>
+
+Mobile Landing Page 2<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/mobile-landing-page-2.png?raw=true)
+
+<br><br>
+
+Mobile Main Menu<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/mobile-main-menu.png?raw=true)
 
 <br><hr><br>
 
@@ -244,6 +269,7 @@ Below is the refined and confirmed roadmap, that has been planned for completion
 | 1.1.1 | 2024-10-18 | `<ul><li>`Design, view and quality improvements.`</li><li>`Address numerous security concerns and exploits.`</li><li>`Adds further rate limiting and enhances existing session limits.`</li><li>`Enhances session and cookies config.`</li><li>`Minor general server updates and tidy.`</li><li>`Update README.md`</li></ul>` |
 | 1.1.2 | 2024-10-22 | `<ul><li>`Design, view and quality improvements.`</li><li>`Refine posts fetching on the server side, and update front end handling of this.`</li><li>`Update README.md`</li></ul>` |
 | 1.1.3 | 2024-10-23 | `<ul><li>`Minor view update.`</li><li>`Add our current privacy policy, that has always been followed by us (mencap liverpool and sefton), even if not visible.`</li><li>`Update README.md`</li></ul>` |
+| 1.1.4 | 2024-10-25 | `<ul><li>`Minor view and style updates.`</li><li>`Add screenshots.`</li><li>`Update README.md`</li></ul>` |
 
 <br><hr><br>
 

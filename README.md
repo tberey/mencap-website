@@ -129,33 +129,33 @@ For help or guidance in downloading and running the application, see the followi
 
 ### Screenshots
 
-Landing Page 1 `<br>`
-![Screenshot#1](https://github.com/tberey/mencap-website/screenshots/screenshots/landing-page-1.png?raw=true)
+Landing Page 1<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/landing-page-1.png?raw=true)
 
 <br><br>
 
-Landing Page 2 `<br>`
-![Screenshot#1](https://github.com/tberey/mencap-website/screenshots/screenshots/landing-page-2.png?raw=true)
+Landing Page 2<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/landing-page-2.png?raw=true)
 
 <br><br>
 
-Screenshot `<br>`
-![Screenshot#1](https://github.com/tberey/mencap-website/screenshots/screenshots/screenshot.png?raw=true)
+Screenshot<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/screenshot.png?raw=true)
 
 <br><br>
 
-Mobile Landing Page 1 `<br>`
-![Screenshot#1](https://github.com/tberey/mencap-website/screenshots/screenshots/mobile-landing-page-1.png?raw=true)
+Mobile Landing Page 1<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/mobile-landing-page-1.png?raw=true)
 
 <br><br>
 
-Mobile Landing Page 2 `<br>`
-![Screenshot#1](https://github.com/tberey/mencap-website/screenshots/screenshots/mobile-landing-page-2.png?raw=true)
+Mobile Landing Page 2<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/mobile-landing-page-2.png?raw=true)
 
 <br><br>
 
-Mobile Main Menu `<br>`
-![Screenshot#1](https://github.com/tberey/mencap-website/screenshots/screenshots/mobile-main-menu.png?raw=true)
+Mobile Main Menu<br>
+![Screenshot#1](https://github.com/tberey/mencap-website/blob/development/screenshots/mobile-main-menu.png?raw=true)
 
 <br><hr><br>
 

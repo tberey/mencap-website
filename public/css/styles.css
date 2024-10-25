@@ -8,6 +8,7 @@
 
 
 
+
 /* ---- Custom Font Settings ---- */
 
 @font-face {
@@ -17,54 +18,55 @@
     font-style: normal;
 }
 
-/*@font-face {
+@font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Italic.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Light.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
     font-weight: lighter;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Light-Italic.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
     font-weight: lighter;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Bold.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Bold-Italic.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
     font-weight: bold;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Heavy.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
     font-weight: bolder;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Heavy-Italic.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
     font-weight: bolder;
-    font-style: italic;      #ff01a5
-}*/
+    font-style: italic;
+}
+
 
 
 
@@ -80,7 +82,7 @@ html, body {
     left: 0;
     top: 0;
     color: white;
-    font-family: 'mencap-font', sans-serif;
+    font-family: 'mencap-font';
     background-color: #4F006F;
 }
 
@@ -104,19 +106,15 @@ button:hover {
     background-color: #ff01a5;
 }
 
-
 a {
     color: white;
     text-decoration: none;
 }
 
-.underline {
-    text-decoration: underline;
-}
-
 .no-scroll {
     overflow: hidden;
 }
+
 
 
 
@@ -139,82 +137,95 @@ a {
     overflow: auto;
 }
 
-.banner {
-    width: 100%;
-}
+
+
+
+
 
 .footer {
     position: fixed;
-    padding-top: 9px;
-    padding-bottom: 3px;
-    padding-left: 4px;
     bottom: 0;
     width: 100%;
     height: fit-content;
+    padding-top: 7px;
+    padding-bottom: 4px;
+    padding-left: 0;
     background: #970361;
     z-index: 3;
     font-size: 15px;
 }
 
-.footer-logout-button {
-    display: inline-block;
+.footer-col-override {
+    margin-left: 120px;
+    width: 112%;
 }
 
+.container-footer {
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr 1fr;
+}
 
-
-
+.banner {
+    width: 100%;
+}
 
 .container-banner {
     display: grid;
-    width: 100%;
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr;
 }
 
+
+
+
+
+
 .container-1 {
     display: grid;
-    width: 80%;
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr;
-    padding-left: 36px;
+    padding-left: 14%;
+    padding-right: 10%;
 }
 
 .container-2 {
     display: grid;
-    width: 80%;
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr;
-    padding-left: 36px;
+    padding-left: 14%;
+    padding-right: 10%;
 }
 
 .container-3 {
     display: grid;
-    width: 80%;
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr 1fr;
-    padding-left: 36px;
+    padding-left: 14%;
+    padding-right: 10%;
 }
 
 .container-4 {
     display: grid;
-    width: 80%;
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    padding-left: 36px;
+    padding-left: 14%;
+    padding-right: 10%;
 }
 
 .container-5 {
     display: grid;
-    width: 80%;
     margin-left: auto;
     margin-right: auto;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    padding-left: 36px;
+    padding-left: 14%;
+    padding-right: 10%;
 }
 
 .col-1 {
@@ -236,6 +247,7 @@ a {
 .col-5 {
     grid-column-start: 5;
 }
+
 
 
 
@@ -292,6 +304,7 @@ a {
 .item-auto-show {
     display: none;
 }
+
 
 
 
@@ -409,6 +422,9 @@ a {
 
 
 
+
+/* Custom Feature CSS Settings */
+
 .image-viewer {
     position: relative;
     display: block;
@@ -522,7 +538,7 @@ a {
     right: 0;
     background-color: #97036196;
     padding: 0px;
-    width: 298px;
+    width: 281px;
     font-size: 18px;
     border-radius: 0px 0px 0px 20px;
     z-index: 9;
@@ -577,8 +593,9 @@ a {
 
 .remove-list-indent {
     list-style-type: none;
-    padding-left: 12px;
-    margin-left: 12px;
+    margin-top: 10px;
+    padding-left: 6px;
+    margin-left: 6px;
 }
 
 
@@ -592,6 +609,13 @@ a {
 
 
 
+.footer-logout-button {
+    display: inline-block;
+}
+
+.underline {
+    text-decoration: underline;
+}
 
 .custom-submit-button {
     background-color: transparent;
@@ -772,7 +796,7 @@ a {
     margin: 0 auto;
     display: block;
     text-align: center;
-    margin-left: 45px;
+    margin-left: 4%;
 }
 
 .spacing {
@@ -797,33 +821,33 @@ a {
 
 @media (max-width: 899px) {
     .container-1 {
-        width: 99.6%;
-        padding-left: 0px;
+        width: 95%;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .container-2 {
-        width: 99.6%;
-        padding-left: 0px;
+        width: 95%;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .container-3 {
-        width: 99.6%;
-        padding-left: 0px;
+        width: 95%;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .container-4 {
-        width: 99.6%;
-        padding-left: 0px;
+        width: 95%;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .container-5 {
-        width: 99.6%;
-        padding-left: 0px;
-    }
-
-    .container-6 {
-        width: 99.6%;
-        padding-left: 0px;
+        width: 95%;
+        padding-left: 0;
+        padding-right: 0;
     }
 
 
@@ -838,6 +862,12 @@ a {
 
     .footer {
         font-size: 13px;
+    }
+
+    .footer-col-override {
+        width: 100%;
+        margin-left: 1px;
+        padding-right: 4px;
     }
 
 
@@ -860,9 +890,9 @@ a {
     }
 
     .burger-icon {
-        width: 65px;
-        height: 65px;
-        font-size: 40px;
+        width: 60px;
+        height: 60px;
+        font-size: 60px;
         display: flex;
         justify-content: center;
         align-items: center;

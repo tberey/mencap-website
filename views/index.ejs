@@ -46,10 +46,10 @@
             <div class="col-1">
                 <% articles.forEach(function(article) { %>
                     <nav style="background-color: #ff01a64d; border-radius: 100px;">
-                        <nav style="word-break: normal; padding: 30px 60px;">
+                        <nav style="word-break: normal; padding: 30px 20px;">
                             <div>
-                                <p style="font-size: 32px;"><%= article.title %></p>
-                                <p style="font-size: 20px;"><%= article.date %></p>
+                                <p style="font-size: 32px; padding-left: 18px;"><%= article.title %></p>
+                                <p style="font-size: 20px; padding-left: 24px;"><%= article.date %></p>
 
                                 <% if (article.type == 'db') { %>
                                     <img class="image-right" src="assets/images/website-icon.png"  alt="Website Post Thumbnail" height="64" width="66">
@@ -62,10 +62,10 @@
                                     <img class="image-right" src="assets/images/instagram-icon.png"  alt="Instagram Post Thumbnail" height="70" width="70">
                                 <% } %>
 
-                                <p style="font-size: 23px; padding: 16px; word-break: break-word;"><%- article.body %></p>
+                                <p style="font-size: 22px; word-break: break-word;"><%- article.body %></p>
 
                                 <% if (article.type == 'db' && article.fileName && mediaUrl) { %>
-                                    <p style="font-size: 18px; border: 3px solid white; padding: 5px; border-radius: 55px; width: fit-content;">
+                                    <p style="font-size: 18px; border: 3px solid white; padding: 10px; border-radius: 55px; width: fit-content;">
                                         <a href="<%= mediaUrl %><%= article.file %>" download="<%= article.fileName %>" target="_blank">
                                             <i>Click here to download:</i><br><b><u><%= article.fileName %></u> &#8659;</b>
                                         </a>
@@ -100,7 +100,7 @@
 
                                 <br>
 
-                                <nav class="item-right"><p style="font-size: 12px;">Published by&nbsp;<b><%= article.author %></b>&nbsp;on <%= article.createdAt %></p></nav>
+                                <nav class="item-right"><p style="font-size: 12px;">&nbsp;Published by&nbsp;<b><%= article.author %></b>&nbsp;on <%= article.createdAt %>&nbsp;</p></nav>
                                 <% if (article.type == 'db' && loggedIn && uid && article.userUid && article.userUid == uid) { %>
                                     <input type="button" value="Delete" class="custom-submit-button" style="text-decoration: underline; cursor: pointer; font-size: 12px;" onclick="confirmArticleDelete('<%= article.ID %>','<%= article.userUid %>','<%= article.imgThumb %>','<%= article.imgMain %>','<%= article.file %>')">
                                 <% } %>

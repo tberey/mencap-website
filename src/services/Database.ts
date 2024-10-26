@@ -5,31 +5,31 @@ import util from 'util';
 
 
 type queryUsersRead = {
-    username: string,
-    password: string,
-    email: string,
-    membership: string,
-    uid: string,
-    sid: string
+    username?: string,
+    password?: string,
+    email?: string,
+    membership?: string,
+    uid?: string,
+    sid?: string
 };
 
 type queryArticlesRead = {
-    ID: number,
-    title: string,
-    date: string,
-    body: string,
-    file: string | null,
-    fileName: string | null,
-    imgThumb: string | null,
-    imgMain: string | null,
-    author: string,
-    userUid: string,
-    type: string,
-    createdAt: string | Date
+    ID?: number,
+    title?: string,
+    date?: string,
+    body?: string,
+    file?: string | null,
+    fileName?: string | null,
+    imgThumb?: string | null,
+    imgMain?: string | null | Array<any>,
+    author?: string,
+    userUid?: string,
+    type?: string,
+    createdAt?: string | Date
 };
 
 type queryEventsRead = {
-    ID: string,
+    ID: number,
     title: string,
     startDateTime: Date,
     endDateTime: Date,
@@ -41,13 +41,14 @@ type queryEventsRead = {
 };
 
 type queryGalleryRead = {
-    ID: string,
-    monthName: string,
-    month: string,
-    year: string,
-    media: string,
-    author: string,
-    userUid: string
+    ID?: number,
+    monthName?: string,
+    month?: number,
+    year?: string,
+    media?: string,
+    author?: string,
+    userUid?: string,
+    mediaType?: string
 };
 
 type queryWrite = {
@@ -459,35 +460,39 @@ export class Database {
         }
     }
 
-    public async getGalleryMediaByYear(limit: number, year: string): Promise<queryGalleryRead[]> {
+    public async getGalleryMediaByMonthYear(limit: number, month: number, year: string): Promise<queryGalleryRead[]> {
         const connection = await this.open();
-        
+
         try {
-            const query: string = 'SELECT ?? FROM ?? WHERE ?? = ? ORDER BY ?? DESC LIMIT ?';
-            const inserts: Array<string | number | string[]> = [['ID','media','month','userUid'], this.dbTables[3]!, 'year', year, 'createdAt', limit];
+            let query: string = 'SELECT ?? FROM ?? WHERE ?? = ?';
+            const inserts: Array<string | number | string[]> = [['ID', 'media', 'month', 'userUid'], this.dbTables[3]!, 'year', year];
+
+            query += ' AND ?? = ?';
+            inserts.push('month', month);
+
+            query += ' ORDER BY ?? DESC LIMIT ?';
+            inserts.push('createdAt', limit);
 
             const result: queryGalleryRead[] = await this.query(connection, query, inserts) as queryGalleryRead[];
 
             this.dbTxtLogger.writeToLogFile(`Query Results: ${result}`);
 
-            if (result) return result;
-            return [];
+            return result || [];
 
         } catch (err) {
             this.dbTxtLogger.writeToLogFile(`Error Querying: ${err}`);
             return [];
-
         } finally {
             await this.close(connection);
         }
     }
 
-    public async getGalleryMonthsByYear(year: string): Promise<queryGalleryRead[]> {
+    public async getGalleryMonths(): Promise<queryGalleryRead[]> {
         const connection = await this.open();
         
         try {
-            const query: string = 'SELECT DISTINCT ?? FROM ?? WHERE ?? = ? ORDER BY ?? DESC';
-            const inserts: string[] = ['month', this.dbTables[3]!, 'year', year, 'month'];
+            const query: string = 'SELECT DISTINCT ?? FROM ?? ORDER BY ?? DESC';
+            const inserts: string[] = ['month', this.dbTables[3]!, 'month'];
 
             const result: queryGalleryRead[] = await this.query(connection, query, inserts) as queryGalleryRead[];
 

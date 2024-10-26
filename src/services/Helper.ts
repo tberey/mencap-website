@@ -17,8 +17,8 @@ export class Helper {
         return term;
     }
 
-    static getMonthName = (month: string): string | undefined => {
-        const monthNumber = parseInt(month, 10);
+    static getMonthName = (month: number): string | undefined => {
+        const monthNumber = month;
         
         if (isNaN(monthNumber) || monthNumber < 1 || monthNumber > 12) return undefined;
 
@@ -29,9 +29,8 @@ export class Helper {
         return monthNames[monthNumber - 1];
     };
 
-    static parseDate(date: string | Date): number | null {
-        if (date) return new Date(date).getTime();
-        return null
+    static parseDate(date: string | Date): number {
+        return new Date(date).getTime();
     }
 
     static formatDate(dateString: string): string {

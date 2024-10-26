@@ -43,6 +43,10 @@ export class Server extends ServerSetup {
         galleryFolder: 'gallery-media',
     };
 
+    private fbPosts: queryArticlesRead[] = [];
+    private igPosts: queryArticlesRead[] = [];
+    private timestamp: number = 0;
+
 
     private getRequests(): void {
         this.router.get('/', async (req: Request, res: Response): Promise<void> => {
@@ -52,74 +56,17 @@ export class Server extends ServerSetup {
             const articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
 
             try {
-                //const facebookUrl: string = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/posts?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=message,full_picture,created_time,attachments{media}&limit=4`;
-                const facebookUrl2: string = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/feed?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=message,full_picture,created_time,attachments{media}&limit=4`;
-                const instagramUrl: string = `https://graph.instagram.com/${process.env['INSTAGRAM_BUSINESS_USER_ID']}/media?fields=caption,media_url,timestamp,media_type,children{media_url,media_type}&access_token=${process.env['INSTAGRAM_APP_API_TOKEN']}&limit=8`;
-
-                this.txtLogger.writeToLogFile('Attempting to fetch Articles, Facebook Posts and Instagram Posts.');
-
+                this.txtLogger.writeToLogFile('Attempting to fetch Articles.');
                 const articles: queryArticlesRead[] = await this.db.getArticles(4);
                 if (articles.length) {
-                    articles.forEach((article: queryArticlesRead) => article.body = article.body.replace(/\n/g, '<br>'));
+                    articles.forEach((article: queryArticlesRead) => { if (article.body) article.body = article.body.replace(/\n/g, '<br>') });
                     this.txtLogger.writeToLogFile('Successfully got Articles.');
                 }
 
-                let fbPosts: queryArticlesRead[] = [];
-                const responseFb: globalThis.Response = await fetch(facebookUrl2); // facebookUrl2  facebookUrl
-                if (responseFb && responseFb.status == 200) var dataFb = await responseFb.json();
-                if (dataFb) {
-                    fbPosts = dataFb.data.map((postFb: { message: string; full_picture: string; created_time: string; attachments?: { media: { image: { src: string; } }[] }; }) => {
-                        let images: string[] = postFb.attachments?.media?.map(media => media.image.src) || [postFb.full_picture];
-                        return {
-                            ID: 0,
-                            title: 'Facebook Post',
-                            date: Helper.formatDate(postFb.created_time),
-                            body: postFb.message,
-                            file: null,
-                            fileName: null,
-                            imgThumb: null,
-                            imgMain: images.slice(0, 5),
-                            author: 'fb',
-                            userUid: '127345',
-                            type: 'fb',
-                            createdAt: postFb.created_time
-                        };
-                    });
-                    this.txtLogger.writeToLogFile('Successfully got Facebook Posts.');
-                }
+                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 4, 8));
 
-                let igPosts: queryArticlesRead[] = [];
-                const responseIg: globalThis.Response = await fetch(instagramUrl);
-                if (responseIg && responseIg.status == 200) var dataIg = await responseIg.json();
-                if (dataIg) {
-                    igPosts = dataIg.data.map((igPost: { caption: string; media_url: string; timestamp: string; media_type: string; children?: { data: { media_url: string, media_type: string }[]; } }) => {
-                        let images: { media_url: string, media_type: string }[] = [];
-
-                        if (igPost && igPost.children && igPost.children.data && igPost.children.data.length) igPost.children.data.forEach(child => images.push(child));
-                        else if (igPost) images.push(igPost);
-
-                        return {
-                            ID: 0,
-                            title: 'Instagram Post',
-                            date: Helper.formatDate(igPost.timestamp),
-                            body: igPost.caption,
-                            file: null,
-                            fileName: null,
-                            imgThumb: null,
-                            imgMain: images.slice(0, 5),
-                            author: 'ig',
-                            userUid: '124345',
-                            type: 'ig',
-                            createdAt: igPost.timestamp
-                        };
-                    });
-                    this.txtLogger.writeToLogFile('Successfully got Instagram Posts.');
-                }
-
-                articlesPostsList = articlesPostsList.concat(articles, fbPosts, igPosts);
-
-                if (articlesPostsList.length) articlesPostsList.sort((a, b) => Helper.parseDate(b.createdAt)! - Helper.parseDate(a.createdAt)!);
-                else this.txtLogger.writeToLogFile(`No Articles/Posts to fetch, or, an error occurred getting articles or posts.`);
+                if (articlesPostsList.length) articlesPostsList.sort((a, b) => (b.createdAt && a.createdAt) ? Helper.parseDate(b.createdAt) - Helper.parseDate(a.createdAt) : 0);
+                else this.txtLogger.writeToLogFile(`No Articles or external posts to sort, or an error occurred fetching Articles and Posts.`);
             } catch (err) {
                 this.txtLogger.writeToLogFile(`An error occurred getting articles or posts: ${err}`);
             } finally {
@@ -283,36 +230,46 @@ export class Server extends ServerSetup {
         this.router.get('/gallery', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /gallery');
 
-            let gallery: queryGalleryRead[] | undefined;
-            let years: queryGalleryRead[] | undefined;
-            let months: queryGalleryRead[] | undefined;
-            let mediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.galleryFolder}/`;
-            const { yearView } = req.query;
+            let gallery: queryGalleryRead[] = [];
+            let years: queryGalleryRead[] = [];
+            let months: queryGalleryRead[] = [];
+            const mediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.galleryFolder}/`;
+            const { yearView, monthView } = req.query;
+            const selectedYearToView: string = (yearView) ? yearView.toString() : (new Date().getFullYear().toString());
+            const selectedMonthToView: number = (monthView) ? parseInt(monthView.toString()) : (new Date().getMonth() + 1);
 
             try {
                 const mediaLimit: number = 420;
+
+                months = await this.db.getGalleryMonths();
                 years = await this.db.getGalleryYears();
-                months = await this.db.getGalleryMonthsByYear((yearView) ? yearView.toString() : ((years && years[0] && years[0].year) ? years[0].year : '2023'));
-                gallery = await this.db.getGalleryMediaByYear(mediaLimit, (yearView) ? yearView.toString() : ((years && years[0] && years[0].year) ? years[0].year : '2023'));
-                this.txtLogger.writeToLogFile('Successfully got Gallery Media.');
+                gallery = await this.db.getGalleryMediaByMonthYear(mediaLimit, selectedMonthToView, selectedYearToView);
+
+                if (gallery && gallery.length) this.txtLogger.writeToLogFile('Successfully fetched Gallery Media.');
+
+                const allMediaItems = await this.updateMediaDataArrays(months, years, gallery, selectedMonthToView, selectedYearToView);
+                months = allMediaItems.months;
+                years = allMediaItems.years;
+                gallery = allMediaItems.mediaItems;
 
                 if (months) months.forEach((month) => {
-                    if (Helper.getMonthName(month.month)) month.monthName = Helper.getMonthName(month.month)!
+                    if (month.month && Helper.getMonthName(month.month)) month.monthName = Helper.getMonthName(month.month);
                 });
 
             } catch (err) {
                 this.txtLogger.writeToLogFile(`An error occurred getting Gallery media: ${err}`);
-            }
-            finally {
+            } finally {
                 res.status(200);
                 res.render('gallery.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
                     username: req.session.username || '',
                     uid: req.session.uid || '',
-                    mediaUrl: mediaUrl || '',
-                    gallery: gallery || [],
-                    months: months || [],
-                    years: years || []
+                    mediaUrl: mediaUrl,
+                    gallery: gallery,
+                    months: months,
+                    years: years,
+                    selectedYear: selectedYearToView,
+                    selectedMonth: selectedMonthToView
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -1368,5 +1325,140 @@ export class Server extends ServerSetup {
         }
 
         return false;
+    }
+
+
+    private async getExternalPosts(fullPosts: boolean, fbLimit: number, igLimit: number): Promise<queryArticlesRead[]> {
+        let postsList: queryArticlesRead[] = [];
+        let facebookUrl: string;
+        let instagramUrl: string;
+
+        if (fullPosts) {
+            //const facebookUrl: string = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/posts?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=message,full_picture,created_time,attachments{media}&limit=${fbLimit}`;
+            facebookUrl = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/feed?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=message,full_picture,created_time,attachments{media}&limit=${fbLimit}`;
+            instagramUrl = `https://graph.instagram.com/${process.env['INSTAGRAM_BUSINESS_USER_ID']}/media?fields=caption,media_url,timestamp,media_type,children{media_url,media_type}&access_token=${process.env['INSTAGRAM_APP_API_TOKEN']}&limit=${igLimit}`;
+        } else {
+            //const facebookUrl: string = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/posts?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=created_time&limit=${fbLimit}`;
+            facebookUrl = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/feed?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=created_time&limit=${fbLimit}`;
+            instagramUrl = `https://graph.instagram.com/${process.env['INSTAGRAM_BUSINESS_USER_ID']}/media?fields=timestamp&access_token=${process.env['INSTAGRAM_APP_API_TOKEN']}&limit=${igLimit}`;
+        }
+
+        this.txtLogger.writeToLogFile('Attempting to fetch external media or social posts.');
+
+        if (!this.timestamp || this.timestamp < 1) {
+            this.timestamp = Date.now();
+        }
+
+        const twoMinsInMs: number = 300000;
+        if (postsList.length > 0 && (Date.now() - this.timestamp) < twoMinsInMs) {
+            return postsList
+        }
+
+        const responseFb: globalThis.Response = await fetch(facebookUrl);
+        if (responseFb && responseFb.status == 200) var dataFb = await responseFb.json();
+        else this.txtLogger.writeToLogFile('FB API returned non-successful.');
+        if (dataFb) {
+            this.fbPosts = dataFb.data.map((postFb: { message: string; full_picture: string; created_time: string; attachments?: { media: { image: { src: string; } }[] }; }) => {
+                let images: string[] = postFb.attachments?.media?.map(media => media.image.src) || [postFb.full_picture];
+                return {
+                    ID: 0,
+                    title: 'Facebook Post',
+                    date: Helper.formatDate(postFb.created_time),
+                    body: postFb.message,
+                    file: null,
+                    fileName: null,
+                    imgThumb: null,
+                    imgMain: images.slice(0, 5),
+                    author: 'fb',
+                    userUid: '0',
+                    type: 'fb',
+                    createdAt: postFb.created_time
+                };
+            });
+            this.txtLogger.writeToLogFile('Successfully got Facebook Posts.');
+        }
+
+        const responseIg: globalThis.Response = await fetch(instagramUrl);
+        if (responseIg && responseIg.status == 200) var dataIg = await responseIg.json();
+        else this.txtLogger.writeToLogFile('IG API returned non-successful.');
+        if (dataIg) {
+            this.igPosts = dataIg.data.map((igPost: { caption: string; media_url: string; timestamp: string; media_type: string; children?: { data: { media_url: string, media_type: string }[]; } }) => {
+                let images: { media_url: string, media_type: string }[] = [];
+
+                if (igPost && igPost.children && igPost.children.data && igPost.children.data.length) igPost.children.data.forEach(child => images.push(child));
+                else if (igPost) images.push(igPost);
+
+                return {
+                    ID: 0,
+                    title: 'Instagram Post',
+                    date: Helper.formatDate(igPost.timestamp),
+                    body: igPost.caption,
+                    file: null,
+                    fileName: null,
+                    imgThumb: null,
+                    imgMain: images.slice(0, 5),
+                    author: 'ig',
+                    userUid: '0',
+                    type: 'ig',
+                    createdAt: igPost.timestamp
+                };
+            });
+            this.txtLogger.writeToLogFile('Successfully got Instagram Posts.');
+        }
+
+        postsList = postsList.concat(this.fbPosts, this.igPosts);
+
+        if (postsList.length) postsList.sort((a, b) => (b.createdAt && a.createdAt) ? Helper.parseDate(b.createdAt) - Helper.parseDate(a.createdAt) : 0);
+        else this.txtLogger.writeToLogFile(`No Posts fetched to sort, or an error occurred fetching external posts.`);
+
+        return postsList;
+    }
+
+
+    private async updateMediaDataArrays(months: queryGalleryRead[], years: queryGalleryRead[], mediaItems: queryGalleryRead[], monthView: number, yearView: string) {
+        /*
+        const allPostTimestamps: queryArticlesRead[] = await this.getExternalPosts(false, 1, 99999); // Pagination to access data beyond single response limits needed.
+        allPostTimestamps.forEach(post => {
+            if (!post || !post.createdAt) return;
+
+            const postDate: Date = new Date(post.createdAt);
+            const month: number = postDate.getMonth() + 1;
+            const year: string = postDate.getFullYear().toString();
+
+            if (!years.some(y => y.year === year)) years.push({ year: year });
+            if (!months.some(m => m.month === month)) months.push({ month: month });
+        });
+        */
+
+        const posts: queryArticlesRead[] = await this.getExternalPosts(true, 1, 100);
+        posts.forEach(post => {
+            if (!post || !post.createdAt || !post.imgMain || !Array.isArray(post.imgMain) || !post.imgMain.length) return;
+
+            const postDate: Date = new Date(post.createdAt);
+            const month: number = postDate.getMonth() + 1;
+            const year: string = postDate.getFullYear().toString();
+
+            if (!years.some(y => y.year === year)) years.push({ year: year });
+            if (!months.some(m => m.month === month)) months.push({ month: month });
+
+            if (year !== yearView || month !== monthView) return;
+
+            post.imgMain.forEach((image: { media_url: string; media_type: string }) => {
+                if (image?.media_url) {
+                    mediaItems.push({
+                        ID: 0,
+                        media: image.media_url,
+                        month,
+                        userUid: post.userUid || '0',
+                        mediaType: image.media_type
+                    });
+                }
+            });
+        });
+
+        if (months.length > 1) months.sort((a, b) => a.month! + b.month!);
+        if (years.length > 1) years.sort((a, b) => parseInt(a.year!) + parseInt(b.year!));
+
+        return { months, years, mediaItems };
     }
 }

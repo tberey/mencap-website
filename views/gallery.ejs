@@ -54,40 +54,64 @@
 
         <nav class="custom-hr"></nav>
 
-        <div class="container-1">
-            <div class="col-1 text-center image-center" style="font-size: 32px;">
-                <label for="yearView">Year&nbsp;</label>
-                <select id="yearView" name="yearView" required>
-                <% years.forEach((year) => { %>
-                    <option value="<%= year.year %>"><%= year.year %></option>
-                <% }); %>
-                </select>
+        <form action="/gallery" method="GET">
+            <div class="container-1">
+                <div class="col-1 text-center image-center" style="font-size: 32px;">
+                    <label for="monthView">Month&nbsp;</label>
+                    <select id="monthView" name="monthView" required>
+                        <% months.forEach((month) => { %>
+                            <option value="<%= month.month %>" <%= selectedMonth == month.month ? 'selected' : '' %>><%= month.monthName %></option>
+                        <% }); %>
+                    </select>
+                    <br>
+                    <label for="yearView">Year&nbsp;</label>
+                    <select id="yearView" name="yearView" required>
+                        <% years.forEach((year) => { %>
+                            <option value="<%= year.year %>" <%= selectedYear == year.year ? 'selected' : '' %>><%= year.year %></option>
+                        <% }); %>
+                    </select>
+                    <br>
+                    <button class="image-center margin-top-m" type="submit">Filter</button>
+                </div>
             </div>
-        </div>
+        </form>
 
         <br>
 
         <div class="container-1">
             <div class="col-1" >
-                <% months.forEach(function(month) { %>
-                    <nav style="padding-bottom: 50px;">
-                        <p style="padding-bottom: 10px; padding-left: 5px; font-size: 28px;"><b><%= month.monthName %></b></p>
-                        <div class="gallery-wrapping">
-                            <% gallery.forEach(function(media) { %>
-                                <% if (media.month == month.month) { %>
+                <nav style="padding-bottom: 50px;">
+                    <% months.forEach((month) => { %>
+                        <% if (month.month == selectedMonth) { %>
+                            <p style="padding-bottom: 10px; padding-left: 5px; font-size: 28px;"><b><%= month.monthName %>, <%= selectedYear %></b></p>
+                        <% } %>
+                    <% }); %>
+                    <div class="gallery-wrapping">
+                        <% gallery.forEach(function(media) { %>
+                            <% if (media && media.month == selectedMonth && media.media.toLowerCase().startsWith("http")) { %>
+                                <% if (media.mediaType && media.mediaType == "VIDEO") { %>
+                                    <video class="media-item" style="height: 330px; width: 330px; margin-right: 10px; border: 1px solid white;" controls>
+                                        <source src="<%= media.media %>" type="video/mp4">
+                                        Your browser does not support this video format.
+                                    </video>
+                                <% } else { %>
                                     <div class="image-container">
-                                        <img class="gallery-image" src="<%= mediaUrl %><%= media.media %>" alt="Gallery Media Item" onclick="showImage('<%= mediaUrl %><%= media.media %>')"/>
-                                        <% if (loggedIn && uid && media.userUid && media.userUid == uid) { %>
-                                            <div class="dustbin-icon" onclick="confirmGalleryDelete('<%= media.ID %>','<%= media.userUid %>','<%= media.media %>')">
-                                                🗑️
-                                            </div>
-                                        <% } %>
+                                        <img class="gallery-image" src="<%= media.media %>" alt="Gallery Media Item" onclick="showImage('<%= media.media %>')"/>
                                     </div>
                                 <% } %>
-                            <% }); %>
-                        </div>
-                    </nav>
-                <% }); %>
+                            <% } else if (media.month == selectedMonth) { %>
+                                <div class="image-container">
+                                    <img class="gallery-image" src="<%= mediaUrl %><%= media.media %>" alt="Gallery Media Item" onclick="showImage('<%= mediaUrl %><%= media.media %>')"/>
+                                    <% if (loggedIn && uid && media.userUid && media.userUid == uid) { %>
+                                        <div class="dustbin-icon" onclick="confirmGalleryDelete('<%= media.ID %>','<%= media.userUid %>','<%= media.media %>')">
+                                            🗑️
+                                        </div>
+                                    <% } %>
+                                </div>
+                            <% } %>
+                        <% }); %>
+                    </div>
+                </nav>
             </div>
         </div>
 

@@ -2,24 +2,25 @@ import { SimpleTxtLogger } from 'simple-txt-logger';
 import { Rollbar } from './services/Rollbar';
 import { Database } from './services/Database';
 import { AwsS3 } from './services/AwsS3';
+import { AdminEmails } from './services/AdminEmails';
+import nodemailer, { Transporter } from 'nodemailer';
 import express, { Express, Router } from 'express';
 import session from "express-session";
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import dotenv from 'dotenv';
 import http from 'http';
 import cors from 'cors';
-import nodemailer, { Transporter } from 'nodemailer';
 
 
 declare module 'express-session' {
     interface SessionData {
-        loggedin: boolean;
-        username: string;
-        uid: string;
-        sid: string;
-        helpRequests: number;
-        loginRequests: number;
-        resetRequests: number;
+        loggedin?: boolean;
+        username?: string;
+        uid?: string;
+        sid?: string;
+        helpRequests?: number;
+        loginRequests?: number;
+        resetRequests?: number;
     }
 }
 
@@ -30,15 +31,17 @@ export class ServerSetup {
     private hostname: string;
     private server: http.Server;
     private app: Express;
+    private transporter: Transporter;
 
     protected txtLogger: SimpleTxtLogger;
     protected rollbarLogger: Rollbar;
 
-    protected router: Router;
+    protected admin: AdminEmails;
     protected db: Database;
     protected s3: AwsS3;
-    protected transporter: Transporter | undefined;
+
     protected loginLimiter: RateLimitRequestHandler;
+    protected router: Router;
 
 
     protected constructor(live: boolean = false, port: string = '4000', hostname: string = '127.0.0.1') {
@@ -49,9 +52,17 @@ export class ServerSetup {
         else process.exit(0);
 
         this.txtLogger = new SimpleTxtLogger(SimpleTxtLogger.newDateTime(), 'Server', 'Mencap-Website');
-        this.rollbarLogger = new Rollbar(process.env['ROLLBAR_ACCESS_TOKEN']!, process.env['ROLLBAR_ENV']!, this.txtLogger);
         this.txtLogger.writeToLogFile(`...::STARTING ${process.env['ENVIRONMENT']!} APPLICATION::...`);
+        this.rollbarLogger = new Rollbar(process.env['ROLLBAR_ACCESS_TOKEN']!, process.env['ROLLBAR_ENV']!, this.txtLogger);
+        this.transporter = nodemailer.createTransport({
+            service: process.env['EMAIL_SERVER']!,
+            auth: {
+                user: process.env['EMAIL_USERNAME']!,
+                pass: process.env['EMAIL_PASSWORD']!
+            }
+        });
 
+        this.admin = new AdminEmails(this.transporter, this.txtLogger);
         this.db = new Database(process.env['DB_NAME']!, process.env['DB_HOST']!, process.env['DB_USERNAME']!, process.env['DB_PASSWORD']!, this.txtLogger);
         this.s3 = new AwsS3(process.env['AWS_REGION']!, process.env['AWS_ACCESS_KEY']!, process.env['AWS_SECRET_ACCESS_KEY']!, this.txtLogger);
 
@@ -75,14 +86,6 @@ export class ServerSetup {
 
 
     private serverConfig(): void {
-        this.transporter = nodemailer.createTransport({
-            service: process.env['EMAIL_SERVER']!,
-            auth: {
-                user: process.env['EMAIL_USERNAME']!,
-                pass: process.env['EMAIL_PASSWORD']!
-            }
-        });
-
         const corsOptions: cors.CorsOptions = {  origin: [`${process.env['CORS_ORIGIN']!}`]  };
         this.app.use(cors(corsOptions));
 

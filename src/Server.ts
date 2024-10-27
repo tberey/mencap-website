@@ -31,7 +31,7 @@ type S3Details = {
 
 export class Server extends ServerSetup {
 
-    constructor(live?: boolean, port?: string, hostname?: string) {
+    public constructor(live?: boolean, port?: string, hostname?: string) {
         super(live, port, hostname);
         this.getRequests();
         this.postRequests();
@@ -574,27 +574,16 @@ export class Server extends ServerSetup {
                         const updateSuccess: boolean = await this.db.updateData(newRandomPassword, 'password', 'email', email.toString());
 
                         if (updateSuccess) {
-                            if (this.transporter) this.transporter.sendMail({
-                                from: process.env['EMAIL_ADDRESS'],
-                                to: email.toString(),
-                                subject: 'Mencap Website Account Recovery',
-                                text:
-                                    'Hi,\n\n'
-                                    +'You are receiving this email because you have forgotten your Mencap website login details.\n'
-                                    +'Your password has been reset, and you can find both your Username and Password below:\n\n'
-                                    +`Your Username:  '${username}'\nYour new Password:  '${newRandomPassword}'.\n\n`
-                                    +'You can login here: https://www.mencapliverpool.org.uk/login\n\n\n\n'
-                                    +`If you did not do this, or were not expecting this email, you can reply to this email or contact: ${process.env['EMAIL_ADDRESS']}\n`
-                            }, (err, info) => {
-                                if (err) {
-                                    this.txtLogger.writeToLogFile(`Error sending account recovery email: ${err}`);
-                                } else {
-                                    this.txtLogger.writeToLogFile(`Account recovery email sent: ${info.response}`);
-                                }
-                            });
+                            let emailSent: boolean = await this.admin.sendResetEmail(email.toString(), username, newRandomPassword);
 
-                            status = 200;
-                            return;
+                            if (emailSent) {
+                                status = 200;
+                                return;
+                            } else {
+                                log = 'Account recovery failed. Reset email failed to send.';
+                                status = 500;
+                                return;
+                            }
                         }
                     }
 
@@ -655,30 +644,18 @@ export class Server extends ServerSetup {
                     const email: string | null = await this.db.getData('email','sid', sid);
 
                     if (email && (await this.db.updateAccount(email, newUsername.toString(), newPassword.toString(), newEmail.toString()))) {
-                        if (newUsername.toString()) req.session.username = newUsername.toString();
+                        req.session.username = newUsername.toString();
 
-                        if (this.transporter) this.transporter.sendMail({
-                            from: process.env['EMAIL_ADDRESS'],
-                            to: email,
-                            subject: 'Mencap Website Account Updated',
-                            text:
-                                'Hi,\n\n'
-                                +'You are receiving this email because you have updated your Mencap website account.\n'
-                                +'Your account has successfully been updated, and you can check which details were updated below:\n\n'
-                                +`${(newUsername.toString()) ? '    - Username\n': ''}`
-                                +`${(newPassword.toString()) ? '    - Password\n': ''}`
-                                +`${(newEmail.toString()) ? '    - Email\n': ''}`
-                                +`\n\n\nIf you did not make any of these changes, or were not expecting this email, you can reply to this email or contact: ${process.env['EMAIL_ADDRESS']}\n`
-                        }, (err, info) => {
-                            if (err) {
-                                this.txtLogger.writeToLogFile(`Error sending account update email: ${err}`);
-                            } else {
-                                this.txtLogger.writeToLogFile(`Account update email sent: ${info.response}`);
-                            }
-                        });
+                        let emailSent: boolean = await this.admin.sendUpdateEmail(email.toString(), newEmail.toString(), newUsername.toString(), newPassword.toString());
 
-                        status = 200;
-                        return;
+                        if (emailSent) {
+                            status = 200;
+                            return;
+                        } else {
+                            log = 'Reset email failed to send. However your new login details are active and will work.';
+                            status = 500;
+                            return;
+                        }
                     }
 
                     log = 'Account update failed. Failed to update the user account.';
@@ -1169,37 +1146,25 @@ export class Server extends ServerSetup {
                     return;
                 }
 
-                if (this.transporter) {
-                    try {
-                        const info = await this.transporter.sendMail({
-                            from: process.env['EMAIL_ADDRESS'],
-                            to: process.env['MENCAP_EMAIL_ADDRESS'],
-                            subject: '[Website Message] Someone has reached out through the Mencap Website...',
-                            text:
-                                'Hi,\n\n' +
-                                '****Internal Message to Staff****\n' +
-                                'This is an automatic email from the Mencap Liverpool & Sefton website; it is internal and perfectly safe. HOWEVER, the message itself below, is external and might not be safe!\n' +
-                                'So please check all contents of the below message carefully: Make sure there are no dangerous links or email addresses, that lead to a scam or virus.\n' +
-                                'You can tell when a link or email address looks suspicious, not quite right, or one you do not recognise. IF IN DOUBT, NEVER CLICK ANY LINKS OR DOWNLOAD ANY FILES!\n' +
-                                '****End of Staff Message****\n\n\n\n' +
-                                'Someone has reached out through the Mencap website. You can see the full details below:\n\n' +
-                                `Name (of person who left this message):  ${name}\n` +
-                                `Email (of person who left this message):  ${email}\n` +
-                                `Message:\n"${message}"\n` +
-                                `\n\n\n\nIf you suspect something is wrong with this email, delete it. You can also contact: ${process.env['EMAIL_ADDRESS']}\n`
-                        });
+                try {
+                    let emailSent: boolean = await this.admin.sendContactEmail(email.toString(), name.toString(), message.toString());
+                    req.session.helpRequests++;
 
-                        req.session.helpRequests++;
-                        this.txtLogger.writeToLogFile(`Contact us email sent: ${info.response}`);
+                    if (emailSent) {
                         log = 'Message successfully sent.';
                         status = 200;
-
-                    } catch (err) {
-                        this.txtLogger.writeToLogFile(`Error sending account update email: ${err}`);
-                        log = `Failed to send message. You can reach out to the site Admin here: ${process.env['EMAIL_ADDRESS']}`;
-                        alertLog = true;
+                        return;
+                    } else {
+                        log = `Message failed to send. You can reach out to the site Admin here: ${process.env['EMAIL_ADDRESS']}`;
                         status = 500;
+                        return;
                     }
+
+                } catch (err) {
+                    this.txtLogger.writeToLogFile(`Error sending account update email: ${err}`);
+                    log = `Failed to send message. You can reach out to the site Admin here: ${process.env['EMAIL_ADDRESS']}`;
+                    alertLog = true;
+                    status = 500;
                 }
             } catch (err) {
                 log = `An error occurred during contact us request: ${err}`;

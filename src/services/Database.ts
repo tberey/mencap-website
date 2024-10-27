@@ -21,7 +21,7 @@ type queryArticlesRead = {
     file?: string | null,
     fileName?: string | null,
     imgThumb?: string | null,
-    imgMain?: string | null | Array<any>,
+    imgMain?: string | null | { media_url: string, media_type: string }[],
     author?: string,
     userUid?: string,
     type?: string,

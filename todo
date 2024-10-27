@@ -1,3 +1,5 @@
--Setup CRON job to email about refreshing tokens.
+Todo List:
 
--Gallery page add month dropdown, and also instagram + fb pics render there too.
+ - Improve Gallery filtering.
+ - Improve Calendar page.
+ - Add FB integration.

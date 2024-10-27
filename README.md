@@ -271,6 +271,7 @@ Below is the refined and confirmed roadmap, that has been planned for completion
 | 1.1.3 | 2024-10-23 | `<ul><li>`Minor view update.`</li><li>`Add our current privacy policy, that has always been followed by us (mencap liverpool and sefton), even if not visible.`</li><li>`Update README.md`</li></ul>` |
 | 1.1.4 | 2024-10-25 | `<ul><li>`Minor view and style updates.`</li><li>`Add screenshots.`</li><li>`Update README.md`</li></ul>` |
 | 1.2.0 | 2024-10-26 | `<ul><li>`Major Gallery page update, being supplemented by social post images.`</li><li>`Server side minor updates.`</li><li>`Minor view updates.`</li><li>`Update README.md`</li></ul>` |
+| 1.2.1 | 2024-10-27 | `<ul><li>`Update server emailing handling.`</li><li>`Add email cron scripts.`</li><li>`Minor API updates.`</li><li>`Update README.md`</li></ul>` |
 
 <br><hr><br>
 

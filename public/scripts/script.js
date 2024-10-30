@@ -1,6 +1,52 @@
-//Global Bariables
+//Global Variables
 var isStickyMenuVisible = true;
 const hideButton = document.querySelector('.hide-sticky-menu-button');
+
+
+
+// Check scroll position and toggle 'back to top' button visibility
+window.onload = checkScrollPosition;
+window.onscroll = checkScrollPosition;
+
+// Smooth scroll to the top when the button is clicked
+function scrollToTop() {
+  let scrollStep = -window.scrollY / 15;
+  let scrollInterval = setInterval(function () {
+    if (window.scrollY !== 0) {
+      window.scrollBy(0, scrollStep);
+    } else {
+      clearInterval(scrollInterval);
+    }
+  }, 15);
+}
+
+// Show/hide 'back to top' button based on scroll position
+function checkScrollPosition() {
+  const backToTopButton = document.getElementById("backToTop");
+  if (window.scrollY > 100) {
+    backToTopButton.style.display = "block";
+  } else {
+    backToTopButton.style.display = "none";
+  }
+}
+
+// Reposition Back to Top button above footer
+function positionBackToTopButton() {
+    const backToTopButton = document.getElementById("backToTop");
+    const footer = document.getElementById("footer");
+
+    if (footer && backToTopButton) {
+        const footerHeight = footer.offsetHeight;
+        backToTopButton.style.bottom = `${footerHeight + 6}px`; // Position just above the footer
+    }
+}
+
+// Adjust position on load and resize
+window.addEventListener("load", positionBackToTopButton);
+window.addEventListener("resize", positionBackToTopButton);
+
+// Ensure the button is shown only when scrolled down
+window.addEventListener("scroll", checkScrollPosition);
 
 
 
@@ -183,9 +229,9 @@ function setupFileUpload() {
     fileInputs.forEach(function(fileInput) {
       fileInput.addEventListener('change', handleFileChange);
     });
-  }
+}
 
-  function handleFileChange() {
+function handleFileChange() {
     var inputId = this.id;
     var clearButton = document.querySelector('.clear-button[data-input-id="' + inputId + '"]');
 
@@ -196,9 +242,9 @@ function setupFileUpload() {
         clearButton.style.display = 'none';
       }
     }
-  }
+}
 
-  function clearFileInput() {
+function clearFileInput() {
     var inputId = this.getAttribute('data-input-id');
     var fileInput = document.getElementById(inputId);
     var clearButton = document.querySelector('.clear-button[data-input-id="' + inputId + '"]');
@@ -207,10 +253,10 @@ function setupFileUpload() {
       fileInput.value = ''; // Clear the file input
       clearButton.style.display = 'none'; // Hide the clear button
     }
-  }
+}
 
-  // Call the setup function when the document is ready
-  document.addEventListener('DOMContentLoaded', setupFileUpload);
+// Call the setup function when the document is ready
+document.addEventListener('DOMContentLoaded', setupFileUpload);
 
 
 

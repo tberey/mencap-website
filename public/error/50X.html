@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>Mencap Liverpool & Sefton - empowering learning disabilities</title>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="icon" href="./favicon.ico" type="image/x-icon">
+        <style>
+            html, body {
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                left: 0;
+                top: 0;
+                color: white;
+                font-family: sans-serif;
+                background-color: #4F006F;
+            }
+
+            button {
+                width: 80px;
+                padding: 15px 0;
+                margin-bottom: 6px;
+                border-radius: 50%;
+                background-color: #d31160;
+                border: none;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                font-size: large;
+                display: block;
+                cursor: pointer;
+                transition: background-color 0.5s;
+            }
+
+            button:hover {
+                background-color: #ff01a5;
+            }
+
+            a {
+                color: white;
+                text-decoration: none;
+            }
+
+            .js-banner {
+                display: block;
+                position: fixed;
+                top: 0;
+                width: 100%;
+                background-color: #afafafbd;
+                color: #000;
+                text-align: center;
+                pointer-events: none;
+                font-weight: bolder;
+                font-size: 22px;
+                z-index: 12;
+                overflow: auto;
+            }
+
+            .container-1 {
+                display: grid;
+                margin-left: auto;
+                margin-right: auto;
+                grid-template-columns: 1fr;
+                padding-left: 10%;
+                padding-right: 10%;
+            }
+
+            .container-2 {
+                display: grid;
+                margin-left: auto;
+                margin-right: auto;
+                grid-template-columns: 1fr 1fr;
+                padding-left: 10%;
+                padding-right: 10%;
+            }
+
+            .col-1 {
+                grid-column-start: 1;
+            }
+
+            .col-2 {
+                grid-column-start: 2;
+            }
+
+            .image-center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .mencap-index-logo {
+                width: 100%;
+                height: auto;
+                min-width: 320px;
+                max-width: 600px;
+            }
+
+            .item-auto-hide {
+                display: block;
+            }
+
+            .item-auto-show {
+                display: none;
+            }
+
+            .font-size-xl {
+                font-size: 24px;
+            }
+
+            .remove-list-indent {
+                list-style-type: none;
+                margin-top: 10px;
+                padding-left: 6px;
+                margin-left: 6px;
+            }
+
+            .socials-list {
+                display: inline-block;
+            }
+
+            .socials-image-padding {
+                height: 50px;
+                width: 50px;
+            }
+
+            .contact-icons {
+                height: 30px;
+                width: 35px;
+                margin-top: 22px;
+            }
+
+            .item-center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .pad-top-m {
+                padding-top: 20px;
+            }
+
+            .pad-top-l {
+                padding-top: 32px;
+            }
+
+            .footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                height: fit-content;
+                padding-top: 7px;
+                padding-bottom: 4px;
+                padding-left: 0;
+                background: #970361;
+                font-size: 15px;
+                box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.5);
+                z-index: 3;
+            }
+
+            .container-footer {
+                display: grid;
+                margin-left: auto;
+                margin-right: auto;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .image-right {
+                display: block;
+                margin-left: auto;
+                margin-right: 0;
+            }
+
+            .rounded-box {
+                border-radius: 26px;
+                border: 2px solid white;
+                padding: 12px;
+                width: fit-content;
+                margin: 0 0 26px 0;
+                word-break: break-word;
+            }
+
+            .hello-picture {
+                width: 60%;
+                max-width: 400px;
+                border-radius: 25px;
+            }
+
+            @media (max-width: 899px) {
+                .container-1 {
+                    width: 95%;
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+
+                .container-2 {
+                    width: 95%;
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+
+                .js-banner {
+                    padding: 4px;
+                    text-align: center;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+
+                .mencap-index-logo {
+                    height: auto;
+                    width: 58%;
+                }
+
+                .item-auto-hide {
+                    display: none;
+                }
+
+                .item-auto-show {
+                    display: block;
+                }
+
+                .remove-list-indent {
+                    list-style-type: none;
+                    padding-left: 8px;
+                    margin-left: 8px;
+                }
+
+                .socials-image-padding {
+                    padding-right: 26px;
+                    height: 45px;
+                    width: 45px;
+                }
+
+                .contact-icons {
+                    height: 30px;
+                    width: 28px;
+                    padding-top: 10px;
+                }
+
+                .footer {
+                    font-size: 13px;
+                }
+
+                .contact-small-screen {
+                    font-size: 24px;
+                    word-break: break-word;
+                }
+            }
+        </style>
+    </head>
+
+
+
+    <body>
+        <div class="js-banner" id="js-disabled-banner">
+            <p>&#9888; JavaScript is disabled in your browser.</p>
+        </div>
+
+
+        <div class="container-2 pad-top-l">
+            <div class="col-1 image-center">
+                <img class="image-center mencap-index-logo item-auto-hide" src="./MencapLogo-white-no-background.png" alt="Mencap Logo">
+            </div>
+
+            <div class="col-2 image-center font-size-xl item-auto-hide">
+                <ul class="remove-list-indent rounded-box">
+                    <li class="socials-list">
+                        <a href="https://www.facebook.com/mencapliverpool/" target="_blank">
+                            <img class="socials-image-padding" src="./facebook-icon.png" alt="Facebook">
+                        </a>
+                    </li>
+                    &nbsp;&nbsp;
+                    <li class="socials-list">
+                        <a href="https://www.tiktok.com/@mencap_liverpool_sefton" target="_blank">
+                            <img class="socials-image-padding" src="./tiktok-icon.png" alt="TikTok">
+                        </a>
+                    </li>
+                    &nbsp;&nbsp;
+                    <li class="socials-list">
+                        <a href="https://www.instagram.com/mencapliverpool/" target="_blank">
+                            <img class="socials-image-padding" src="./instagram-icon.png" alt="Instagram">
+                        </a>
+                    </li>
+                    &nbsp;&nbsp;
+                    <li class="socials-list">
+                        <a href="https://twitter.com/mencapliverpool" target="_blank">
+                            <img class="socials-image-padding" src="./twitter-icon.png" alt="Twitter">
+                        </a>
+                    </li>
+                    <li class="pad-top-m">
+                        <a href="tel:01517078582" target="_blank">
+                            <img class="contact-icons" src="./telephone-icon.png" alt="Phone">
+                            <br>
+                            <nav>0151 707 8582</nav>
+                        </a>
+                    </li>
+                    <li class="pad-top-m">
+                        <a href="mailto:contact@mencapliverpool.org.uk" target="_blank">
+                            <img class="contact-icons" src="./email-icon.png" alt="Email">
+                            <br>
+                            <nav>contact@mencapliverpool.org.uk</nav>
+                        </a>
+                    </li>
+                    <br>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="container-1 item-auto-show">
+            <img class="image-center mencap-index-logo" src="./MencapLogo-white-no-background.png" alt="Mencap Logo">
+        </div>
+
+
+        <div class="container-1 item-auto-show">
+            <div class="col-1 item-center pad-top-l">
+                <a href="https://www.facebook.com/mencapliverpool/" target="_blank">
+                    <img class="socials-image-padding" src="./facebook-icon.png" alt="Facebook">
+                </a>
+                &nbsp;&nbsp;
+                <a href="https://www.tiktok.com/@mencap_liverpool_sefton" target="_blank">
+                    <img class="socials-image-padding" src="./tiktok-icon.png" alt="TikTok">
+                </a>
+                &nbsp;&nbsp;
+                <a href="https://www.instagram.com/mencapliverpool/" target="_blank">
+                    <img class="socials-image-padding" src="./instagram-icon.png" alt="Instagram">
+                </a>
+                &nbsp;&nbsp;
+                <a href="https://twitter.com/mencapliverpool" target="_blank">
+                    <img class="socials-image-padding" src="./twitter-icon.png" alt="Twitter">
+                </a>
+            </div>
+        </div>
+
+
+        <div class="container-1 item-auto-show">
+            <div class="col-1 item-center">
+                <p class="text-center">
+                    <a class="contact-small-screen" href="tel:01517078582" target="_blank">0151 707 8582</a>
+                    <br><br>
+                    <a class="contact-small-screen" href="mailto:contact@mencapliverpool.org.uk" target="_blank">contact@mencapliverpool.org.uk</a>
+                </p>
+            </div>
+        </div>
+
+
+        <div class="pad-top-m"></div>
+
+
+        <div class="container-1 pad-top-l">
+            <div class="col-1 image-center">
+                <h2>We are very sorry, our website is currently down for scheduled maintenance. This means we are performing some updates and getting things ready, so that our website is even better in supporting you. Please check back later, or you can also reach out to us if you need anything.</h2>
+                <h3>We hope that this does not cause you any inconvenience, and rest assured most down time will only last minutes, so you can usually check back soon. Thank you for you patience!</h3>
+                <img class="image-center hello-picture" src="./cheers.jpg" alt="Hello Picture">
+            </div>
+        </div>
+
+
+        <div class="pad-top-l"></div>
+        <div class="pad-top-l"></div>
+        <div class="pad-top-l"></div>
+        <div class="pad-top-l"></div>
+        <div class="pad-top-l"></div>
+        <div class="pad-top-l"></div>
+
+
+        <div id="footer" class="footer">
+            <div class="container-footer">
+                <div class="col-1">
+                    Address:&nbsp;Mencap Community Cottage
+                    <br>6-8 Mariners Road, Crosby, L23 6SX.
+                    <br>Phone:&nbsp;0151 7078582
+                    <br>Email:&nbsp;contact@mencapliverpool.org.uk
+                </div>
+
+                <div class="col-2 image-right">
+                    &copy; Copyright 2024 Mencap Liverpool. All rights reserved. Registered Charity 1004262.
+                    <br>To Donate £4 txt <b><i>MENL33 £4</i></b> to <b>70070.</b>
+                </div>
+            </div>
+        </div>
+
+
+        <script>document.getElementById('js-disabled-banner').style.display = 'none';</script>
+    </body>
+</html>

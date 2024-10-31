@@ -559,7 +559,7 @@ a {
 }
 
 .hide-sticky-menu-button:hover {
-    border: 5px solid red;
+    border: 5px solid #ff01a5;
 }
 
 .socials-list {
@@ -756,16 +756,165 @@ a {
 .media-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 32px;
     justify-content: center;
     overflow: hidden;
 }
 
 .media-item {
     flex: 1 1 100%;
-    max-width: 46%;
+    max-width: 36%;
     cursor: pointer;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.container-widget {
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr;
+    padding-left: 14%;
+    padding-right: 10%;
+}
+
+div.scroll-widgetA {
+    overflow: auto;
+    white-space: nowrap;
+    padding-bottom: 15px;
+}
+
+div.scroll-widgetA p {
+    background-color: #ff01a68f;
+    border-radius: 50px;
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    margin-left: 6px;
+    margin-right: 6px;
+    text-decoration: none;
+    vertical-align: top;
+    white-space: wrap;
+    height: max-content;
+    box-shadow: 0px 3px 6px 6px rgba(0, 0, 0, 0.4);
+}
+
+div.scroll-widgetB {
+    overflow: auto;
+    white-space: nowrap;
+    padding-bottom: 15px;
+}
+
+div.scroll-widgetB p {
+    background-color: #ff01a68f;
+    border-radius: 50px;
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    margin-left: 6px;
+    margin-right: 6px;
+    text-decoration: none;
+    vertical-align: top;
+    white-space: wrap;
+    height: max-content;
+    box-shadow: 0px 3px 6px 6px rgba(0, 0, 0, 0.4);
+}
+
+.widget-text-content {
+    display: inline-block;
+}
+
+.widget-text {
+    font-size: 18px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.read-more-button {
+    display: none;
+    color: #8fc5ff;
+    cursor: pointer;
+    margin-top: 6px;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+.dot-indicator {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+    color: #ff01a5;
+}
+
+.dotA {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: grey;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+}
+
+.dotA.active {
+    background-color: #ff01a5;
+}
+
+.dotB {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: grey;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+}
+
+.dotB.active {
+    background-color: #ff01a5;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .rounded-box {
     border-radius: 26px;
@@ -789,7 +938,7 @@ a {
     margin: 36px auto;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.7);
     width: 72%;
-    transform: translateX(28px);
+    transform: translateX(34px);
 }
 
 .custom-ellipsis {
@@ -798,7 +947,7 @@ a {
     margin: 0 auto;
     display: block;
     text-align: center;
-    margin-left: 3%;
+    margin-left: 4%;
     text-shadow: 0px 3px 6px rgba(0, 0, 0, 0.8);
 }
 
@@ -1047,12 +1196,16 @@ a {
         width: 80%;
     }
 
+    .media-container {
+        gap: 15px;
+    }
+
     .media-item {
         max-width: 48%;
     }
 
     .custom-hr {
-        transform: translateX(0px);
+        transform: translateX(10px);
     }
 
     .custom-ellipsis {
@@ -1093,7 +1246,7 @@ a {
 
 @media (max-width: 499px) {
     .media-item {
-        max-width: 85%;
+        max-width: 82%;
     }
 }
 

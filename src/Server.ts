@@ -35,6 +35,19 @@ export class Server extends ServerSetup {
         super(live, port, hostname);
         this.getRequests();
         this.postRequests();
+
+        this.router.use((req: Request, res: Response): void => {
+            this.txtLogger.writeToLogFile(`Request Made: ${req.method} ${req.url}`);
+            res.status(404).render('404.ejs', { loggedIn: req.session.loggedin ? true : false, username: req.session.username || '' });
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                ${req.method}: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
+            );
+        });
     }
 
 
@@ -63,7 +76,7 @@ export class Server extends ServerSetup {
                     this.txtLogger.writeToLogFile('Successfully got Articles.');
                 }
 
-                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 4, 8));
+                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 4, 8, 6));
 
                 if (articlesPostsList.length) articlesPostsList.sort((a, b) => (b.createdAt && a.createdAt) ? Helper.parseDate(b.createdAt) - Helper.parseDate(a.createdAt) : 0);
                 else this.txtLogger.writeToLogFile(`No Articles or external posts to sort, or an error occurred fetching Articles and Posts.`);
@@ -72,6 +85,47 @@ export class Server extends ServerSetup {
             } finally {
                 res.status(200);
                 res.render('index.ejs', {
+                    loggedIn: req.session.loggedin ? true : false,
+                    username: req.session.username || '',
+                    uid: req.session.uid || '',
+                    mediaUrl: articlesMediaUrl || '',
+                    articles: articlesPostsList.slice(0, 10) || []
+                });
+
+                this.txtLogger.writeToLogFile(
+                    `Request Completed:
+                    POST: ${req.url},
+                    Host: ${req.hostname},
+                    IP: ${req.ip},
+                    Type: ${req.protocol?.toUpperCase()},
+                    Status: ${res.statusCode}.`
+                );
+            }
+        });
+
+        this.router.get('/newpage', async (req: Request, res: Response): Promise<void> => {
+            this.txtLogger.writeToLogFile('Request Made: GET /newpage');
+
+            let articlesPostsList: queryArticlesRead[] = [];
+            const articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
+
+            try {
+                this.txtLogger.writeToLogFile('Attempting to fetch Articles.');
+                const articles: queryArticlesRead[] = await this.db.getArticles(6);
+                if (articles.length) {
+                    articles.forEach((article: queryArticlesRead) => { if (article.body) article.body = article.body.replace(/\n/g, '<br>') });
+                    this.txtLogger.writeToLogFile('Successfully got Articles.');
+                }
+
+                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 1, 6, 3));
+
+                if (articlesPostsList.length) articlesPostsList.sort((a, b) => (b.createdAt && a.createdAt) ? Helper.parseDate(b.createdAt) - Helper.parseDate(a.createdAt) : 0);
+                else this.txtLogger.writeToLogFile(`No Articles or external posts to sort, or an error occurred fetching Articles and Posts.`);
+            } catch (err) {
+                this.txtLogger.writeToLogFile(`An error occurred getting articles or posts: ${err}`);
+            } finally {
+                res.status(200);
+                res.render('index-new.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
                     username: req.session.username || '',
                     uid: req.session.uid || '',
@@ -1293,7 +1347,7 @@ export class Server extends ServerSetup {
     }
 
 
-    private async getExternalPosts(fullPosts: boolean, fbLimit: number, igLimit: number): Promise<queryArticlesRead[]> {
+    private async getExternalPosts(fullPosts: boolean, fbLimit: number, igLimit: number, imageLimit: number): Promise<queryArticlesRead[]> {
         let postsList: queryArticlesRead[] = [];
         let facebookUrl: string;
         let instagramUrl: string;
@@ -1307,6 +1361,9 @@ export class Server extends ServerSetup {
             facebookUrl = `https://graph.facebook.com/${process.env['FACEBOOK_PAGE_ID']}/feed?access_token=${process.env['FACEBOOK_APP_GRAPH_API_PAGE_TOKEN']}&fields=created_time&limit=${fbLimit}`;
             instagramUrl = `https://graph.instagram.com/${process.env['INSTAGRAM_BUSINESS_USER_ID']}/media?fields=timestamp&access_token=${process.env['INSTAGRAM_APP_API_TOKEN']}&limit=${igLimit}`;
         }
+
+        if (imageLimit > 10) imageLimit = 10;
+        else if (imageLimit < 0) imageLimit = 0;
 
         this.txtLogger.writeToLogFile('Attempting to fetch external media or social posts.');
 
@@ -1325,6 +1382,7 @@ export class Server extends ServerSetup {
         if (dataFb) {
             this.fbPosts = dataFb.data.map((postFb: { message: string; full_picture: string; created_time: string; attachments?: { media: { image: { src: string; } }[] }; }) => {
                 let images: string[] = postFb.attachments?.media?.map(media => media.image.src) || [postFb.full_picture];
+
                 return {
                     ID: 0,
                     title: 'Facebook Post',
@@ -1333,7 +1391,7 @@ export class Server extends ServerSetup {
                     file: null,
                     fileName: null,
                     imgThumb: null,
-                    imgMain: images.slice(0, 5),
+                    imgMain: images.slice(0, imageLimit),
                     author: 'fb',
                     userUid: '0',
                     type: 'fb',
@@ -1361,7 +1419,7 @@ export class Server extends ServerSetup {
                     file: null,
                     fileName: null,
                     imgThumb: null,
-                    imgMain: images.slice(0, 5),
+                    imgMain: images.slice(0, imageLimit),
                     author: 'ig',
                     userUid: '0',
                     type: 'ig',
@@ -1395,7 +1453,7 @@ export class Server extends ServerSetup {
         });
         */
 
-        const posts: queryArticlesRead[] = await this.getExternalPosts(true, 1, 100);
+        const posts: queryArticlesRead[] = await this.getExternalPosts(true, 1, 100, 10);
         posts.forEach(post => {
             if (!post || !post.createdAt || !post.imgMain || !Array.isArray(post.imgMain) || !post.imgMain.length) return;
 

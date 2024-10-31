@@ -183,6 +183,32 @@ setInterval(fadeImages, 4500);
 
 
 
+document.querySelectorAll('.widget-text-content').forEach(container => {
+    const textContent = container.querySelector('.widget-text');
+    const readMoreLink = container.querySelector('.read-more-button');
+    const maxLength = parseInt(container.dataset.maxLength, 10);
+    const fullText = textContent.innerHTML.trim();
+    let isExpanded = false; // Flag to track the current state
+
+    if (fullText.length > maxLength) {
+        readMoreLink.style.display = 'inline'; // Show "Read More" link
+        textContent.innerHTML = fullText.slice(0, maxLength) + '...';
+
+        readMoreLink.addEventListener('click', () => {
+        if (isExpanded) {
+            textContent.innerHTML = fullText.slice(0, maxLength) + '...';
+            readMoreLink.textContent = 'Read More';
+        } else {
+            textContent.innerHTML = fullText;
+            readMoreLink.textContent = 'Read Less';
+        }
+        isExpanded = !isExpanded; // Toggle the state
+        });
+    }
+});
+
+
+
 // Articles Confirm Delete prompt.
 function confirmArticleDelete(id, uuid, thumbImg, mainImg, file) {
     var confirmation = confirm("Are you sure you want to delete your article?");

@@ -45,21 +45,21 @@
         <div class="container-1">
             <div class="col-1">
                 <% articles.forEach(function(article) { %>
-                    <nav style="background-color: #ff01a64d; border-radius: 100px; box-shadow: 0px 3px 9px 9px rgba(0, 0, 0, 0.35);">
+                    <nav style="background-color: #ff01a68f; border-radius: 75px; box-shadow: 0px 3px 9px 9px rgba(0, 0, 0, 0.35);">
                         <nav style="word-break: normal; padding: 30px 20px;">
                             <div>
                                 <p style="font-size: 32px; padding-left: 18px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);"><%= article.title %></p>
                                 <p style="font-size: 20px; padding-left: 24px;"><%= article.date %></p>
 
                                 <% if (article.type == 'db') { %>
-                                    <img class="image-right" src="assets/images/website-icon.png"  alt="Website Post Thumbnail" height="64" width="66">
+                                    <img class="image-right" src="assets/images/website-icon.png" alt="Website Post Thumbnail" height="64" width="66">
                                     <% if (article.imgThumb && mediaUrl) { %>
                                         <img class="image-center" src="<%= mediaUrl %><%= article.imgThumb %>"  alt="Image Thumbnail" style="max-width: 40%; max-height: 330px; border-radius: 30%; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgThumb %>')">
                                     <% } %>
                                 <% } else if (article.type == 'fb') { %>
-                                    <img class="image-right" src="assets/images/facebook-icon.png"  alt="Facebook Post Thumbnail" height="70" width="70">
+                                    <img class="image-right" src="assets/images/facebook-icon.png" alt="Facebook Post Thumbnail" height="70" width="70">
                                 <% } else if (article.type == 'ig') { %>
-                                    <img class="image-right" src="assets/images/instagram-icon.png"  alt="Instagram Post Thumbnail" height="70" width="70">
+                                    <img class="image-right" src="assets/images/instagram-icon.png" alt="Instagram Post Thumbnail" height="70" width="70">
                                 <% } %>
 
                                 <p style="font-size: 22px; word-break: break-word;"><%- article.body %></p>
@@ -73,15 +73,15 @@
                                 <% } %>
 
                                 <% if (article.type == 'db' && article.imgMain && mediaUrl) { %>
-                                    <img class="image-center" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" style="max-width: 60%; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
+                                    <img class="image-center" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" style="max-width: 55%; cursor: pointer; border-radius: 10px;" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
                                     <br>
                                 <% } else if (article.type == 'ig' && article.imgMain && article.imgMain.length) { %>
                                     <div class="media-container">
                                         <% article.imgMain.forEach(function(image) { %>
                                             <% if (image && image.media_type == "IMAGE") { %>
-                                                <img class="media-item" src="<%= image.media_url %>" alt="Post Image" onclick="showImage('<%= image.media_url %>')">
+                                                <img class="media-item" src="<%= image.media_url %>" alt="Post Image" style="border-radius: 10px;" onclick="showImage('<%= image.media_url %>')">
                                             <% } else if (image && image.media_type == "VIDEO") { %>
-                                                <video class="media-item" controls>
+                                                <video class="media-item" style="border-radius: 10px;" controls>
                                                     <source src="<%= image.media_url %>" type="video/mp4">
                                                     Your browser does not support this video format.
                                                 </video>
@@ -92,7 +92,7 @@
                                     <div class="media-container">
                                         <% article.imgMain.forEach(function(image) { %>
                                             <% if (image) { %>
-                                                <img class="media-item" src="<%= image %>" alt="Post Image" style="max-width: 60%; cursor: pointer;" onclick="showImage('<%= image %>')">
+                                                <img class="media-item" src="<%= image %>" alt="Post Image" style="border-radius: 10px;" onclick="showImage('<%= image %>')">
                                             <% } %>
                                         <% }); %>
                                     </div>

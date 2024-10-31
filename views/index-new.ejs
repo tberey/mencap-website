@@ -1,0 +1,240 @@
+        <!--  EJS variables needed to render: `loggedIn`(boolean) + any in partials.ejs  -->
+
+        <%- include('partials/header') %>
+
+        <div class="container-1">
+            <div class="col-1 image-center">
+                <h1 class="text-center" style="font-size: 52px;">Welcome to the Mencap Liverpool & Sefton website!<br>&#128578;</h1>
+            </div>
+        </div>
+
+        <div class="container-1">
+            <% if (loggedIn) { %>
+                <nav class="custom-hr"></nav>
+                <div class="col-1">
+                    <form id="article-form" action="/article" method="POST" enctype="multipart/form-data">
+                        <label for="testSubmit"><h2>Post a new Article, with a pic, video or downloadable attachment:</h2></label>
+                        <p>Give it a title</p>
+                        <input type="text" id="testSubmit" name="title" placeholder="Post Title" style="width: 50%;" required>
+                        <br>
+                        <p>When did it happen?</p>
+                        <input type="text" id="testSubmit" name="date" placeholder="Wednesday 19th August 2023 or Last Week or 19/08/23" style="width: 40%;" required>
+                        <br>
+                        <p>Write something about it</p>
+                        <textarea id="testSubmit" name="body" placeholder="Tell a story..." style="width: 80%; height: 300px;" required></textarea>
+                        <br><br><br>
+                        <label for="imgThumb">Thumbnail Image (<i>Optional;</i>&nbsp;&nbsp;Select an image or video for the <b>top</b> of your Post, that will be smaller but above the text.)</label><br>
+                        <nav class="clear-button" data-input-id="imgThumb"><br>X</nav>&nbsp;
+                        <input type="file" id="imgThumb" name="imgThumb" accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg">
+                        <br><br>
+                        <label for="imgMain">Main Image (<i>Optional;</i>&nbsp;&nbsp;Select an image or video for the <b>main</b> part of your Post, that will be larger but below the text.)</label><br>
+                        <nav class="clear-button" data-input-id="imgMain"><br>X</nav>&nbsp;
+                        <input type="file" id="imgMain" name="imgMain" accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg">
+                        <br><br>
+                        <label for="fileDl">File Attachement (<i>Optional;</i>&nbsp;&nbsp;Select a file you want users to be able to <b>download</b>.)</label><br>
+                        <nav class="clear-button" data-input-id="fileDl"><br>X</nav>&nbsp;
+                        <input type="file" id="fileDl" name="fileDl" accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .odt, .ods, .odp, .txt, .rtf, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg, .mov">
+                        <br><br><br>
+                        <button type="submit" style="border-radius: 25px; background-color: #b10153; width: 40%;">Post Article</button>
+                    </form>
+                </div>
+                <nav class="custom-hr"></nav>
+            <% } %>
+        </div>
+
+        <div class="container-widget">
+            <div class="col-1">
+                <h2>Check out some of our Instagram Posts below!</h2>
+                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 25px;">
+                    <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
+                    <div class="dotA" id="dot11"></div>
+                    <div class="dotA" id="dot12"></div>
+                    <div class="dotA" id="dot13"></div>
+                    <div style="font-size: 26px; line-height: 0.5;">&nbsp;&#8594;</div>
+                </div>
+                <div class="scroll-widgetA">
+                    <% articles.forEach(function(article) { %>
+                        <% if (article && article.type == 'ig') { %>
+                            <p>
+                                <span style="font-size: 26px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);">@mencapliverpool</span>
+                                <br><br>
+                                <span style="font-size: 22px; text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.9);"><%= article.date %></span>
+                                <br><br>
+                                <img src="assets/images/instagram-icon.png" alt="Instagram Post Thumbnail" height="60" width="60">
+                                <br><br>
+                                <span class="widget-text-content" data-max-length="304">
+                                    <span class="widget-text"><%- article.body %></span>
+                                    <span class="read-more-button">Read More</span>
+                                </span>
+                                <% if (article.imgMain && article.imgMain.length) { %>
+                                    <br><br>
+                                    <% article.imgMain.forEach(function(image) { %>
+                                        <% if (image && image.media_type == "IMAGE") { %>
+                                            <img style="height: 20vw; width: auto; border-radius: 10px; cursor: pointer; margin-left: 3px; margin-right: 3px;" src="<%= image.media_url %>" alt="Post Image" onclick="showImage('<%= image.media_url %>')">
+                                        <% } else if (image && image.media_type == "VIDEO") { %>
+                                            <video style="height: 20vw; width: auto; border-radius: 10px; margin-left: 3px; margin-right: 3px;" controls>
+                                                <source src="<%= image.media_url %>" type="video/mp4">
+                                                Your browser does not support this video format.
+                                            </video>
+                                        <% } %>
+                                    <% }); %>
+                                <% } %>
+                            </p>
+                        <% } %>
+                    <% }); %>
+                </div>
+                <div class="dot-indicator" style="margin-top: 5px;">
+                    <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
+                    <div class="dotA" id="dot21"></div>
+                    <div class="dotA" id="dot22"></div>
+                    <div class="dotA" id="dot23"></div>
+                    <div style="font-size: 26px; line-height: 0.5;">&nbsp;&#8594;</div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="custom-hr"></nav>
+        <nav class="pad-below-l"></nav>
+
+        <div class="container-widget">
+            <div class="col-1">
+                <h2>And also our Website Posts or Announcements here!</h2>
+                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 25px;">
+                    <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
+                    <div class="dotB" id="dot31"></div>
+                    <div class="dotB" id="dot32"></div>
+                    <div class="dotB" id="dot33"></div>
+                    <div style="font-size: 26px; line-height: 0.5;">&nbsp;&#8594;</div>
+                </div>
+                <div class="scroll-widgetB">
+                    <% articles.forEach(function(article) { %>
+                        <% if (article && article.type == 'db') { %>
+                            <p>
+                                <span style="font-size: 26px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);">Website Post</span>
+                                <br><br>
+                                <span style="font-size: 22px; text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.9);"><%= article.date %></span>
+                                <br><br>
+                                <img src="assets/images/website-icon.png"  alt="Website Post Thumbnail" height="60" width="60">
+                                <br><br>
+                                <span class="widget-text-content" data-max-length="304">
+                                    <span class="widget-text"><%- article.body %></span>
+                                    <span class="read-more-button">Read More</span>
+                                </span>
+                                <% if (article.imgMain && mediaUrl) { %>
+                                    <br><br>
+                                    <img style="height: 20vw; width: auto; border-radius: 10px; cursor: pointer;" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
+                                <% } %>
+                                <% if (article.type == 'db' && article.fileName && mediaUrl) { %>
+                                    <br><br>
+                                    <span style="font-size: 15px; border: 2px solid white; padding: 6px; border-radius: 50px; display: inline-block;">
+                                        <a href="<%= mediaUrl %><%= article.file %>" download="<%= article.fileName %>" target="_blank">
+                                            Click here to download <%= article.fileName %>&#8659;
+                                        </a>
+                                    </span>
+                                <% } %>
+                            </p>
+                        <% } %>
+                    <% }); %>
+                </div>
+                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 25px;">
+                    <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
+                    <div class="dotB" id="dot41"></div>
+                    <div class="dotB" id="dot42"></div>
+                    <div class="dotB" id="dot43"></div>
+                    <div style="font-size: 26px; line-height: 0.5;">&nbsp;&#8594;</div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const galleryContainerA = document.querySelector('.scroll-widgetA');
+            const dotsA = document.querySelectorAll('.dotA');
+            const dot11 = document.getElementById('dot11');
+            const dot12 = document.getElementById('dot12');
+            const dot13 = document.getElementById('dot13');
+            const dot21 = document.getElementById('dot21');
+            const dot22 = document.getElementById('dot22');
+            const dot23 = document.getElementById('dot23');
+
+            const galleryContainerB = document.querySelector('.scroll-widgetB');
+            const dotsB = document.querySelectorAll('.dotB');
+            const dot31 = document.getElementById('dot31');
+            const dot32 = document.getElementById('dot32');
+            const dot33 = document.getElementById('dot33');
+            const dot41 = document.getElementById('dot41');
+            const dot42 = document.getElementById('dot42');
+            const dot43 = document.getElementById('dot43');
+
+            galleryContainerA.addEventListener('scroll', () => {
+                const scrollLeft = galleryContainerA.scrollLeft;
+                const scrollWidth = galleryContainerA.scrollWidth;
+                const clientWidth = galleryContainerA.clientWidth;
+
+                const totalItems = dotsA.length / 2;
+                const scrollPosition = Math.round(scrollLeft / (scrollWidth / totalItems));
+
+                dotsA.forEach(dotA => dotA.classList.remove('active'));
+
+                if (scrollPosition < 1) {
+                    dot11.classList.add('active');
+                    dot12.classList.remove('active');
+                    dot13.classList.remove('active');
+                    dot21.classList.add('active');
+                    dot22.classList.remove('active');
+                    dot23.classList.remove('active');
+                } else if (scrollPosition >= totalItems) {
+                    dot11.classList.remove('active');
+                    dot12.classList.remove('active');
+                    dot13.classList.add('active');
+                    dot21.classList.remove('active');
+                    dot22.classList.remove('active');
+                    dot23.classList.add('active');
+                } else {
+                    dot11.classList.remove('active');
+                    dot12.classList.add('active');
+                    dot13.classList.remove('active');
+                    dot21.classList.remove('active');
+                    dot22.classList.add('active');
+                    dot23.classList.remove('active');
+                }
+            });
+
+            galleryContainerB.addEventListener('scroll', () => {
+                const scrollLeft = galleryContainerB.scrollLeft;
+                const scrollWidth = galleryContainerB.scrollWidth;
+                const clientWidth = galleryContainerB.clientWidth;
+
+                const totalItems = dotsB.length / 2;
+                const scrollPosition = Math.round(scrollLeft / (scrollWidth / totalItems));
+
+                dotsB.forEach(dotB => dotB.classList.remove('active'));
+
+                if (scrollPosition < 1) {
+                    dot31.classList.add('active');
+                    dot32.classList.remove('active');
+                    dot33.classList.remove('active');
+                    dot41.classList.add('active');
+                    dot42.classList.remove('active');
+                    dot43.classList.remove('active');
+                } else if (scrollPosition >= totalItems) {
+                    dot31.classList.remove('active');
+                    dot32.classList.remove('active');
+                    dot33.classList.add('active');
+                    dot41.classList.remove('active');
+                    dot42.classList.remove('active');
+                    dot43.classList.add('active');
+                } else {
+                    dot31.classList.remove('active');
+                    dot32.classList.add('active');
+                    dot33.classList.remove('active');
+                    dot41.classList.remove('active');
+                    dot42.classList.add('active');
+                    dot43.classList.remove('active');
+                }
+            });
+
+            galleryContainerA.dispatchEvent(new Event('scroll'));
+            galleryContainerB.dispatchEvent(new Event('scroll'));
+        </script>
+
+        <%- include('partials/footer') %>

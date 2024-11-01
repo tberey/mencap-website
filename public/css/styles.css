@@ -490,14 +490,15 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 18px;
+    padding-top: 10px;
     overflow: auto;
+    scrollbar-width: thin;
     z-index: 5;
 }
 
 .menu-link-button {
-    width: 76%;
-    padding: 18px 0;
+    width: 78%;
+    padding: 20px 0;
     margin-bottom: 8px;
     border-radius: 50%;
     background-color: #d31160;
@@ -505,7 +506,7 @@ a {
     color: white;
     text-align: center;
     text-decoration: none;
-    font-size: 21px;
+    font-size: 20px;
     display: block;
     cursor: pointer;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.5);
@@ -806,9 +807,9 @@ div.scroll-widgetA p {
     display: inline-block;
     color: white;
     text-align: center;
-    padding: 14px;
-    margin-left: 6px;
-    margin-right: 6px;
+    padding: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
     text-decoration: none;
     vertical-align: top;
     white-space: wrap;
@@ -829,8 +830,8 @@ div.scroll-widgetB p {
     color: white;
     text-align: center;
     padding: 14px;
-    margin-left: 6px;
-    margin-right: 6px;
+    margin-left: 10px;
+    margin-right: 10px;
     text-decoration: none;
     vertical-align: top;
     white-space: wrap;

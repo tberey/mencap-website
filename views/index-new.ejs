@@ -44,8 +44,8 @@
 
         <div class="container-widget">
             <div class="col-1">
-                <h2>Check out some of our Instagram Posts below!</h2>
-                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 25px;">
+                <h2>&#128071; Check out some of our Instagram Posts below! &#128071;</h2>
+                <div class="dot-indicator" style="margin-bottom: -5px; margin-top: 25px;">
                     <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
                     <div class="dotA" id="dot11"></div>
                     <div class="dotA" id="dot12"></div>
@@ -55,16 +55,18 @@
                 <div class="scroll-widgetA">
                     <% articles.forEach(function(article) { %>
                         <% if (article && article.type == 'ig') { %>
-                            <p>
+                            <p id="testingA">
                                 <span style="font-size: 26px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);">@mencapliverpool</span>
                                 <br><br>
                                 <span style="font-size: 22px; text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.9);"><%= article.date %></span>
                                 <br><br>
                                 <img src="assets/images/instagram-icon.png" alt="Instagram Post Thumbnail" height="60" width="60">
                                 <br><br>
-                                <span class="widget-text-content" data-max-length="304">
+                                <span class="widget-text-content" data-max-length="300">
                                     <span class="widget-text"><%- article.body %></span>
-                                    <span class="read-more-button">Read More</span>
+                                    <span style="display: block; min-height: 16px;">
+                                        <span class="read-more-button">Read More</span>
+                                    </span>
                                 </span>
                                 <% if (article.imgMain && article.imgMain.length) { %>
                                     <br><br>
@@ -83,7 +85,7 @@
                         <% } %>
                     <% }); %>
                 </div>
-                <div class="dot-indicator" style="margin-top: 5px;">
+                <div class="dot-indicator" style="margin-top: 12px;">
                     <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
                     <div class="dotA" id="dot21"></div>
                     <div class="dotA" id="dot22"></div>
@@ -93,13 +95,14 @@
             </div>
         </div>
 
+        <nav class="pad-top-l"></nav>
         <nav class="custom-hr"></nav>
         <nav class="pad-below-l"></nav>
 
         <div class="container-widget">
             <div class="col-1">
-                <h2>And also our Website Posts or Announcements here!</h2>
-                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 25px;">
+                <h2>&#128071; And also our Website Posts or Announcements here! &#128071;</h2>
+                <div class="dot-indicator" style="margin-bottom: -5px; margin-top: 25px;">
                     <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
                     <div class="dotB" id="dot31"></div>
                     <div class="dotB" id="dot32"></div>
@@ -109,7 +112,7 @@
                 <div class="scroll-widgetB">
                     <% articles.forEach(function(article) { %>
                         <% if (article && article.type == 'db') { %>
-                            <p>
+                            <p id="testingB">
                                 <span style="font-size: 26px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);">Website Post</span>
                                 <br><br>
                                 <span style="font-size: 22px; text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.9);"><%= article.date %></span>
@@ -136,7 +139,7 @@
                         <% } %>
                     <% }); %>
                 </div>
-                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 25px;">
+                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 12px;">
                     <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
                     <div class="dotB" id="dot41"></div>
                     <div class="dotB" id="dot42"></div>
@@ -235,6 +238,67 @@
 
             galleryContainerA.dispatchEvent(new Event('scroll'));
             galleryContainerB.dispatchEvent(new Event('scroll'));
+
+
+
+            const scrollContainer = document.querySelector('.scroll-widgetA');
+            const scrollContainerP = document.querySelector('.scroll-widgetA p');
+            const scrollContainerP2 = document.getElementById('testingA');
+            const pTags = Array.from(scrollContainer.querySelectorAll('p'));
+            let currentIndex2 = 0;
+            const scrollInterval2 = 1000;
+            let prevPos2 = 0;
+            let scrollIntervalId;
+            let trigger = false;
+
+            function autoScroll() {
+                const nextP = pTags[currentIndex2];
+                if (nextP) {
+                    const nextPosition = nextP.offsetLeft;
+                    console.log(1);
+                    if (currentIndex2 === 0) {
+                        prevPos2 = nextPosition;
+                        scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        scrollContainer.scrollTo({ left: nextPosition - prevPos2, behavior: 'smooth' });
+                    }
+                    currentIndex2 = (currentIndex2 + 1) % pTags.length;
+                }
+            }
+
+            // Function to start the auto-scrolling
+            function startAutoScroll() {
+                trigger = false;
+                console.log(2);
+                scrollIntervalId = setInterval(autoScroll, scrollInterval2);
+                scrollContainer.addEventListener('click', pauseAutoScroll);
+                scrollContainer.addEventListener('contextmenu', pauseAutoScroll);
+                scrollContainer.addEventListener('dblclick', pauseAutoScroll);
+                scrollContainer.addEventListener('mousemove', pauseAutoScroll);
+            }
+
+            // Function to pause the auto-scrolling
+            function pauseAutoScroll() {
+                scrollContainer.removeEventListener('click', pauseAutoScroll);
+                scrollContainer.removeEventListener('contextmenu', pauseAutoScroll);
+                scrollContainer.removeEventListener('dblclick', pauseAutoScroll);
+                scrollContainer.removeEventListener('mousemove', pauseAutoScroll);
+
+                if (trigger) {
+                    return;
+                }
+                trigger = true;
+                console.log(3);
+                clearInterval(scrollIntervalId);
+                setTimeout(startAutoScroll, 2000);
+            }
+
+            // Event listeners to pause/resume on interaction
+            //scrollContainer.addEventListener('scroll', pauseAutoScroll);
+            //scrollContainer.addEventListener('mousemove', pauseAutoScroll);
+
+            // Start the auto-scrolling when the page loads
+            startAutoScroll();
         </script>
 
         <%- include('partials/footer') %>

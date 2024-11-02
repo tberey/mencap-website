@@ -2,5 +2,6 @@ Todo List:
 
  - Improve Gallery filtering.
  - Improve Calendar page.
- - Add FB integration.
- - Play / Pause button for scroller?
+ - Homepage: Add FB integration.
+ - Homepage: Play / Pause button for scroller. Also remember position if manual scroll. Also dots move you along the scroller position too?
+ - Homepage: A new feed banner/list at the top, showing a list of articles/news/updates, that are simply a line of text each. A RSS feed of specific news related to mencap, also bare minimum of upcoming public holidays/bank holidays.

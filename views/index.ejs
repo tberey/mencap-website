@@ -5,8 +5,11 @@
         <div class="container-1">
             <div class="col-1 image-center">
                 <h1 class="text-center" style="font-size: 52px;">Welcome to the Mencap Liverpool & Sefton website!<br>&#128578;</h1>
+                <p style="text-align: center;">If you prefer, you can still find our classic homepage, which lists all our posts as a single timeline:&nbsp;&nbsp;<b><u><a href="/timeline">Click Here.</a></u></b></p>
             </div>
         </div>
+
+        <nav class="pad-below-l"></nav>
 
         <div class="container-1">
             <% if (loggedIn) { %>
@@ -42,75 +45,326 @@
             <% } %>
         </div>
 
-        <div class="container-1">
+        <div class="scroll-widget-container">
             <div class="col-1">
-                <% articles.forEach(function(article) { %>
-                    <nav style="background-color: #ff01a68f; border-radius: 75px; box-shadow: 0px 3px 9px 9px rgba(0, 0, 0, 0.35);">
-                        <nav style="word-break: normal; padding: 30px 20px;">
-                            <div>
-                                <p style="font-size: 32px; padding-left: 18px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);"><%= article.title %></p>
-                                <p style="font-size: 20px; padding-left: 24px;"><%= article.date %></p>
-
-                                <% if (article.type == 'db') { %>
-                                    <img class="image-right" src="assets/images/website-icon.png" alt="Website Post Thumbnail" height="64" width="66">
-                                    <% if (article.imgThumb && mediaUrl) { %>
-                                        <img class="image-center" src="<%= mediaUrl %><%= article.imgThumb %>"  alt="Image Thumbnail" style="max-width: 40%; max-height: 330px; border-radius: 30%; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgThumb %>')">
-                                    <% } %>
-                                <% } else if (article.type == 'fb') { %>
-                                    <img class="image-right" src="assets/images/facebook-icon.png" alt="Facebook Post Thumbnail" height="70" width="70">
-                                <% } else if (article.type == 'ig') { %>
-                                    <img class="image-right" src="assets/images/instagram-icon.png" alt="Instagram Post Thumbnail" height="70" width="70">
+                <h2>&#128071; Check out some of our Instagram Posts below! &#128071;</h2>
+                <div class="dot-indicator" style="margin-bottom: -5px; margin-top: 25px;">
+                    <div style="font-size: 26px; line-height: 0.5; cursor: pointer;" onclick="scrollPrev()">&#8592;prev&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="dotA" id="dot11"></div>
+                    <div class="dotA" id="dot12"></div>
+                    <div class="dotA" id="dot13"></div>
+                    <div style="font-size: 26px; line-height: 0.5; cursor: pointer;" onclick="scrollNext()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next&#8594;</div>
+                </div>
+                <div class="scroll-widgetA">
+                    <% articles.forEach(function(article) { %>
+                        <% if (article && article.type == 'ig') { %>
+                            <p class="scroll-widgetA-item" id="testingA">
+                                <span style="font-size: 26px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);">@mencapliverpool</span>
+                                <br><br>
+                                <span style="font-size: 22px; text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.9);"><%= article.date %></span>
+                                <br><br>
+                                <img src="assets/images/instagram-icon.png" alt="Instagram Post Thumbnail" height="60" width="60">
+                                <br><br>
+                                <span class="widget-text-content" data-max-length="300">
+                                    <span class="widget-text"><%- article.body %></span>
+                                    <span style="display: block; min-height: 16px;">
+                                        <span class="read-more-button">Read More</span>
+                                    </span>
+                                </span>
+                                <% if (article.imgMain && article.imgMain.length) { %>
+                                    <br><br>
+                                    <% article.imgMain.forEach(function(image) { %>
+                                        <% if (image && image.media_type == "IMAGE") { %>
+                                            <img style="height: 19vw; width: auto; border-radius: 10px; cursor: pointer; margin-left: 3px; margin-right: 3px;" src="<%= image.media_url %>" alt="Post Image" onclick="showImage('<%= image.media_url %>')">
+                                        <% } else if (image && image.media_type == "VIDEO") { %>
+                                            <video style="height: 19vw; width: auto; border-radius: 10px; margin-left: 3px; margin-right: 3px;" controls>
+                                                <source src="<%= image.media_url %>" type="video/mp4">
+                                                Your browser does not support this video format.
+                                            </video>
+                                        <% } %>
+                                    <% }); %>
                                 <% } %>
-
-                                <p style="font-size: 22px; word-break: break-word;"><%- article.body %></p>
-
-                                <% if (article.type == 'db' && article.fileName && mediaUrl) { %>
-                                    <p style="font-size: 18px; border: 3px solid white; padding: 10px; border-radius: 55px; width: fit-content;">
-                                        <a href="<%= mediaUrl %><%= article.file %>" download="<%= article.fileName %>" target="_blank">
-                                            <i>Click here to download:</i><br><b><u><%= article.fileName %></u> &#8659;</b>
-                                        </a>
-                                    </p>
-                                <% } %>
-
-                                <% if (article.type == 'db' && article.imgMain && mediaUrl) { %>
-                                    <img class="image-center" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" style="max-width: 55%; cursor: pointer; border-radius: 10px;" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
-                                    <br>
-                                <% } else if (article.type == 'ig' && article.imgMain && article.imgMain.length) { %>
-                                    <div class="media-container">
-                                        <% article.imgMain.forEach(function(image) { %>
-                                            <% if (image && image.media_type == "IMAGE") { %>
-                                                <img class="media-item" src="<%= image.media_url %>" alt="Post Image" style="border-radius: 10px;" onclick="showImage('<%= image.media_url %>')">
-                                            <% } else if (image && image.media_type == "VIDEO") { %>
-                                                <video class="media-item" style="border-radius: 10px;" controls>
-                                                    <source src="<%= image.media_url %>" type="video/mp4">
-                                                    Your browser does not support this video format.
-                                                </video>
-                                            <% } %>
-                                        <% }); %>
-                                    </div>
-                                <% } else if (article.type == 'fb' && article.imgMain && article.imgMain.length) { %>
-                                    <div class="media-container">
-                                        <% article.imgMain.forEach(function(image) { %>
-                                            <% if (image) { %>
-                                                <img class="media-item" src="<%= image %>" alt="Post Image" style="border-radius: 10px;" onclick="showImage('<%= image %>')">
-                                            <% } %>
-                                        <% }); %>
-                                    </div>
-                                <% } %>
-
-                                <br>
-
-                                <nav class="item-right"><p style="font-size: 12px;">&nbsp;Published by&nbsp;<b><%= article.author %></b>&nbsp;on <%= article.createdAt %>&nbsp;</p></nav>
-                                <% if (article.type == 'db' && loggedIn && uid && article.userUid && article.userUid == uid) { %>
-                                    <input type="button" value="Delete" class="custom-submit-button" style="text-decoration: underline; cursor: pointer; font-size: 12px;" onclick="confirmArticleDelete('<%= article.ID %>','<%= article.userUid %>','<%= article.imgThumb %>','<%= article.imgMain %>','<%= article.file %>')">
-                                <% } %>
-                            </div>
-                        </nav>
-                    </nav>
-
-                    <nav class="custom-hr"></nav>
-                <% }); %>
+                            </p>
+                        <% } %>
+                    <% }); %>
+                </div>
+                <div class="dot-indicator" style="margin-top: 12px;">
+                    <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
+                    <div class="dotA" id="dot21"></div>
+                    <div class="dotA" id="dot22"></div>
+                    <div class="dotA" id="dot23"></div>
+                    <div style="font-size: 26px; line-height: 0.5;">&nbsp;&#8594;</div>
+                </div>
             </div>
         </div>
+
+        <nav class="pad-top-l"></nav>
+        <nav class="custom-hr"></nav>
+        <nav class="pad-below-l"></nav>
+
+        <div class="scroll-widget-container">
+            <div class="col-1">
+                <h2>&#128071; And also our Website Posts or Announcements here! &#128071;</h2>
+                <div class="dot-indicator" style="margin-bottom: -5px; margin-top: 25px;">
+                    <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
+                    <div class="dotB" id="dot31"></div>
+                    <div class="dotB" id="dot32"></div>
+                    <div class="dotB" id="dot33"></div>
+                    <div style="font-size: 26px; line-height: 0.5;">&nbsp;&#8594;</div>
+                </div>
+                <div class="scroll-widgetB">
+                    <% articles.forEach(function(article) { %>
+                        <% if (article && article.type == 'db') { %>
+                            <p class="scroll-widgetB-item" id="testingB">
+                                <span style="font-size: 26px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);">Website Post</span>
+                                <br><br>
+                                <span style="font-size: 22px; text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.9);"><%= article.date %></span>
+                                <br><br>
+                                <img src="assets/images/website-icon.png"  alt="Website Post Thumbnail" height="60" width="60">
+                                <br><br>
+                                <span class="widget-text-content" data-max-length="304">
+                                    <span class="widget-text"><%- article.body %></span>
+                                    <span class="read-more-button">Read More</span>
+                                </span>
+                                <% if (article.imgMain && mediaUrl) { %>
+                                    <br><br>
+                                    <img style="height: 19vw; width: auto; border-radius: 10px; cursor: pointer;" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
+                                <% } %>
+                                <% if (article.type == 'db' && article.fileName && mediaUrl) { %>
+                                    <br><br>
+                                    <span style="font-size: 15px; border: 2px solid white; padding: 6px; border-radius: 50px; display: inline-block;">
+                                        <a href="<%= mediaUrl %><%= article.file %>" download="<%= article.fileName %>" target="_blank">
+                                            Click here to download <%= article.fileName %>&#8659;
+                                        </a>
+                                    </span>
+                                <% } %>
+                            </p>
+                        <% } %>
+                    <% }); %>
+                </div>
+                <div class="dot-indicator" style="margin-bottom: 0px; margin-top: 12px;">
+                    <div style="font-size: 26px; line-height: 0.5;">&#8592;&nbsp;</div>
+                    <div class="dotB" id="dot41"></div>
+                    <div class="dotB" id="dot42"></div>
+                    <div class="dotB" id="dot43"></div>
+                    <div style="font-size: 26px; line-height: 0.5;">&nbsp;&#8594;</div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            const galleryContainerA = document.querySelector('.scroll-widgetA');
+            const dotsA = document.querySelectorAll('.dotA');
+            const dot11 = document.getElementById('dot11');
+            const dot12 = document.getElementById('dot12');
+            const dot13 = document.getElementById('dot13');
+            const dot21 = document.getElementById('dot21');
+            const dot22 = document.getElementById('dot22');
+            const dot23 = document.getElementById('dot23');
+
+            const galleryContainerB = document.querySelector('.scroll-widgetB');
+            const dotsB = document.querySelectorAll('.dotB');
+            const dot31 = document.getElementById('dot31');
+            const dot32 = document.getElementById('dot32');
+            const dot33 = document.getElementById('dot33');
+            const dot41 = document.getElementById('dot41');
+            const dot42 = document.getElementById('dot42');
+            const dot43 = document.getElementById('dot43');
+
+            galleryContainerA.addEventListener('scroll', () => {
+                const scrollLeft = galleryContainerA.scrollLeft;
+                const scrollWidth = galleryContainerA.scrollWidth;
+                const clientWidth = galleryContainerA.clientWidth;
+
+                const totalItems = dotsA.length / 2;
+                const scrollPosition = Math.round(scrollLeft / (scrollWidth / totalItems));
+
+                dotsA.forEach(dotA => dotA.classList.remove('active'));
+
+                if (scrollPosition < 1) {
+                    dot11.classList.add('active');
+                    dot12.classList.remove('active');
+                    dot13.classList.remove('active');
+                    dot21.classList.add('active');
+                    dot22.classList.remove('active');
+                    dot23.classList.remove('active');
+                } else if (scrollPosition >= totalItems) {
+                    dot11.classList.remove('active');
+                    dot12.classList.remove('active');
+                    dot13.classList.add('active');
+                    dot21.classList.remove('active');
+                    dot22.classList.remove('active');
+                    dot23.classList.add('active');
+                } else {
+                    dot11.classList.remove('active');
+                    dot12.classList.add('active');
+                    dot13.classList.remove('active');
+                    dot21.classList.remove('active');
+                    dot22.classList.add('active');
+                    dot23.classList.remove('active');
+                }
+            });
+
+            galleryContainerB.addEventListener('scroll', () => {
+                const scrollLeft = galleryContainerB.scrollLeft;
+                const scrollWidth = galleryContainerB.scrollWidth;
+                const clientWidth = galleryContainerB.clientWidth;
+
+                const totalItems = dotsB.length / 2;
+                const scrollPosition = Math.round(scrollLeft / (scrollWidth / totalItems));
+
+                dotsB.forEach(dotB => dotB.classList.remove('active'));
+
+                if (scrollPosition < 1) {
+                    dot31.classList.add('active');
+                    dot32.classList.remove('active');
+                    dot33.classList.remove('active');
+                    dot41.classList.add('active');
+                    dot42.classList.remove('active');
+                    dot43.classList.remove('active');
+                } else if (scrollPosition >= totalItems) {
+                    dot31.classList.remove('active');
+                    dot32.classList.remove('active');
+                    dot33.classList.add('active');
+                    dot41.classList.remove('active');
+                    dot42.classList.remove('active');
+                    dot43.classList.add('active');
+                } else {
+                    dot31.classList.remove('active');
+                    dot32.classList.add('active');
+                    dot33.classList.remove('active');
+                    dot41.classList.remove('active');
+                    dot42.classList.add('active');
+                    dot43.classList.remove('active');
+                }
+            });
+
+            galleryContainerA.dispatchEvent(new Event('scroll'));
+            galleryContainerB.dispatchEvent(new Event('scroll'));
+
+
+
+            const scrollWidgetContainer = document.querySelector('.scroll-widgetA');
+            const pTags = Array.from(scrollWidgetContainer.querySelectorAll('p'));
+            let currIndex = 0;
+            let prevPosition = 0;
+            let scrollIntervalId;
+            let widgetTrigger = false;
+
+            function smoothScroll(targetPosition, duration) {
+                const startPosition = scrollWidgetContainer.scrollLeft;
+                const distance = targetPosition - startPosition;
+                let startTime = null;
+
+                function animation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const progress = Math.min(timeElapsed / duration, 1);
+                    scrollWidgetContainer.scrollLeft = startPosition + distance * easeInOutQuad(progress);
+                    if (timeElapsed < duration) requestAnimationFrame(animation);
+                }
+
+                function easeInOutQuad(t) {
+                    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+                }
+
+                requestAnimationFrame(animation);
+            }
+
+            function autoScroll() {
+                const nextP = pTags[currIndex];
+                if (nextP) {
+                    const nextPosition = nextP.offsetLeft;
+                    if (currIndex === 0) {
+                        prevPosition = nextPosition;
+                        smoothScroll(0, 600); // Adjust duration as needed
+                    } else {
+                        smoothScroll(nextPosition - prevPosition, 600); // Adjust duration as needed
+                    }
+                    currIndex = (currIndex + 1) % pTags.length;
+                }
+            }
+
+            function scrollNext() {
+                autoScroll();
+                pauseAutoScroll(3000);
+            }
+
+            function scrollPrev() {
+                if (currIndex !== 0 && currIndex !== 1) {
+                    currIndex -= 2;
+                } else if (currIndex === 0) {
+                    currIndex = pTags.length - 2;
+                } else if (currIndex === 1) {
+                    currIndex = pTags.length - 1;
+                }
+
+                autoScroll();
+                pauseAutoScroll(3000);
+            }
+
+            // Named function to pause auto-scroll
+            function handlePause() {
+                pauseAutoScroll(3000);
+            }
+
+            // Toggle event listeners for pausing/resuming
+            function toggleInteractionListeners(action) {
+                const events = [
+                    'scroll', 'select', 'click', 'contextmenu', 'dblclick', 
+                    'mouseenter', 'mousedown', 'mouseup', 'touchstart', 
+                    'touchmove', 'touchend', 'drag'
+                ];
+                events.forEach(event => scrollWidgetContainer[`${action}EventListener`](event, handlePause));
+            }
+
+            // Function to start the auto-scrolling
+            function startAutoScroll(scrollTimeMs) {
+                widgetTrigger = false;
+                scrollIntervalId = setInterval(autoScroll, scrollTimeMs);
+                toggleInteractionListeners('add'); // Add interaction listeners
+            }
+
+            // Function to pause the auto-scrolling
+            function pauseAutoScroll(pauseTimeMs) {
+                if (widgetTrigger) return;
+
+                widgetTrigger = true;
+                clearInterval(scrollIntervalId);
+                toggleInteractionListeners('remove'); // Remove interaction listeners
+
+                setTimeout(() => startAutoScroll(2000), pauseTimeMs);
+            }
+
+            // Start the auto-scrolling when the page loads
+            startAutoScroll(2000);
+
+            // Widget post auto scroller read more text.
+            document.querySelectorAll('.widget-text-content').forEach(container => {
+                const textContent = container.querySelector('.widget-text');
+                const readMoreLink = container.querySelector('.read-more-button');
+                const maxLength = parseInt(container.dataset.maxLength, 10);
+                const fullText = textContent.innerHTML.trim();
+                let isExpanded = false; // Flag to track the current state of read more or read less button
+
+                if (fullText.length > maxLength) {
+                    readMoreLink.style.display = 'inline'; // Show "Read More" link
+                    textContent.innerHTML = fullText.slice(0, maxLength) + '...';
+
+                    readMoreLink.addEventListener('click', () => {
+                    if (isExpanded) {
+                        textContent.innerHTML = fullText.slice(0, maxLength) + '...';
+                        readMoreLink.textContent = 'Read More';
+                    } else {
+                        textContent.innerHTML = fullText;
+                        readMoreLink.textContent = 'Read Less';
+                    }
+                    isExpanded = !isExpanded; // Toggle the state
+                    });
+                }
+            });
+        </script>
+
 
         <%- include('partials/footer') %>

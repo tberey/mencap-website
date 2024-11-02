@@ -1,0 +1,126 @@
+        <!--  EJS variables needed to render: `loggedIn`(boolean) + any in partials.ejs  -->
+
+        <%- include('partials/header') %>
+
+        <div class="container-1">
+            <div class="col-1 image-center">
+                <h1 class="text-center" style="font-size: 52px;">Posts and Articles Timeline<br>&#128075;</h1>
+            </div>
+        </div>
+
+        <div class="container-1">
+            <div class="col-1 text-center">
+                <h2>
+                    This is our timeline page, where we you can scroll through our social media and other posts!
+                </h2>
+            </div>
+        </div>
+
+        <nav class="pad-below-l"></nav>
+
+        <div class="container-1">
+            <% if (loggedIn) { %>
+                <nav class="custom-hr"></nav>
+                <div class="col-1">
+                    <form id="article-form" action="/article" method="POST" enctype="multipart/form-data">
+                        <label for="testSubmit"><h2>Post a new Article, with a pic, video or downloadable attachment:</h2></label>
+                        <p>Give it a title</p>
+                        <input type="text" id="testSubmit" name="title" placeholder="Post Title" style="width: 50%;" required>
+                        <br>
+                        <p>When did it happen?</p>
+                        <input type="text" id="testSubmit" name="date" placeholder="Wednesday 19th August 2023 or Last Week or 19/08/23" style="width: 40%;" required>
+                        <br>
+                        <p>Write something about it</p>
+                        <textarea id="testSubmit" name="body" placeholder="Tell a story..." style="width: 80%; height: 300px;" required></textarea>
+                        <br><br><br>
+                        <label for="imgThumb">Thumbnail Image (<i>Optional;</i>&nbsp;&nbsp;Select an image or video for the <b>top</b> of your Post, that will be smaller but above the text.)</label><br>
+                        <nav class="clear-button" data-input-id="imgThumb"><br>X</nav>&nbsp;
+                        <input type="file" id="imgThumb" name="imgThumb" accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg">
+                        <br><br>
+                        <label for="imgMain">Main Image (<i>Optional;</i>&nbsp;&nbsp;Select an image or video for the <b>main</b> part of your Post, that will be larger but below the text.)</label><br>
+                        <nav class="clear-button" data-input-id="imgMain"><br>X</nav>&nbsp;
+                        <input type="file" id="imgMain" name="imgMain" accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg">
+                        <br><br>
+                        <label for="fileDl">File Attachement (<i>Optional;</i>&nbsp;&nbsp;Select a file you want users to be able to <b>download</b>.)</label><br>
+                        <nav class="clear-button" data-input-id="fileDl"><br>X</nav>&nbsp;
+                        <input type="file" id="fileDl" name="fileDl" accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .odt, .ods, .odp, .txt, .rtf, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .tif, .webp, .mp4, .webm, .ogg, .mov">
+                        <br><br><br>
+                        <button type="submit" style="border-radius: 25px; background-color: #b10153; width: 40%;">Post Article</button>
+                    </form>
+                </div>
+                <nav class="custom-hr"></nav>
+            <% } %>
+        </div>
+
+        <div class="container-1">
+            <div class="col-1">
+                <% articles.forEach(function(article) { %>
+                    <nav style="background-color: #ff01a68f; border-radius: 75px; box-shadow: 0px 3px 9px 9px rgba(0, 0, 0, 0.35);">
+                        <nav style="word-break: normal; padding: 30px 20px;">
+                            <div>
+                                <p style="font-size: 32px; padding-left: 18px; text-shadow: -3px 4px 8px rgba(0, 0, 0, 0.75);"><%= article.title %></p>
+                                <p style="font-size: 20px; padding-left: 24px;"><%= article.date %></p>
+
+                                <% if (article.type == 'db') { %>
+                                    <img class="image-right" src="assets/images/website-icon.png" alt="Website Post Thumbnail" height="64" width="66">
+                                    <% if (article.imgThumb && mediaUrl) { %>
+                                        <img class="image-center" src="<%= mediaUrl %><%= article.imgThumb %>"  alt="Image Thumbnail" style="max-width: 40%; max-height: 330px; border-radius: 30%; cursor: pointer;" onclick="showImage('<%= mediaUrl %><%= article.imgThumb %>')">
+                                    <% } %>
+                                <% } else if (article.type == 'fb') { %>
+                                    <img class="image-right" src="assets/images/facebook-icon.png" alt="Facebook Post Thumbnail" height="70" width="70">
+                                <% } else if (article.type == 'ig') { %>
+                                    <img class="image-right" src="assets/images/instagram-icon.png" alt="Instagram Post Thumbnail" height="70" width="70">
+                                <% } %>
+
+                                <p style="font-size: 22px; word-break: break-word;"><%- article.body %></p>
+
+                                <% if (article.type == 'db' && article.fileName && mediaUrl) { %>
+                                    <p style="font-size: 18px; border: 3px solid white; padding: 10px; border-radius: 55px; width: fit-content;">
+                                        <a href="<%= mediaUrl %><%= article.file %>" download="<%= article.fileName %>" target="_blank">
+                                            <i>Click here to download:</i><br><b><u><%= article.fileName %></u> &#8659;</b>
+                                        </a>
+                                    </p>
+                                <% } %>
+
+                                <% if (article.type == 'db' && article.imgMain && mediaUrl) { %>
+                                    <img class="image-center" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" style="max-width: 55%; cursor: pointer; border-radius: 10px;" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
+                                    <br>
+                                <% } else if (article.type == 'ig' && article.imgMain && article.imgMain.length) { %>
+                                    <div class="media-container">
+                                        <% article.imgMain.forEach(function(image) { %>
+                                            <% if (image && image.media_type == "IMAGE") { %>
+                                                <img class="media-item" src="<%= image.media_url %>" alt="Post Image" style="border-radius: 10px;" onclick="showImage('<%= image.media_url %>')">
+                                            <% } else if (image && image.media_type == "VIDEO") { %>
+                                                <video class="media-item" style="border-radius: 10px;" controls>
+                                                    <source src="<%= image.media_url %>" type="video/mp4">
+                                                    Your browser does not support this video format.
+                                                </video>
+                                            <% } %>
+                                        <% }); %>
+                                    </div>
+                                <% } else if (article.type == 'fb' && article.imgMain && article.imgMain.length) { %>
+                                    <div class="media-container">
+                                        <% article.imgMain.forEach(function(image) { %>
+                                            <% if (image) { %>
+                                                <img class="media-item" src="<%= image %>" alt="Post Image" style="border-radius: 10px;" onclick="showImage('<%= image %>')">
+                                            <% } %>
+                                        <% }); %>
+                                    </div>
+                                <% } %>
+
+                                <br>
+
+                                <nav class="item-right"><p style="font-size: 12px;">&nbsp;Published by&nbsp;<b><%= article.author %></b>&nbsp;on <%= article.createdAt %>&nbsp;</p></nav>
+                                <% if (article.type == 'db' && loggedIn && uid && article.userUid && article.userUid == uid) { %>
+                                    <input type="button" value="Delete" class="custom-submit-button" style="text-decoration: underline; cursor: pointer; font-size: 12px;" onclick="confirmArticleDelete('<%= article.ID %>','<%= article.userUid %>','<%= article.imgThumb %>','<%= article.imgMain %>','<%= article.file %>')">
+                                <% } %>
+                            </div>
+                        </nav>
+                    </nav>
+
+                    <nav class="custom-hr"></nav>
+                <% }); %>
+            </div>
+        </div>
+
+        <%- include('partials/footer') %>

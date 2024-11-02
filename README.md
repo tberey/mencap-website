@@ -274,6 +274,7 @@ Below is the refined and confirmed roadmap, that has been planned for completion
 | 1.2.1 | 2024-10-27 | `<ul><li>`Update server emailing handling.`</li><li>`Add email cron scripts.`</li><li>`Minor API updates.`</li><li>`Update README.md`</li></ul>` |
 | 1.2.2 | 2024-10-30 | `<ul><li>`Add better website down handling static page.`</li><li>`Improve website design.`</li><li>`Add back to the top button.`</li><li>`Update README.md`</li></ul>` |
 | 1.2.3 | 2024-10-31 | `<ul><li>`Testing new home page / landing page.`</li><li>`Minor improvements to website design and visual.`</li><li>`Add custom 404 handling for server.`</li><li>`Update README.md`</li></ul>` |
+| 1.3.0 | 2024-11-02 | `<ul><li>`Implement a refined and upgraded new home page / landing page.`</li><li>`Minor improvements to website design and visual.`</li><li>`Minor API adjustments.`</li><li>`Old homepage remade into new timeline page.`</li><li>`Update README.md`</li></ul>` |
 
 <br><hr><br>
 

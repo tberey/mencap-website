@@ -70,13 +70,13 @@ export class Server extends ServerSetup {
 
             try {
                 this.txtLogger.writeToLogFile('Attempting to fetch Articles.');
-                const articles: queryArticlesRead[] = await this.db.getArticles(4);
+                const articles: queryArticlesRead[] = await this.db.getArticles(7);
                 if (articles.length) {
                     articles.forEach((article: queryArticlesRead) => { if (article.body) article.body = article.body.replace(/\n/g, '<br>') });
                     this.txtLogger.writeToLogFile('Successfully got Articles.');
                 }
 
-                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 4, 8, 6));
+                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 1, 7, 3));
 
                 if (articlesPostsList.length) articlesPostsList.sort((a, b) => (b.createdAt && a.createdAt) ? Helper.parseDate(b.createdAt) - Helper.parseDate(a.createdAt) : 0);
                 else this.txtLogger.writeToLogFile(`No Articles or external posts to sort, or an error occurred fetching Articles and Posts.`);
@@ -103,21 +103,21 @@ export class Server extends ServerSetup {
             }
         });
 
-        this.router.get('/newpage', async (req: Request, res: Response): Promise<void> => {
-            this.txtLogger.writeToLogFile('Request Made: GET /newpage');
+        this.router.get('/timeline', async (req: Request, res: Response): Promise<void> => {
+            this.txtLogger.writeToLogFile('Request Made: GET /timeline');
 
             let articlesPostsList: queryArticlesRead[] = [];
             const articlesMediaUrl: string = `https://${process.env['AWS_BUCKET_NAME']}.s3.${process.env['AWS_REGION']}.amazonaws.com/${this.s3Details.articlesFolder}/`;
 
             try {
                 this.txtLogger.writeToLogFile('Attempting to fetch Articles.');
-                const articles: queryArticlesRead[] = await this.db.getArticles(6);
+                const articles: queryArticlesRead[] = await this.db.getArticles(10);
                 if (articles.length) {
                     articles.forEach((article: queryArticlesRead) => { if (article.body) article.body = article.body.replace(/\n/g, '<br>') });
                     this.txtLogger.writeToLogFile('Successfully got Articles.');
                 }
 
-                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 1, 6, 3));
+                articlesPostsList = articlesPostsList.concat(articles, await this.getExternalPosts(true, 1, 10, 6));
 
                 if (articlesPostsList.length) articlesPostsList.sort((a, b) => (b.createdAt && a.createdAt) ? Helper.parseDate(b.createdAt) - Helper.parseDate(a.createdAt) : 0);
                 else this.txtLogger.writeToLogFile(`No Articles or external posts to sort, or an error occurred fetching Articles and Posts.`);
@@ -125,7 +125,7 @@ export class Server extends ServerSetup {
                 this.txtLogger.writeToLogFile(`An error occurred getting articles or posts: ${err}`);
             } finally {
                 res.status(200);
-                res.render('index-new.ejs', {
+                res.render('timeline.ejs', {
                     loggedIn: req.session.loggedin ? true : false,
                     username: req.session.username || '',
                     uid: req.session.uid || '',

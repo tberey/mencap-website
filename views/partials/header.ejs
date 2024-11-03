@@ -14,8 +14,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" type="text/css" href="css/styles.css">
-        <script src="https://www.google.com/recaptcha/api.js" async></script>
+        <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+        <style>
+            html, body {
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                left: 0;
+                top: 0;
+                color: white;
+                font-family: 'mencap-font';
+                background-color: #4F006F;
+            }
+        </style>
     </head>
 
 
@@ -224,5 +237,5 @@
         <nav class="pad-below-m"></nav>
 
 
-        <script>document.getElementById('js-disabled-banner').style.display = 'none';</script>
+        <script defer>document.getElementById('js-disabled-banner').style.display = 'none';</script>
 

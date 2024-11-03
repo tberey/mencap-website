@@ -89,7 +89,7 @@ export class Server extends ServerSetup {
                     username: req.session.username || '',
                     uid: req.session.uid || '',
                     mediaUrl: articlesMediaUrl || '',
-                    articles: articlesPostsList.slice(0, 10) || []
+                    articles: articlesPostsList.slice(0, 14) || []
                 });
 
                 this.txtLogger.writeToLogFile(
@@ -130,7 +130,7 @@ export class Server extends ServerSetup {
                     username: req.session.username || '',
                     uid: req.session.uid || '',
                     mediaUrl: articlesMediaUrl || '',
-                    articles: articlesPostsList.slice(0, 10) || []
+                    articles: articlesPostsList.slice(0, 25) || []
                 });
 
                 this.txtLogger.writeToLogFile(

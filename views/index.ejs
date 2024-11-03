@@ -128,7 +128,7 @@
                                 </span>
                                 <% if (article.imgMain && mediaUrl) { %>
                                     <br><br>
-                                    <img style="height: 19vw; width: auto; border-radius: 10px; cursor: pointer;" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
+                                    <img style="height: 19vh; width: auto; border-radius: 10px; cursor: pointer;" src="<%= mediaUrl %><%= article.imgMain %>" alt="Post Image" onclick="showImage('<%= mediaUrl %><%= article.imgMain %>')">
                                 <% } %>
                                 <% if (article.type == 'db' && article.fileName && mediaUrl) { %>
                                     <br><br>
@@ -153,7 +153,7 @@
         </div>
 
 
-        <script>
+        <script defer>
             const galleryContainerA = document.querySelector('.scroll-widgetA');
             const dotsA = document.querySelectorAll('.dotA');
             const dot11 = document.getElementById('dot11');

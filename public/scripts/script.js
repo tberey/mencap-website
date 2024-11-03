@@ -260,13 +260,30 @@ document.addEventListener('DOMContentLoaded', setupFileUpload);
 
 
 
-// Calendar init.
+function loadFullCalendarScript() {
+    return new Promise((resolve, reject) => {
+        if (typeof FullCalendar !== 'undefined') {
+            resolve(); // FullCalendar already loaded
+        } else {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js';
+
+            script.onload = () => {
+                resolve();
+            };
+            script.onerror = () => reject(new Error("Failed to load FullCalendar script."));
+
+            document.head.appendChild(script);
+        }
+    });
+}
+
 function initialiseCalendar() {
     const element = document.getElementById('eventsField');
-    if (element) { // Check if the element exists
+    if (element) {
         const textContent = element.innerText || element.textContent;
 
-        var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+        const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
             locale: 'en-gb',
             headerToolbar: {
                 left: 'prev,next,today dayGridMonth,dayGridWeek,timeGridDay,listWeek',
@@ -283,11 +300,26 @@ function initialiseCalendar() {
             events: JSON.parse(textContent)
         });
         calendar.render();
+    } else {
+        return
     }
 }
 
-// Trigger the initialiseCalendar function when the document is loaded
-document.addEventListener('DOMContentLoaded', initialiseCalendar); // Call the function here
+function loadAndInitializeCalendar() {
+    const element = document.getElementById('eventsField');
+    if (!element) return;
+    loadFullCalendarScript()
+        .then(() => initialiseCalendar())
+        .catch((error) => console.error(error.message));
+}
+
+// Check if the document is already loaded, otherwise set up event listeners
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadAndInitializeCalendar);
+    window.addEventListener('load', loadAndInitializeCalendar);  // Fallback
+} else {
+    loadAndInitializeCalendar();
+}
 
 // Calendar Page Form and Fields Formatting.
 function toggleTimeFields() {
@@ -376,10 +408,10 @@ function initializePage() {
 
         // Populate the drop-down with the next 12 months
         for (var i = 0; i < 12; i++) {
-        var option = document.createElement("option");
-        option.text = monthNames[(currentMonth + i) % 12];
-        option.value = (currentMonth + i) % 12 + 1; // Adding 1 to make months 1-indexed
-        monthDropdown.add(option);
+            var option = document.createElement("option");
+            option.text = monthNames[(currentMonth + i) % 12];
+            option.value = (currentMonth + i) % 12 + 1; // Adding 1 to make months 1-indexed
+            monthDropdown.add(option);
         }
     }
 

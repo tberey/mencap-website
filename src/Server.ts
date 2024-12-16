@@ -356,6 +356,25 @@ export class Server extends ServerSetup {
             );
         });
 
+        this.router.get('/refer', async (req: Request, res: Response): Promise<void> => {
+            this.txtLogger.writeToLogFile('Request Made: GET /refer');
+
+            res.status(200);
+            res.render('refer.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
+
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
+            );
+        });
+
         this.router.get('/cafe', async (req: Request, res: Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /cafe');
 

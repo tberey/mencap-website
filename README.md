@@ -276,7 +276,7 @@ Below is the refined and confirmed roadmap, that has been planned for completion
 | 1.2.3 | 2024-10-31 | `<ul><li>`Testing new home page / landing page.`</li><li>`Minor improvements to website design and visual.`</li><li>`Add custom 404 handling for server.`</li><li>`Update README.md`</li></ul>` |
 | 1.3.0 | 2024-11-02 | `<ul><li>`Implement a refined and upgraded new home page / landing page.`</li><li>`Minor improvements to website design and visual.`</li><li>`Minor API adjustments.`</li><li>`Old homepage remade into new timeline page.`</li><li>`Update README.md`</li></ul>` |
 | 1.3.0 | 2024-12-16 | `<ul><li>`Wording content updates, as requested.`</li></ul>` |
-| 1.3.1 | 2024-12-16 | `<ul><li>`Add campaign top banner.`</li><li>`Add new content to involve.ejs get involved page.`</li><li>`Add new content to donate.ejs donate sub-page.`</li><li>`Update README.md`</li></ul>` |
+| 1.3.1 | 2025-01-30 | `<ul><li>`Add campaign top banner.`</li><li>`Add new content to involve.ejs get involved page.`</li><li>`Add new content to donate.ejs donate sub-page.`</li><li>`Update README.md`</li></ul>` |
 
 <br><hr><br>
 

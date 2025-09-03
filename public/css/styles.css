@@ -30,14 +30,14 @@
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Bold.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Bold-Italic.otf') format('opentype');
     font-weight: bold;
     font-style: italic;
 }
@@ -51,7 +51,7 @@
 
 @font-face {
     font-family: 'mencap-font';
-    src: url('../assets/fonts/Mencap-Regular.otf') format('opentype');
+    src: url('../assets/fonts/Mencap-Heavy-Italic.otf') format('opentype');
     font-weight: bolder;
     font-style: italic;
 }
@@ -210,6 +210,15 @@ a {
     padding-right: 10%;
 }
 
+.container-2-stack {
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 13%;
+    padding-right: 10%;
+}
+
 .container-3 {
     display: grid;
     margin-left: auto;
@@ -242,6 +251,10 @@ a {
 }
 
 .col-2 {
+    grid-column-start: 2;
+}
+
+.col-2-stack {
     grid-column-start: 2;
 }
 
@@ -910,6 +923,60 @@ a {
     word-break: break-word;
 }
 
+.bubble-background {
+    background-color: #ff01a68f;
+    border-radius: 50px;
+    display: inline-block;
+    color: #0cc0df;
+    text-align: center;
+    padding: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-decoration: none;
+    vertical-align: top;
+    white-space: wrap;
+    height: max-content;
+    box-shadow: 0px 3px 6px 6px rgba(0, 0, 0, 0.4);
+}
+
+.parallelogram {
+    width: fit-content;
+    height: auto;
+    background: #ad9b40;
+    transform: skew(-20deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.parallelogram span {
+    transform: skew(20deg);
+    color: white;
+    font-size: clamp(1rem, 1.5vw, 2rem);
+    padding-top: 20px;
+    padding-bottom: 30px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.promotion-button {
+    width: fit-content;
+    border-radius: 50px;
+    padding: 15px;
+    color: white;
+    text-align: center;
+    background-color: #004aad;
+    font-size: 24px;
+    transition: background-color 0.3s;
+    box-shadow: 0px 2px 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+.promotion-button:hover {
+    background-color: #0cc0df;
+}
+
 .highlight:hover {
     background-color: #ff01a5;
     border-radius: 50%;
@@ -1241,6 +1308,17 @@ a {
 
 
 
+@media (max-width: 699px) {
+    .container-2-stack {
+        grid-template-columns: 1fr;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .col-2-stack {
+        grid-column-start: 1;
+    }
+}
 
 
 

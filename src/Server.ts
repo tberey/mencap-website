@@ -489,6 +489,25 @@ export class Server extends ServerSetup {
             );
         });
 
+        this.router.get('/freewill', async (req: Request, res: Response): Promise<void> => {
+            this.txtLogger.writeToLogFile('Request Made: GET /freewill');
+
+            res.status(200);
+            res.render('freewill.ejs', {
+                loggedIn: req.session.loggedin ? true : false,
+                username: req.session.username || ''
+            });
+
+            this.txtLogger.writeToLogFile(
+                `Request Completed:
+                GET: ${req.url},
+                Host: ${req.hostname},
+                IP: ${req.ip},
+                Type: ${req.protocol?.toUpperCase()},
+                Status: ${res.statusCode}.`
+            );
+        });
+
         this.router.get('/test', async (req:Request, res:Response): Promise<void> => {
             this.txtLogger.writeToLogFile('Request Made: GET /test');
 

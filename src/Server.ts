@@ -508,11 +508,12 @@ export class Server extends ServerSetup {
             );
         });
 
-        this.router.get('/test', async (req:Request, res:Response): Promise<void> => {
-            this.txtLogger.writeToLogFile('Request Made: GET /test');
+        this.router.get('/community-podcast-download', async (req: Request, res: Response): Promise<void> => {
+            this.txtLogger.writeToLogFile('Request Made: GET /community-podcast-download');
 
-            res.status(200);
-            res.redirect('/');
+            res.redirect(
+                "https://drive.google.com/file/d/1lvInEcX-TEoArYaJyLSOPuKi6AIglUSB/view"
+            );
 
             this.txtLogger.writeToLogFile(
                 `Request Completed:
